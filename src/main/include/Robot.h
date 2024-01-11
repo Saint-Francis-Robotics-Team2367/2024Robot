@@ -5,8 +5,9 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
-#include <frc/XboxController.h>
+#include <frc/PS5Controller.h>
 #include <frc/shuffleboard/Shuffleboard.h>
+
 
 #include "util/ShuffleUI.h"
 #include <thread>
@@ -40,7 +41,8 @@ public:
 
 
   // Modules/Devices
-  frc::XboxController ctr = frc::XboxController(0);
+  // frc::XboxController ctr = frc::XboxController(0);
+  frc::PS5Controller ctr = frc::PS5Controller(0);
   SwerveDrive mDrive = SwerveDrive();
   NavX mGyro = NavX();
 

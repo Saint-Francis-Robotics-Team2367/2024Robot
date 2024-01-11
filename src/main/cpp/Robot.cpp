@@ -46,14 +46,14 @@ void Robot::TeleopPeriodic()
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
     mHeadingController.setSetpointPOV(dPad);
   } else {
-    if (mShouldMaintain.update(drive_translating && !drive_turning, 1.0)) {
-      // Maintain when only translating
-      mHeadingController.setHeadingControllerState(SwerveHeadingController::MAINTAIN);
-      mHeadingController.setSetpointPOV(Rotation2d::degreesBound(ctr.GetPOV()));
-    } else {
+    // if (mShouldMaintain.update(drive_translating && !drive_turning, 1.0)) {
+    //   // Maintain when only translating
+    //   mHeadingController.setHeadingControllerState(SwerveHeadingController::MAINTAIN);
+    //   mHeadingController.setSetpointPOV(Rotation2d::degreesBound(ctr.GetPOV()));
+    // } else {
       // Turn off otherwise
       mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
-    }
+    // }
   }
 
   rot = mHeadingController.getHeadingControllerState() == SwerveHeadingController::OFF
@@ -72,7 +72,7 @@ void Robot::TeleopPeriodic()
   mDrive.displayDriveTelemetry();
 
   // Gyro Resets
-  if (ctr.GetAButtonReleased()) 
+  if (ctr.GetCrossButtonReleased()) 
   {
     mGyro.init();
   }
