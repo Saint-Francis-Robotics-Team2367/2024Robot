@@ -120,10 +120,10 @@ void SwerveDrive::runModules()
  */
 void SwerveDrive::enableThreads()
 {
-    mFrontLeft.exitStandbyThread();
-    mBackLeft.exitStandbyThread();
-    mBackRight.exitStandbyThread();
-    mFrontRight.exitStandbyThread();
+    mFrontLeft.startModule();
+    mBackLeft.startModule();
+    mBackRight.startModule();
+    mFrontRight.startModule();
 }
 /**
  * Disable every module's thread
@@ -131,10 +131,10 @@ void SwerveDrive::enableThreads()
  */
 bool SwerveDrive::stopAllMotors()
 {
-    mFrontLeft.standbyThread();
-    mBackLeft.standbyThread();
-    mBackRight.standbyThread();
-    mFrontRight.standbyThread();
+    mFrontLeft.stopModule();
+    mBackLeft.stopModule();
+    mBackRight.stopModule();
+    mFrontRight.stopModule();
     return true;
 }
 

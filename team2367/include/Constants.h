@@ -40,19 +40,7 @@
 
 
 
-// Steer PID values(custom, untuned)
-#define steerP 0.76
-#define steerI 0.0
-#define steerD 0.0
 
-// Drive Velocity PID Values(Defaults from REV)
-#define revkP 6e-5
-#define revkI 1e-6
-#define revkD 0
-#define revkIz 0
-#define revkFF 0.000015
-#define revkMaxOutput 1.0
-#define revkMinOutput -1.0
 
 
 

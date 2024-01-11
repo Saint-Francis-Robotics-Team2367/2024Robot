@@ -168,8 +168,8 @@ bool SwerveModule::isFinished(float percentageBound)
 
 /**
  * This function is meant to run in a while loop
- * when stopThread is true, motors are stopped
- * when stopThread is false, motor PIDs are running
+ * when moduleInhibit is true, motors are stopped
+ * when moduleInhibit is false, motor PIDs are running
  * steerPID uses frc::PIDController
  * drivePID uses rev::PIDController
  *
@@ -177,7 +177,7 @@ bool SwerveModule::isFinished(float percentageBound)
 void SwerveModule::run()
 {
 
-    if (stopThread) // Thread is in standby mode
+    if (moduleInhibit) // Thread is in standby mode
     {
 
         steerMotor->StopMotor();
@@ -223,22 +223,22 @@ double SwerveModule::getDriveEncoderPos()
 }
 
 /**
- * Set stopThread to true
+ * Set moduleInhibit to true
  * Stops motors and exits PID loop
  * Intended for disabledInit()
  *
  */
-void SwerveModule::standbyThread()
+void SwerveModule::stopModule()
 {
-    stopThread = true;
+    moduleInhibit = true;
 }
 
 /**
- * Set stopThread to false
+ * Set moduleInhibit to false
  * Enter PID loop, motors are ON
  * Intended for teleop/auto init functions
  */
-void SwerveModule::exitStandbyThread()
+void SwerveModule::startModule()
 {
-    stopThread = false;
+    moduleInhibit = false;
 }

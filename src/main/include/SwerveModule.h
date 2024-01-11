@@ -15,6 +15,21 @@
 #include "Constants.h"
 #include "util/ShuffleUI.h"
 
+// Steer PID values(custom, untuned)
+constexpr float steerP = 0.76;
+#define steerI 0.0
+#define steerD 0.0
+
+// Drive Velocity PID Values(Defaults from REV)
+#define revkP 6e-5
+#define revkI 1e-6
+#define revkD 0
+#define revkIz 0
+#define revkFF 0.000015
+#define revkMaxOutput 1.0
+#define revkMinOutput -1.0
+
+
 class SwerveModule
 {
     // private: <- removed for testing
@@ -32,7 +47,7 @@ public:
     frc::PIDController steerCTR{steerP, steerI, steerD};
 
     // REV Default Velocity PID values(Drive Motor)
-    double kP = revkP, kI = revkI, kD = revkD, kIz = revkIz, kFF = revkFF, kMaxOutput = revkMaxOutput, kMinOutput = revkMinOutput;
+    float kP = revkP, kI = revkI, kD = revkD, kIz = revkIz, kFF = revkFF, kMaxOutput = revkMaxOutput, kMinOutput = revkMinOutput;
 
     // PID Controller for Drive Motor
     rev::SparkPIDController m_pidController;
@@ -40,8 +55,9 @@ public:
     float driveVelocitySetpoint;
     float drivePositionSetpoint;
     float steerAngleSetpoint;
-    bool driveModePosition = false;
-    bool stopThread = false;
+    // TODO make enum
+    bool driveModePosition = false; // whether we are controlling module velocity or position
+    bool moduleInhibit = false;
     const int maxRPMFreeSpeed = moduleMaxRPM;
     double currentSteerOutput = 0.0;
 
@@ -70,6 +86,6 @@ public:
 
     // Threading
     void run();
-    void standbyThread();
-    void exitStandbyThread();
+    void stopModule();
+    void startModule();
 };
