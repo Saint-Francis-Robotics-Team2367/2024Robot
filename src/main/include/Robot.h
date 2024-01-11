@@ -47,6 +47,5 @@ public:
   NavX mGyro = NavX();
 
   // Controllers
-  SwerveHeadingController mHeadingController = SwerveHeadingController();
-  TimeDelayedBool mShouldMaintain;
+  SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
 };

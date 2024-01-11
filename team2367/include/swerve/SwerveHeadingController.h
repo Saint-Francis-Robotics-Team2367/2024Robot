@@ -10,6 +10,8 @@ class SwerveHeadingController {
 private:
     frc::PIDController mPIDCtr {0.02, 0.0, 0.0};
     double mSetpoint = 0.0;
+    double outputMax;
+    double outputMin;
         
     
     Rotation2d desiredHeading;
@@ -21,8 +23,10 @@ public:
     HeadingControllerState mHeadingControllerState = OFF;
 
 
-    SwerveHeadingController() {
+    SwerveHeadingController(double output_min = -1.0, double output_max = 1.0) {
         mPIDCtr.EnableContinuousInput(0, 360);
+        outputMax = output_max;
+        outputMin = output_min;
     }
 
     HeadingControllerState getHeadingControllerState() {
@@ -55,7 +59,7 @@ public:
                 // maintain pids
                 break;
         }
-        return mPIDCtr.Calculate(current_angle, mSetpoint);
+        return std::clamp(mPIDCtr.Calculate(current_angle, mSetpoint), outputMin, outputMax);
     }
 
 

@@ -41,6 +41,8 @@ void Robot::TeleopPeriodic()
   bool drive_turning = !(rightX == 0);
   double rot = rightX;
 
+
+  // Decide drive modes
   if (dPad >= 0) {
     // Snap condition
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
@@ -48,27 +50,30 @@ void Robot::TeleopPeriodic()
   } else {
       mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   }
-
   rot = mHeadingController.getHeadingControllerState() == SwerveHeadingController::OFF
     ? rot : mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
-  // Clamp rot
-  rot = std::clamp(rot, -1.0, 1.0);
+
   frc::SmartDashboard::PutNumber("rot" , rot);
 
-
-  mDrive.Drive(
-    rot, 
-    ControlUtil::deadZoneQuadratic(ctr.GetLeftX() / 2, ctrDeadzone), 
-    ControlUtil::deadZoneQuadratic(-ctr.GetLeftY() / 2, ctrDeadzone), 
-    mGyro.getBoundedAngleCCW().getRadians());
-  
-  mDrive.displayDriveTelemetry();
 
   // Gyro Resets
   if (ctr.GetCrossButtonReleased()) 
   {
     mGyro.init();
   }
+
+  // Drive function
+  mDrive.Drive(
+    rot, 
+    ControlUtil::deadZoneQuadratic(ctr.GetLeftX() / 2, ctrDeadzone), 
+    ControlUtil::deadZoneQuadratic(-ctr.GetLeftY() / 2, ctrDeadzone), 
+    mGyro.getBoundedAngleCCW().getRadians());
+  
+
+  // Module Telemetry
+  mDrive.displayDriveTelemetry();
+
+  
 
 }
 
