@@ -1,8 +1,8 @@
 #include "SwerveModule.h"
 
-SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int CAN_ID) : steerMotor(new rev::CANSparkMax(steerMotorID, rev::CANSparkMax::MotorType::kBrushless)),
+SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int CANencoderID) : steerMotor(new rev::CANSparkMax(steerMotorID, rev::CANSparkMax::MotorType::kBrushless)),
                                                                              driveMotor(new rev::CANSparkMax(driveMotorID, rev::CANSparkMax::MotorType::kBrushless)),
-                                                                             steerEnc(CAN_Coder(CAN_ID)),
+                                                                             steerEnc(CAN_Coder(CANencoderID)),
                                                                              driveEnc(driveMotor->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
                                                                              m_pidController(driveMotor->GetPIDController())
 {

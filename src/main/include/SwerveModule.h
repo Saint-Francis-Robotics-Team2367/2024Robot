@@ -55,14 +55,19 @@ public:
     float driveVelocitySetpoint;
     float drivePositionSetpoint;
     float steerAngleSetpoint;
-    // TODO make enum
+    // TODO: make enum
     bool driveModePosition = false; // whether we are controlling module velocity or position
     bool moduleInhibit = false;
     const int maxRPMFreeSpeed = moduleMaxRPM;
+    // TODO: Add acceleration to prevent I windup in PID and impossible setpoints
+    // TODO: Max speed for the steering motor
+    // TODO: Max current to steer
+    // TODO: Max current to drive
+    // TODO: Brownout module
     double currentSteerOutput = 0.0;
 
     // public:
-    SwerveModule(int steerMotorID, int driveMotorID, int CAN_ID);
+    SwerveModule(int steerMotorID, int driveMotorID, int CANencoderID);
     void initMotors();
 
     // Getters
