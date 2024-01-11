@@ -21,6 +21,10 @@ public:
         radians = angleRadians;
     }
 
+    Rotation2d(double x, double y) {
+        radians = atan2(y, x);
+    }
+
     // Returns a new Rotation2d object that is the result of adding two rotations.
     Rotation2d operator+(const Rotation2d &other) const
     {

@@ -54,9 +54,6 @@
 #define revkMaxOutput 1.0
 #define revkMinOutput -1.0
 
-//Shuffleboard Tabs: THESE DONT WORK
-#define driveTab "Drive"
-#define ctrTab "Controller"
 
 
 // Util
@@ -64,6 +61,11 @@
 
 class Constants
 {
+public:
+    // Swerve Heading Controller PID
+    // static const double kSnapSwerveHeadingKp = 0.05;
+    // static const double kSnapSwerveHeadingKi = 0.0;
+    // static const double kSnapSwerveHeadingKd = 0.0075;
 
 
 

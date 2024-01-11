@@ -5,9 +5,20 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include <frc/XboxController.h>
+#include <frc/shuffleboard/Shuffleboard.h>
 
-class Robot : public frc::TimedRobot {
- public:
+#include "util/ShuffleUI.h"
+#include <thread>
+#include "SwerveDrive.h"
+#include "util/ControlUtil.h"
+#include "sensors/NavX.h"
+#include "swerve/SwerveHeadingController.h"
+#include "util/TimeDelayedBool.h"
+
+class Robot : public frc::TimedRobot
+{
+public:
   void RobotInit() override;
   void RobotPeriodic() override;
 
@@ -25,4 +36,15 @@ class Robot : public frc::TimedRobot {
 
   void SimulationInit() override;
   void SimulationPeriodic() override;
+
+
+
+  // Modules/Devices
+  frc::XboxController ctr = frc::XboxController(0);
+  SwerveDrive mDrive = SwerveDrive();
+  NavX mGyro = NavX();
+
+  // Controllers
+  SwerveHeadingController mHeadingController = SwerveHeadingController();
+  TimeDelayedBool mShouldMaintain;
 };

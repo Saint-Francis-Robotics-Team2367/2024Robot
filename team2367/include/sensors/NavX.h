@@ -16,8 +16,17 @@ class NavX {
 
     }
 
-    double getBoundedAngle() {
-        return Rotation2d::degreesBound(-gyro.GetAngle()) * M_PI / 180;
+
+    /**
+     * Radians
+     * Counter clockwise(idk why this is stupid)
+    */
+    Rotation2d getBoundedAngleCCW() {
+        return Rotation2d(Rotation2d::degreesBound(-gyro.GetAngle()) * M_PI / 180);
+    }
+
+    Rotation2d getBoundedAngleCW() {
+        return Rotation2d(Rotation2d::degreesBound(gyro.GetAngle()) * M_PI / 180);
     }
 
     

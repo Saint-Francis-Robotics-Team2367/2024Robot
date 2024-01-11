@@ -57,6 +57,12 @@ public:
     return Translation2d(x_ * scalar, y_ * scalar);
   }
 
+  Translation2d rotateBy(Rotation2d transform) {
+    double cos_ = cos(transform.getRadians());
+    double sin_ = sin(transform.getRadians());
+    return Translation2d(x_ * cos_ - y_ * sin_, x_ * sin_ + y_ * cos_);
+  }
+
 
 
 
