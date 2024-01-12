@@ -21,10 +21,10 @@ private:
     frc::Matrixd<3, 1> chassisSpeedsVector;
 
 public:
-    SwerveDriveKinematics(std::vector<Translation2d> wheelsPos)
+    SwerveDriveKinematics(const std::array<Translation2d, 4> &wheelsPos)
     {
         // m_numModules = wheelsPos.size();
-        std::vector<Translation2d> m_modules = wheelsPos;
+        std::array<Translation2d, 4> m_modules = wheelsPos;
 
         for (int i = 0; i < m_numModules; i++)
         {

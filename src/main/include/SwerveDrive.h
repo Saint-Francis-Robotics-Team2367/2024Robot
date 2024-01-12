@@ -43,11 +43,12 @@ private:
     // Threas for each Module
     std::thread modulePIDThread;
 
-    //float maxSpeed = moduleMaxFPS; // feet/sec, since 5700 RPM = 16 ft/s * 356.25, we have conversion factor
     float maxRot = moduleMaxRot;
 
     // Kinematic module: wheelPs creates x,y coordinates for each module with 0,0 being center of the robot
-    std::vector<Translation2d> wheelPs = {Translation2d(trackWidth, wheelBase), Translation2d(trackWidth, -wheelBase), Translation2d(-trackWidth, wheelBase), Translation2d(-trackWidth, -wheelBase)};
+    // TODO: Rename to Point2d
+    std::array<Translation2d, 4> wheelPs = {Translation2d(trackWidth, wheelBase), Translation2d(trackWidth, -wheelBase), Translation2d(-trackWidth, wheelBase), Translation2d(-trackWidth, -wheelBase)};
+    
     SwerveDriveKinematics m_kinematics = SwerveDriveKinematics(wheelPs);
 
     int driveMode = 0;
