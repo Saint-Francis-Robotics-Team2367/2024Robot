@@ -52,7 +52,7 @@ void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldR
     /**
      * Kinematics class returns module orientations in polar degrees
      * This means that 0 degrees is "to the right"
-     * We want 0 degrees to be forward, so we use convertAngleReference()
+     * We want 0 degrees to be forward
      * Kinematics class also returns module speeds in ft/sec
      * We need to convert back FPS to RPM for the PIDs, so we use our conversion factors
      * FPS * 60 = FPM(feet per min)
@@ -136,21 +136,6 @@ bool SwerveDrive::stopAllMotors()
     mBackRight.stopModule();
     mFrontRight.stopModule();
     return true;
-}
-
-/**
- * Enter radians
- * Converts from zero = right to zero = forward
- * Also inverts the angle
- */
-double SwerveDrive::convertAngleReference(double angle)
-{
-    angle = -angle + M_PI_2;
-    angle = angle * 180 / M_PI;
-    angle = fmod(angle + 360, 360);
-    angle = angle * M_PI / 180;
-
-    return angle;
 }
 /**
  * Enter radians

@@ -12,6 +12,24 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <networktables/NetworkTableEntry.h>
 
+// Motor/CAN IDs
+#define FLsteerID 11
+#define FLdriveID 18
+#define FL_CAN_ID 3 // updated
+
+#define FRsteerID 4
+#define FRdriveID 16
+#define FR_CAN_ID 1 // updated
+
+#define BLsteerID 12
+#define BLdriveID 10
+#define BL_CAN_ID 2 // updated
+
+#define BRsteerID 1
+#define BRdriveID 42
+#define BR_CAN_ID 0 // updated
+
+// TODO: inherit thread helper
 class SwerveDrive
 {
 private:
@@ -46,7 +64,6 @@ public:
     void initAllMotors();
     void enableThreads();
     bool stopAllMotors();
-    double convertAngleReference(double input);
     void orientModules(double FL, double FR, double BL, double BR);
     void autoMove(double angleRadians, double distanceFeet);
     void displayDriveTelemetry();
