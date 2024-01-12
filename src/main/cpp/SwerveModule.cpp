@@ -1,8 +1,8 @@
 #include "SwerveModule.h"
 
-SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int CANencoderID) : steerMotor(new rev::CANSparkMax(steerMotorID, rev::CANSparkMax::MotorType::kBrushless)),
+SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int cancoderID) : steerMotor(new rev::CANSparkMax(steerMotorID, rev::CANSparkMax::MotorType::kBrushless)),
                                                                              driveMotor(new rev::CANSparkMax(driveMotorID, rev::CANSparkMax::MotorType::kBrushless)),
-                                                                             steerEnc(CAN_Coder(CANencoderID)),
+                                                                             steerEnc(CAN_Coder(cancoderID)),
                                                                              driveEnc(driveMotor->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
                                                                              m_pidController(driveMotor->GetPIDController())
 {
@@ -127,12 +127,10 @@ void SwerveModule::setModuleState(SwerveModuleState setpt)
 {
     bool flip = setSteerAngleSetpointShortestPath(setpt.getRot2d().getRadians());
     if (flip) {
-        setDriveVelocitySetpoint(-setpt.getSpeedFPS());
-    } else {
-        setDriveVelocitySetpoint(setpt.getSpeedFPS());
+        driveMotor->SetInverted(!driveMotor->GetInverted());
+        
     }
-    // setSteerAngleSetpoint(setpt.getRot2d().getRadians());
-    // setDriveVelocitySetpoint(setpt.getSpeedFPS());
+    setDriveVelocitySetpoint(setpt.getSpeedFPS());
 }
 
 SwerveModuleState SwerveModule::getModuleState() {

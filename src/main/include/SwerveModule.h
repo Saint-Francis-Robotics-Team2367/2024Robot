@@ -67,18 +67,22 @@ public:
     double currentSteerOutput = 0.0;
 
     // public:
-    SwerveModule(int steerMotorID, int driveMotorID, int CANencoderID);
+    SwerveModule(int steerMotorID, int driveMotorID, int cancoderID);
     void initMotors();
 
     // Getters
     float getSteerAngleSetpoint();
 
     // Setpoints
+    // TODO: overload first steer angle setpoint
     void setSteerAngleSetpoint(float setpt);
     bool setSteerAngleSetpointShortestPath(float setpt);
+
     void setDrivePositionSetpoint(float setpt);
     void setDriveVelocitySetpoint(float setpt);
+    // TODO: Delele this
     void setDrivePercentVelocitySetpoint(float setpt);
+    // TODO: Test this
     void setModuleState(SwerveModuleState setpt);
 
     // Encoders
@@ -86,10 +90,11 @@ public:
     double getSteerOutput();
     double getDriveEncoderVel();
     double getDriveEncoderPos();
+    // TODO: implement & overload
     bool isFinished(float percentageBound);
     SwerveModuleState getModuleState();
 
-    // Threading
+    // Module state control
     void run();
     void stopModule();
     void startModule();
