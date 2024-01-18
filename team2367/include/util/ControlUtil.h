@@ -56,6 +56,27 @@ class ControlUtil
 
     }
 
+    static double limitAcceleration(double currentVelocity, double desiredVelocity, float maxAcc, float dt) {
+        float accRange = maxAcc * dt;
+        if (fabs(currentVelocity - desiredVelocity) > accRange) {
+            if (desiredVelocity > currentVelocity) {
+                desiredVelocity = currentVelocity + accRange;
+            } else {
+                desiredVelocity = currentVelocity - accRange;
+            }
+        }
+        return desiredVelocity;
+    }
+
+    static double min(double a, double b) {
+        if (a > b) {
+            return b;
+        } else {
+            return a;
+        }
+    }
+
+
 
 
 

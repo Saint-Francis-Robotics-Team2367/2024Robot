@@ -33,40 +33,31 @@
 class SwerveDrive
 {
 private:
-
     SwerveModule mFrontLeft = SwerveModule(FLsteerID, FLdriveID, FL_CAN_ID);
     SwerveModule mFrontRight = SwerveModule(FRsteerID, FRdriveID, FR_CAN_ID);
     SwerveModule mBackLeft = SwerveModule(BLsteerID, BLdriveID, BL_CAN_ID);
     SwerveModule mBackRight = SwerveModule(BRsteerID, BRdriveID, BR_CAN_ID);
 
-    
     // Threas for each Module
     std::thread modulePIDThread;
-
     float maxRot = moduleMaxRot;
 
-    // Kinematic module: wheelPs creates x,y coordinates for each module with 0,0 being center of the robot
     // TODO: Rename to Point2d
     std::array<Translation2d, 4> wheelPs = {Translation2d(trackWidth, wheelBase), Translation2d(trackWidth, -wheelBase), Translation2d(-trackWidth, wheelBase), Translation2d(-trackWidth, -wheelBase)};
-    
+
     SwerveDriveKinematics m_kinematics = SwerveDriveKinematics(wheelPs);
-
-    int driveMode = 0;
-    // nt::NetworkTableEntry entry = frc::Shuffleboard::GetTab(driveTab).Add
-    
-
 
     // Module Level functions
     void runModules(); // Private - do not call outside of init
 
 public:
+    // TODO overload - pass Point2d + rotation, it figures it out
+    // void Drive(Translation2d translation, Rotation2d rotation);
     void Drive(double rightX, double leftX, double leftY, double fieldRelativeGyro);
-    void setModuleVelocity(SwerveModule &mModule, double speed, double angleRadians);
-    void initAllMotors();
-    void enableThreads();
-    bool stopAllMotors();
+    void initModules();
+    void enableModules();
+    bool stopModules();
     void orientModules(double FL, double FR, double BL, double BR);
     void autoMove(double angleRadians, double distanceFeet);
     void displayDriveTelemetry();
-    // void autoRotate(double angleRadians); Needs to be thought out a little
 };

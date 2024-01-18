@@ -7,7 +7,7 @@
 
 void Robot::RobotInit()
 {
-  mDrive.initAllMotors();
+  mDrive.initModules();
   mGyro.init();
 }
 void Robot::RobotPeriodic()
@@ -17,23 +17,23 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
-  mDrive.enableThreads();
-
+  mDrive.enableModules();
 }
 void Robot::AutonomousPeriodic()
 {
 }
 void Robot::TeleopInit()
 {
-  mDrive.enableThreads();
+  mDrive.enableModules();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
 }
 void Robot::TeleopPeriodic()
 {
   // Controller inputs
-  double leftX = ControlUtil::deadZoneQuadratic(ctr.GetLeftX() / 2, ctrDeadzone);
-  double leftY = ControlUtil::deadZoneQuadratic(-ctr.GetLeftY() / 2, ctrDeadzone);
+  double leftX = ControlUtil::deadZoneQuadratic(ctr.GetLeftX() * 0.7, ctrDeadzone);
+  double leftY = ControlUtil::deadZoneQuadratic(-ctr.GetLeftY() * 0.7, ctrDeadzone);
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
+
   int dPad = ctr.GetPOV();
 
   // Teleop States
@@ -41,45 +41,43 @@ void Robot::TeleopPeriodic()
   bool drive_turning = !(rightX == 0);
   double rot = rightX;
 
-
   // Decide drive modes
-  if (dPad >= 0) {
+  if (dPad >= 0)
+  {
     // Snap condition
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
     mHeadingController.setSetpointPOV(dPad);
-  } else {
-      mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
+  }
+  else
+  {
+    mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   }
   rot = mHeadingController.getHeadingControllerState() == SwerveHeadingController::OFF
-    ? rot : mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
+            ? rot
+            : mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
 
-  frc::SmartDashboard::PutNumber("rot" , rot);
-
+  frc::SmartDashboard::PutNumber("rot", rot);
 
   // Gyro Resets
-  if (ctr.GetCrossButtonReleased()) 
+  if (ctr.GetCrossButtonReleased())
   {
     mGyro.init();
   }
 
   // Drive function
   mDrive.Drive(
-    rot, 
-    ControlUtil::deadZoneQuadratic(ctr.GetLeftX() / 2, ctrDeadzone), 
-    ControlUtil::deadZoneQuadratic(-ctr.GetLeftY() / 2, ctrDeadzone), 
-    mGyro.getBoundedAngleCCW().getRadians());
-  
+      rot,
+      leftX,
+      leftY,
+      mGyro.getBoundedAngleCCW().getRadians());
 
   // Module Telemetry
   mDrive.displayDriveTelemetry();
-
-  
-
 }
 
 void Robot::DisabledInit()
 {
-  mDrive.stopAllMotors();
+  mDrive.stopModules();
 }
 void Robot::DisabledPeriodic() {}
 

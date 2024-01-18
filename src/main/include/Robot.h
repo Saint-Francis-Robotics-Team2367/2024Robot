@@ -8,7 +8,6 @@
 #include <frc/PS5Controller.h>
 #include <frc/shuffleboard/Shuffleboard.h>
 
-
 #include "util/ShuffleUI.h"
 #include <thread>
 #include "SwerveDrive.h"
@@ -16,6 +15,7 @@
 #include "sensors/NavX.h"
 #include "swerve/SwerveHeadingController.h"
 #include "util/TimeDelayedBool.h"
+#include <frc/Joystick.h>
 
 class Robot : public frc::TimedRobot
 {
@@ -38,13 +38,12 @@ public:
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
-
-
   // Modules/Devices
   // frc::XboxController ctr = frc::XboxController(0);
   frc::PS5Controller ctr = frc::PS5Controller(0);
   SwerveDrive mDrive = SwerveDrive();
   NavX mGyro = NavX();
+  // frc::Joystick ctr = frc::Joystick(0);
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
