@@ -13,20 +13,17 @@
 
 void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldRelativeGyro)
 {
-    ShuffleUI::MakeWidget("rightX", "CTR", rightX);
-    ShuffleUI::MakeWidget("leftY", "CTR", leftY);
-    ShuffleUI::MakeWidget("leftX", "CTR", leftX);
-
+    
     if ((leftY == 0) && (leftX == 0) && (rightX == 0))
     {
 
         SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
         SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
 
-        mFrontLeft.setModuleState(FLBRstop);
-        mFrontRight.setModuleState(FRBLstop);
-        mBackLeft.setModuleState(FLBRstop);
-        mBackRight.setModuleState(FRBLstop);
+        mFrontLeft.setModuleState(FLBRstop, false);
+        mFrontRight.setModuleState(FRBLstop, false);
+        mBackLeft.setModuleState(FLBRstop, false);
+        mBackRight.setModuleState(FRBLstop, false);
 
         return;
     }

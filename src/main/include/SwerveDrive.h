@@ -29,6 +29,8 @@
 #define BRdriveID 42
 #define BR_CAN_ID 0 // updated
 
+// #define maxRot
+
 // TODO: inherit thread helper
 class SwerveDrive
 {
