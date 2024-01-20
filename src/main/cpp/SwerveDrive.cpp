@@ -1,4 +1,3 @@
-
 #include "SwerveDrive.h"
 #include <cmath>
 #include <string>

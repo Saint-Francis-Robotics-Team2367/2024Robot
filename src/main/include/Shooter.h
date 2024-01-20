@@ -12,9 +12,11 @@ class Shooter
 {
     rev::CANSparkMax *bottomMotor = new rev::CANSparkMax(bottomMotorID, rev::CANSparkMax::MotorType::kBrushless);
     rev::CANSparkMax *topMotor = new rev::CANSparkMax(topMotorID, rev::CANSparkMax::MotorType::kBrushless);
-    std::thread motorThread;
-
-
-
+    std::thread shooterThread;
+    bool stopMotor = false;
+    void initShooter();
+    void run();
+    void enableMotors();
+    void stopMotors();
 
 };
