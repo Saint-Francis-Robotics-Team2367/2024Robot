@@ -43,9 +43,11 @@ void SwerveModule::initMotors()
     m_pidController.SetOutputRange(kMinOutput, kMaxOutput);
     steerCTR.EnableContinuousInput(0, 2 * M_PI);
 
+    // driveMotor->SetClosedLoopRampRate(0.5);
+
     // Clears Motor Controller's Log of errors
-    steerMotor->ClearFaults();
-    driveMotor->ClearFaults();
+    // steerMotor->ClearFaults();
+    // driveMotor->ClearFaults();
 }
 
 float SwerveModule::getSteerAngleSetpoint()
@@ -82,7 +84,7 @@ void SwerveModule::setDriveVelocitySetpoint(float setpt)
 }
 
 /**
- * speedMPS attribute should be in RPM
+ * speedFPS attribute should be in RPM
  * Sets Drive Velocity & Steer Angle
  */
 void SwerveModule::setModuleState(SwerveModuleState setpt, bool takeShortestPath)
@@ -171,7 +173,11 @@ bool SwerveModule::isFinished(float percentageBound)
  */
 void SwerveModule::run()
 {
-    // TODO: timing loops
+    // Constantly enforce motor configurations
+    steerMotor->SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
+    driveMotor->SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
+    
+
 
     if (moduleInhibit) // Thread is in standby mode
     {
@@ -183,6 +189,7 @@ void SwerveModule::run()
     else
     {
         // Steer PID
+        
         currentSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
         steerMotor->Set(currentSteerOutput);
 

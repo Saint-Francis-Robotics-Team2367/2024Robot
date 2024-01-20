@@ -6,11 +6,12 @@
 
 // Controller Settings
 #define ctrDeadzone 0.05
+#define ctrPercent 0.7
 
 // Module Constraints
 #define moduleMaxFPS 16.254667 // feet per sec
 #define moduleMaxRPM 5700      // RPM
-#define moduleMaxRot 1.0       // Radians/sec
+#define moduleMaxRot 9.678 / 2  // Radians/sec
 
 // Drivebase Measurements
 #define trackWidth 2.375          // feet

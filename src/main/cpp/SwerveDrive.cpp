@@ -20,10 +20,14 @@ void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldR
         SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
         SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
 
-        mFrontLeft.setModuleState(FLBRstop, false);
-        mFrontRight.setModuleState(FRBLstop, false);
-        mBackLeft.setModuleState(FLBRstop, false);
-        mBackRight.setModuleState(FRBLstop, false);
+        // mFrontLeft.setModuleState(FLBRstop, false);
+        // mFrontRight.setModuleState(FRBLstop, false);
+        // mBackLeft.setModuleState(FLBRstop, false);
+        // mBackRight.setModuleState(FRBLstop, false);
+        mFrontLeft.setDriveVelocitySetpoint(0.0);
+        mFrontRight.setDriveVelocitySetpoint(0.0);
+        mBackLeft.setDriveVelocitySetpoint(0.0);
+        mBackRight.setDriveVelocitySetpoint(0.0);
 
         return;
     }
@@ -72,10 +76,10 @@ void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldR
     }
 
     // Order of kinematics output is always FL, FR, BL, BR
-    mFrontLeft.setModuleState(moduleStates[1]);
-    mFrontRight.setModuleState(moduleStates[3]);
-    mBackLeft.setModuleState(moduleStates[0]);
-    mBackRight.setModuleState(moduleStates[2]);
+    mFrontLeft.setModuleState(moduleStates[1], true);
+    mFrontRight.setModuleState(moduleStates[3], true);
+    mBackLeft.setModuleState(moduleStates[0], true);
+    mBackRight.setModuleState(moduleStates[2], true);
 }
 
 /**
@@ -102,7 +106,6 @@ void SwerveDrive::runModules()
         mFrontRight.run();
         mBackLeft.run();
         mBackRight.run();
-        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 

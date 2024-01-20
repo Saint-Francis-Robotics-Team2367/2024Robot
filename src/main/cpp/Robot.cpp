@@ -25,13 +25,14 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
   mDrive.enableModules();
+  mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
 }
 void Robot::TeleopPeriodic()
 {
   // Controller inputs
-  double leftX = ControlUtil::deadZoneQuadratic(ctr.GetLeftX(), ctrDeadzone) * 0.7;
-  double leftY = ControlUtil::deadZoneQuadratic(-ctr.GetLeftY(), ctrDeadzone) * 0.7;
+  double leftX = ControlUtil::deadZoneQuadratic(ctr.GetLeftX(), ctrDeadzone) * ctrPercent;
+  double leftY = ControlUtil::deadZoneQuadratic(-ctr.GetLeftY(), ctrDeadzone) * ctrPercent;
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
 
   int dPad = ctr.GetPOV();
