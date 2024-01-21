@@ -45,6 +45,10 @@ public:
   NavX mGyro = NavX();
   // frc::Joystick ctr = frc::Joystick(0);
 
+  double leftX = 0;
+  double leftY = 0;
+
+
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
 };

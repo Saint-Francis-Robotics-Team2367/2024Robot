@@ -3,40 +3,43 @@
 #include <cmath>
 #include "Constants.h"
 
-class ControlUtil 
+class ControlUtil
 {
-    public:
-    
+public:
     /**
      * Add deadzone and scale from deadzone by square
      * Input must be in [-1, 1]
-    */
+     */
     static double deadZoneQuadratic(double input, double deadzone)
     {
-        if (fabs(input) < deadzone) {
+        if (fabs(input) < deadzone)
+        {
             return 0.0;
-        } else {
+        }
+        else
+        {
             // y = a(x-dz)^2
             // a = 1 / (1 - dz)^2
             return std::copysign((1 / pow(1 - deadzone, 2)) * pow((fabs(input) - deadzone), 2), input);
         }
-
     }
 
     /**
      * Add deadzone and scale from deadzone by square
      * Input must be in [-1, 1]
-    */
+     */
     static double deadZonePower(double input, double deadzone, int power)
     {
-        if (fabs(input) < deadzone) {
+        if (fabs(input) < deadzone)
+        {
             return 0.0;
-        } else {
+        }
+        else
+        {
             // y = a(x-dz)^2
             // a = 1 / (1 - dz)^2
             return std::copysign((1 / pow(1 - deadzone, power)) * pow((fabs(input) - deadzone), power), input);
         }
-
     }
 
     /**
@@ -44,45 +47,76 @@ class ControlUtil
      * if absolute val less than 1e-12
      * else returns input
      * kEpsilon=1e-12 defined in Constants
-    */
-    static double epsilonBound(double a) 
+     */
+    static double epsilonBound(double a)
     {
-        if (fabs(a) < kEpsilon) 
+        if (fabs(a) < kEpsilon)
         {
             return 0.0;
-        } else {
+        }
+        else
+        {
             return a;
         }
-
     }
 
-    static double limitAcceleration(double currentVelocity, double desiredVelocity, float maxAcc, float dt) {
+    static double limitAcceleration(double currentVelocity, double desiredVelocity, float maxAcc, float dt)
+    {
         float accRange = maxAcc * dt;
-        if (fabs(currentVelocity - desiredVelocity) > accRange) {
-            if (desiredVelocity > currentVelocity) {
+        if (fabs(currentVelocity - desiredVelocity) > accRange)
+        {
+            if (desiredVelocity > currentVelocity)
+            {
                 desiredVelocity = currentVelocity + accRange;
-            } else {
+            }
+            else
+            {
                 desiredVelocity = currentVelocity - accRange;
             }
         }
         return desiredVelocity;
     }
 
-    static double min(double a, double b) {
-        if (a > b) {
+    static float limitPositiveAcceleration(float previousVelocity, float desiredVelocity, float maxAcc, float dt)
+    {
+        float range = maxAcc * dt;
+        if (previousVelocity > 0 && desiredVelocity > 0)
+        {
+            if (previousVelocity + range < desiredVelocity)
+            {
+                desiredVelocity = previousVelocity + range;
+            }
+        }
+        else if (previousVelocity < 0 && desiredVelocity < 0)
+        {
+            if (previousVelocity - range > desiredVelocity)
+            {
+                desiredVelocity = previousVelocity - range;
+            }
+        }
+        else
+        {
+            if (previousVelocity < 0)
+            {
+                desiredVelocity = previousVelocity + range;
+            }
+            else
+            {
+                desiredVelocity = previousVelocity - range;
+            }
+        }
+        return desiredVelocity;
+    }
+
+    static double min(double a, double b)
+    {
+        if (a > b)
+        {
             return b;
-        } else {
+        }
+        else
+        {
             return a;
         }
     }
-
-
-
-
-
-
-    
-
-
-
 };

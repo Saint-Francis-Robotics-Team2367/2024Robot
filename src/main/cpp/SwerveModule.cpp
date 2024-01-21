@@ -104,14 +104,10 @@ void SwerveModule::setModuleState(SwerveModuleState setpt, bool takeShortestPath
 
 SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currState, SwerveModuleState desiredSetpoint)
 {
-    // double elapsedTime = aTimer.Get().value();
-
     double currAngle = currState.getRot2d().getRadians();
     double currVel = currState.getSpeedFPS();
     double desAngle = desiredSetpoint.getRot2d().getRadians();
     double desVel = desiredSetpoint.getSpeedFPS();
-
-    // ControlUtil::limitAcceleration(currVel, desVel, maxDriveAccelerationRPM, elapsedTime);
 
     double dist = fabs(currAngle - desAngle);
     bool flip = (dist > M_PI_2) && (((M_PI * 2) - dist) > M_PI_2);

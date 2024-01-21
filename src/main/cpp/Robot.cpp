@@ -31,9 +31,13 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
   // Controller inputs
-  double leftX = ControlUtil::deadZoneQuadratic(ctr.GetLeftX(), ctrDeadzone) * ctrPercent;
-  double leftY = ControlUtil::deadZoneQuadratic(-ctr.GetLeftY(), ctrDeadzone) * ctrPercent;
+  double leftRawX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1) * ctrPercent;
+  double leftRawY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1) * ctrPercent;
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
+
+  leftX = ControlUtil::limitPositiveAcceleration(leftX, leftRawX, 0.1, 1.0);
+  leftY = ControlUtil::limitPositiveAcceleration(leftY, leftRawY, 0.1, 1.0);
+  
 
   int dPad = ctr.GetPOV();
 
