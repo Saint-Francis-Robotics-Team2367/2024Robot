@@ -1,139 +1,88 @@
 #include "Shooter.h"
 
-
-void Shooter::initShooter() {
+void Shooter::initShooter()
+{
     bottomMotor->RestoreFactoryDefaults();
     topMotor->RestoreFactoryDefaults();
-    bottomMotor->SetInverted(true); //check later
+
+    bottomMotor->SetSmartCurrentLimit(20);
+    topMotor->SetSmartCurrentLimit(20);
+    tiltMotor->SetSmartCurrentLimit(10);
+
+    bottomMotor->SetInverted(true); // check later
     topMotor->SetInverted(false);
+    tiltMotor->SetInverted(false);
 
-    angleControl.SetP(anglekP); //change these
-    angleControl.SetI(anglekI);
-    angleControl.SetD(anglekD);
-    shooterControl.SetP(shooterkP);
-    shooterControl.SetI(shooterkI);
-    shooterControl.SetD(shooterkD);
-    shooterThread = std::thread(&run, this);
+    tiltController.SetP(anglekP); // change these
+    tiltController.SetI(anglekI);
+    tiltController.SetD(anglekD);
 
+    topShooterController.SetP(shooterkP);
+    topShooterController.SetI(shooterkI);
+    topShooterController.SetD(shooterkD);
+
+    bottomShooterController.SetP(shooterkP);
+    bottomShooterController.SetI(shooterkI);
+    bottomShooterController.SetD(shooterkD);
+
+    motorThread = std::thread(&run, this);
 }
 
-void Shooter::run() {
-
-    if (stopShooterMotor==true) {
-        bottomMotor->StopMotor();
-        topMotor->StopMotor();
-    }
-    else if (stopAngleMotor==true) {
-        angleMotor->StopMotor();
-    }
-    else {
-        enableMotors();
-        //bottomMotor->Set(); calculate later
-        //topMotor->Set();
-    }
-
-}
-
-void Shooter::stopMotors() {
-    //stopMotor = true;
-}
-
-void Shooter::enableMotors() {
-    //stopMotor = false;
-}
-
-void Shooter::setAngleSetpoint(float setpoint) {
-
-}
-
-void Shooter::setMotorVelocitySetpoint(float setpoint) {
-
-}
-
-bool Shooter::isFinished(float percentageBound){
-    double velocity = shooterEncoder.GetVelocity();
-    bool reachedVelocity = (velocity < (motorVelocitySetpoint * (1 + percentageBound))) && (velocity > (motorVelocitySetpoint * (1 - percentageBound)));
-
-    double angle = angleEncoder.GetPosition();
-    bool reachedAngle = (angle < (angleSetpoint * (1 + percentageBound))) && (angle > (angleSetpoint * (1 - percentageBound)));
-
-    return (reachedAngle && reachedVelocity);
-}
-
-double Shooter::getMotorVelocity() {
-    float velocity = shooterEncoder.GetVelocity();
-    return velocity;
-}
-
-double Shooter::getAnglePosition() {
-    double anglePosition = angleEncoder.GetPosition();
-    return anglePosition;
-}
-
-
-/*
-// Set the setpoint (target angle in encoder units)
-    double targetAngle = 90.0; // Replace with your desired target angle
-    armPIDController.SetReference(targetAngle, rev::ControlType::kPosition);
-
-    // Loop to periodically update the control
-    while (true) {
-        // You can add other logic or wait time here
-        // ...
-
-        // Read current encoder position
-        double currentAngle = armEncoder.GetPosition();
-
-        // Print current and target angles for debugging
-        std::cout << "Current Angle: " << currentAngle << ", Target Angle: " << targetAngle << std::endl;
-
-        // You may want to add a condition to break out of the loop when the arm reaches the target
-        // if (fabs(currentAngle - targetAngle) < tolerance) {
-        //     break;
-        // }
-    }
-
-    // Disable the PID controller
-    armPIDController.SetReference(0, rev::ControlType::kVoltage);
-
-    return 0;
-}*/
-
-
-
-
-
-/*
-float SwerveModule::getSteerAngleSetpoint()
+void Shooter::run()
 {
-    return steerAngleSetpoint;
+    while (true)
+    {
+        if (stopShooterMotor == true)
+        {
+            bottomMotor->StopMotor();
+            topMotor->StopMotor();
+        }
+        else
+        {
+            bottomShooterController.SetReference(shooterVelocitySetpoint, rev::ControlType::kVelocity);
+            topShooterController.SetReference(shooterVelocitySetpoint, rev::ControlType::kVelocity);
+        }
+
+        if (stopTiltMotor)
+        {
+            tiltMotor->StopMotor();
+        }
+        else
+        {
+            tiltController.SetReference(tiltSetpoint, rev::ControlType::kPosition);
+        }
+    }
 }
 
-/* Takes in input from 0 - 2pi
- * 0 is the right, goes counterclockwise
- * Not tested
- */
-/*void SwerveModule::setSteerAngleSetpoint(float setpt)
+void Shooter::stopMotors()
 {
-    steerAngleSetpoint = setpt;
+    stopTiltMotor = true;
+    stopShooterMotor = true;
 }
 
-/**
- * Untested, I've never used it
- */
-/*void SwerveModule::setDrivePositionSetpoint(float setpt)
+void Shooter::enableMotors()
 {
-    drivePositionSetpoint = setpt;
-    driveMode = POSITION;
+    stopTiltMotor = false;
+    stopShooterMotor = false;
+    // reset tilt setpoint to avoid jumping
 }
 
-/**
- * Set the drive motor velocity setpoint to input RPM
- * Max RPM is 5700
- */
-/*void SwerveModule::setDriveVelocitySetpoint(float setpt)
+void Shooter::setAngleSetpoint(float setpoint)
 {
-    driveVelocitySetpoint = setpt;
-    driveMode = VELOCITY;
+    tiltSetpoint = setpoint;
 }
-*/
+
+void Shooter::setMotorVelocitySetpoint(float setpoint)
+{
+    shooterVelocitySetpoint = setpoint;
+}
+
+double Shooter::getMotorVelocity()
+{
+    return topShooterEncoder.GetVelocity();
+}
+
+double Shooter::getAnglePosition()
+{
+    return tiltEncoder.GetPosition();
+}

@@ -9,7 +9,7 @@
 
 #define bottomMotorID 0 //change later
 #define topMotorID 1
-#define angleMotorID 2
+#define tiltMotorID 2
 
 #define revkP 6e-5 //rev basic settings
 #define revkI 1e-6
@@ -26,25 +26,38 @@
 class Shooter {
     rev::CANSparkMax *bottomMotor = new rev::CANSparkMax(bottomMotorID, rev::CANSparkMax::MotorType::kBrushless);
     rev::CANSparkMax *topMotor = new rev::CANSparkMax(topMotorID, rev::CANSparkMax::MotorType::kBrushless);
-    rev::CANSparkMax *angleMotor = new rev::CANSparkMax(angleMotorID, rev::CANSparkMax::MotorType::kBrushless);
-    std::thread shooterThread;
-    rev::SparkPIDController angleControl;
-    rev::SparkPIDController shooterControl;
-    rev::SparkRelativeEncoder angleEncoder;
-    rev::SparkRelativeEncoder shooterEncoder;
+    // Angle of shooter
+    rev::CANSparkMax *tiltMotor = new rev::CANSparkMax(tiltMotorID, rev::CANSparkMax::MotorType::kBrushless);
 
-    bool stopAngleMotor = false;
-    bool stopShooterMotor = false;
-    float angleSetpoint;
-    float motorVelocitySetpoint;
+    std::thread motorThread;
+
+    // PID controllers
+    rev::SparkPIDController tiltController;
+    rev::SparkPIDController topShooterController;
+    rev::SparkPIDController bottomShooterController;
+
+    // Encoders
+    rev::SparkRelativeEncoder tiltEncoder;
+    rev::SparkRelativeEncoder topShooterEncoder;
+    rev::SparkRelativeEncoder bottomShooterEncoder;
+
+    double maxTiltAngle = 90;
+
+    
+    bool stopTiltMotor = true;
+    bool stopShooterMotor = true;
+
+    double tiltSetpoint;
+    double shooterVelocitySetpoint;
 
     void initShooter();
     void run();
     void enableMotors();
     void stopMotors();
+
     void setAngleSetpoint(float setpoint);
     void setMotorVelocitySetpoint(float setpoint);
+    
     double getAnglePosition();
     double getMotorVelocity();
-    bool isFinished(float percentageBound);
 };
