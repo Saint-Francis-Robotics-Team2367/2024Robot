@@ -64,7 +64,7 @@ public:
         VELOCITY
     };
     driveModeType driveMode = VELOCITY; // whether we are controlling module velocity or position
-    bool moduleInhibit = false;         // True to stop the motors
+    bool moduleInhibit = true;         // True to stop the motors
 
     // Module Constraints
     const int maxRPMFreeSpeed = moduleMaxRPM;
