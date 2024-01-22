@@ -16,27 +16,23 @@
 #define revkFF 0.000015
 #define revkMaxOutput 1.0
 #define revkMinOutput -1.0
-#define anglekP 0 //anglePID
-#define anglekI 0
-#define anglekD 0
-#define shooterkP 0 //shooterPID
-#define shooterkI 0
-#define shooterkD 0
 
 class Shooter {
     rev::CANSparkMax *bottomMotor = new rev::CANSparkMax(bottomMotorID, rev::CANSparkMax::MotorType::kBrushless);
     rev::CANSparkMax *topMotor = new rev::CANSparkMax(topMotorID, rev::CANSparkMax::MotorType::kBrushless);
     rev::CANSparkMax *angleMotor = new rev::CANSparkMax(angleMotorID, rev::CANSparkMax::MotorType::kBrushless);
+    rev::SparkPIDController angleControl = angleMotor->GetPIDController();
+    rev::SparkPIDController shooterControl = topMotor->GetPIDController();
+    rev::SparkRelativeEncoder shooterEncoder = topMotor->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
+    rev::SparkRelativeEncoder angleEncoder = angleMotor->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
     std::thread shooterThread;
-    rev::SparkPIDController angleControl;
-    rev::SparkPIDController shooterControl;
-    rev::SparkRelativeEncoder angleEncoder;
-    rev::SparkRelativeEncoder shooterEncoder;
 
     bool stopAngleMotor = false;
     bool stopShooterMotor = false;
+    int maxRPM = 5700;
     float angleSetpoint;
-    float motorVelocitySetpoint;
+    float motorVelocitySetpoint = 500;
+    float shooterkP = 0, shooterkI = 0, shooterkD = 0, anglekP = 0, anglekI = 0, anglekD = 0;
 
     void initShooter();
     void run();
@@ -44,7 +40,6 @@ class Shooter {
     void stopMotors();
     void setAngleSetpoint(float setpoint);
     void setMotorVelocitySetpoint(float setpoint);
-    double getAnglePosition();
-    double getMotorVelocity();
+    double getShooterAngle();
     bool isFinished(float percentageBound);
 };
