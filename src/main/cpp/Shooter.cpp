@@ -1,11 +1,23 @@
 #include "Shooter.h"
 
+<<<<<<< HEAD
 void Shooter::initShooter() {
+=======
+void Shooter::initShooter()
+{
+>>>>>>> 702b624de0c2d0126f2b302eb8ddfa507417e64f
     bottomMotor->RestoreFactoryDefaults();
     topMotor->RestoreFactoryDefaults();
-    bottomMotor->SetInverted(true); //check later
-    topMotor->SetInverted(false);
 
+    bottomMotor->SetSmartCurrentLimit(20);
+    topMotor->SetSmartCurrentLimit(20);
+    tiltMotor->SetSmartCurrentLimit(10);
+
+    bottomMotor->SetInverted(true); // check later
+    topMotor->SetInverted(false);
+    tiltMotor->SetInverted(false);
+
+<<<<<<< HEAD
     angleControl.SetP(anglekP); //change these
     angleControl.SetI(anglekI);
     angleControl.SetD(anglekD);
@@ -147,35 +159,78 @@ bool Shooter::isFinished(float percentageBound){
 
 /*
 float SwerveModule::getSteerAngleSetpoint()
-{
-    return steerAngleSetpoint;
+=======
+    tiltController.SetP(anglekP); // change these
+    tiltController.SetI(anglekI);
+    tiltController.SetD(anglekD);
+
+    topShooterController.SetP(shooterkP);
+    topShooterController.SetI(shooterkI);
+    topShooterController.SetD(shooterkD);
+
+    bottomShooterController.SetP(shooterkP);
+    bottomShooterController.SetI(shooterkI);
+    bottomShooterController.SetD(shooterkD);
+
+    motorThread = std::thread(&run, this);
 }
 
-/* Takes in input from 0 - 2pi
- * 0 is the right, goes counterclockwise
- * Not tested
- */
-/*void SwerveModule::setSteerAngleSetpoint(float setpt)
+void Shooter::run()
+>>>>>>> 702b624de0c2d0126f2b302eb8ddfa507417e64f
 {
-    steerAngleSetpoint = setpt;
+    while (true)
+    {
+        if (stopShooterMotor == true)
+        {
+            bottomMotor->StopMotor();
+            topMotor->StopMotor();
+        }
+        else
+        {
+            bottomShooterController.SetReference(shooterVelocitySetpoint, rev::ControlType::kVelocity);
+            topShooterController.SetReference(shooterVelocitySetpoint, rev::ControlType::kVelocity);
+        }
+
+        if (stopTiltMotor)
+        {
+            tiltMotor->StopMotor();
+        }
+        else
+        {
+            tiltController.SetReference(tiltSetpoint, rev::ControlType::kPosition);
+        }
+    }
 }
 
-/**
- * Untested, I've never used it
- */
-/*void SwerveModule::setDrivePositionSetpoint(float setpt)
+void Shooter::stopMotors()
 {
-    drivePositionSetpoint = setpt;
-    driveMode = POSITION;
+    stopTiltMotor = true;
+    stopShooterMotor = true;
 }
 
-/**
- * Set the drive motor velocity setpoint to input RPM
- * Max RPM is 5700
- */
-/*void SwerveModule::setDriveVelocitySetpoint(float setpt)
+void Shooter::enableMotors()
 {
-    driveVelocitySetpoint = setpt;
-    driveMode = VELOCITY;
+    stopTiltMotor = false;
+    stopShooterMotor = false;
+    // reset tilt setpoint to avoid jumping
 }
-*/
+
+void Shooter::setAngleSetpoint(float setpoint)
+{
+    tiltSetpoint = setpoint;
+}
+
+void Shooter::setMotorVelocitySetpoint(float setpoint)
+{
+    shooterVelocitySetpoint = setpoint;
+}
+
+double Shooter::getMotorVelocity()
+{
+    return topShooterEncoder.GetVelocity();
+}
+
+double Shooter::getAnglePosition()
+{
+    return tiltEncoder.GetPosition();
+}
