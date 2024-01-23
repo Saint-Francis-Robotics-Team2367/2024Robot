@@ -86,6 +86,10 @@ class Limelight {
             }
         }
 
+        std::vector<double> getTargetPoseRobotSpace() {
+            return LimelightHelpers::getTargetPose_RobotSpace();
+        }
+
 
 
 
