@@ -82,6 +82,61 @@ void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldR
     mBackRight.setModuleState(moduleStates[2], true);
 }
 
+void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented)
+{
+    double desiredVx = desiredSpeeds.vxMetersPerSecond;
+    double desiredVy = desiredSpeeds.vyMetersPerSecond;
+
+    if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon) 
+    {
+        SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
+        SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
+
+        mFrontLeft.setDriveVelocitySetpoint(0.0);
+        mFrontRight.setDriveVelocitySetpoint(0.0);
+        mBackLeft.setDriveVelocitySetpoint(0.0);
+        mBackRight.setDriveVelocitySetpoint(0.0);
+        return;
+    }
+
+    if (useFieldOriented) {
+        desiredSpeeds = ChassisSpeeds::fromFieldRelativeSpeeds(desiredVx, desiredVy, desiredSpeeds.omegaRadiansPerSecond, fieldRelativeGyro);
+        frc::SmartDashboard::PutBoolean("BOTCENTRIC!", false);
+    } else {
+        frc::SmartDashboard::PutBoolean("BOTCENTRIC!", true);
+    }
+
+    std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(desiredSpeeds);
+    moduleStates = m_kinematics.desaturateWheelSpeeds(moduleStates, moduleMaxFPS);
+    /**
+     * Kinematics class returns module orientations in polar degrees
+     * This means that 0 degrees is "to the right"
+     * We want 0 degrees to be forward
+     * Kinematics class also returns module speeds in ft/sec
+     * We need to convert back FPS to RPM for the PIDs, so we use our conversion factors
+     * FPS * 60 = FPM(feet per min)
+     * FPM / (circum) = wheel rotations per minute(WPM)
+     * WPM * (6.12 motor rot / 1 wheel rot) = RPM
+     */
+
+    for (int i = 0; i < 4; i++)
+    {
+        double speed = moduleStates[i].getSpeedFPS();
+        speed = ((speed * 60) / wheelCircumFeet) * moduleDriveRatio;
+        SwerveModuleState temp = SwerveModuleState(speed, moduleStates[i].getRot2d().getRadians());
+        moduleStates[i] = temp;
+
+        // frc::SmartDashboard::PutNumber(std::to_string(i) + "vel", speed);
+        // frc::SmartDashboard::PutNumber(std::to_string(i) + "angle", moduleStates[i].getRot2d().getDegrees());
+    }
+
+    // Order of kinematics output is always FL, FR, BL, BR
+    mFrontLeft.setModuleState(moduleStates[1], true);
+    mFrontRight.setModuleState(moduleStates[3], true);
+    mBackLeft.setModuleState(moduleStates[0], true);
+    mBackRight.setModuleState(moduleStates[2], true);
+}
+
 /**
  * Initialize every motor(encoders, factory reset, current limits, etc)
  * Initialize each motor thread, which should start the threads
@@ -166,40 +221,5 @@ void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
  */
 void SwerveDrive::displayDriveTelemetry()
 {
-    // All shuffleboard prints must have a defined place
-    // mFrontLeft.displayModuleState("FrontLeft", 0, 0);
-    double FR = mFrontRight.getSteerEncoder().getDegrees();
-    double FL = mFrontLeft.getSteerEncoder().getDegrees();
-    double BR = mBackRight.getSteerEncoder().getDegrees();
-    double BL = mBackLeft.getSteerEncoder().getDegrees();
-
-    frc::SmartDashboard::PutNumber("FL", FL);
-    frc::SmartDashboard::PutNumber("FR", FR);
-    frc::SmartDashboard::PutNumber("BL", BL);
-    frc::SmartDashboard::PutNumber("BR", BR);
-
-    ShuffleUI::MakeWidget("FLsteerOut", "drive", mFrontLeft.getSteerOutput());
-    ShuffleUI::MakeWidget("FRsteerOut", "drive", mFrontRight.getSteerOutput());
-    ShuffleUI::MakeWidget("BLsteerOut", "drive", mBackLeft.getSteerOutput());
-    ShuffleUI::MakeWidget("BRsteerOut", "drive", mBackRight.getSteerOutput());
-
-    // FRentry->SetDouble(FL);
-
-    // ShuffleUI::MakeWidget("FL", "drive", FL, frc::BuiltInWidgets::kGyro, 0, 0);
-    // ShuffleUI::MakeWidget("FR", "drive", FR, frc::BuiltInWidgets::kGyro, 0, 2);
-    // ShuffleUI::MakeWidget("BL", "drive", BL, frc::BuiltInWidgets::kGyro, 2, 0);
-    // ShuffleUI::MakeWidget("BR", "drive", BR, frc::BuiltInWidgets::kGyro, 2, 2);
-
-    // FRentry.GetEntry()->SetDouble(FR.getRot2d().getDegrees());
-    // ShuffleUI::MakeWidget("FR", driveTab, FR.getRot2d().getDegrees(), frc::BuiltInWidgets::kGyro);
-    // mBackLeft.displayModuleState("BackLeft", 2, 0);
-    // mBackRight.displayModuleState("BackRight", 2, 2);
-    // ShuffleUI::PrintWidgetList();
-
-    // ShuffleUI::MakeWidget("FLsteerOut", "drive", mFrontLeft.getSteerOutput(), 0, 4);
-    // ShuffleUI::MakeWidget("FRsteerOut", "drive", mFrontRight.getSteerOutput(), 0, 5);
-    // ShuffleUI::MakeWidget("BLsteerOut", "drive", mBackLeft.getSteerOutput(), 1, 4);
-    // ShuffleUI::MakeWidget("BRsteerOut", "drive", mBackRight.getSteerOutput(), 1, 5);
-
-    // ShuffleUI::MakeWidget("driveMode", driveTab, driveMode, 3, 0);
+    
 }

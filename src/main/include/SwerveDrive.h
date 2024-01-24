@@ -56,6 +56,7 @@ public:
     // TODO overload - pass Point2d + rotation, it figures it out
     // void Drive(Translation2d translation, Rotation2d rotation);
     void Drive(double rightX, double leftX, double leftY, double fieldRelativeGyro);
+    void Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented);
     void initModules();
     void enableModules();
     bool stopModules();

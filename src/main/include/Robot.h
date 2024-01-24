@@ -39,15 +39,9 @@ public:
   void SimulationPeriodic() override;
 
   // Modules/Devices
-  // frc::XboxController ctr = frc::XboxController(0);
   frc::PS5Controller ctr = frc::PS5Controller(0);
   SwerveDrive mDrive = SwerveDrive();
   NavX mGyro = NavX();
-  // frc::Joystick ctr = frc::Joystick(0);
-
-  double leftX = 0;
-  double leftY = 0;
-
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);

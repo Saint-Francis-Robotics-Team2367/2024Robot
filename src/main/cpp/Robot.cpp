@@ -13,6 +13,8 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
+  frc::SmartDashboard::PutNumber("Mag", mGyro.getMagnetometerCW().getDegrees());
+  frc::SmartDashboard::PutNumber("GyroConnected?", mGyro.gyro.IsConnected());
 }
 
 void Robot::AutonomousInit()
@@ -31,13 +33,12 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
   // Controller inputs
-  double leftRawX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1) * ctrPercent;
-  double leftRawY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1) * ctrPercent;
+  double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1) * ctrPercent;
+  double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1) * ctrPercent;
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
 
-  leftX = ControlUtil::limitPositiveAcceleration(leftX, leftRawX, 0.1, 1.0);
-  leftY = ControlUtil::limitPositiveAcceleration(leftY, leftRawY, 0.1, 1.0);
-  
+  frc::SmartDashboard::PutNumber("leftX", leftX);
+  frc::SmartDashboard::PutNumber("leftY", leftY);
 
   int dPad = ctr.GetPOV();
 
@@ -61,8 +62,6 @@ void Robot::TeleopPeriodic()
             ? rot
             : mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
 
-  frc::SmartDashboard::PutNumber("rot", rot);
-
   // Gyro Resets
   if (ctr.GetCrossButtonReleased())
   {
@@ -71,10 +70,10 @@ void Robot::TeleopPeriodic()
 
   // Drive function
   mDrive.Drive(
-      rot,
-      leftX,
-      leftY,
-      mGyro.getBoundedAngleCCW().getRadians());
+    ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, rot * moduleMaxRot), 
+    mGyro.getBoundedAngleCCW(),
+    mGyro.gyro.IsConnected()
+  );
 
   // Module Telemetry
   mDrive.displayDriveTelemetry();

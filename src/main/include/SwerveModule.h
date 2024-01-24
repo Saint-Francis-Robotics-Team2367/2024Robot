@@ -69,7 +69,7 @@ public:
     // Module Constraints
     const int maxRPMFreeSpeed = moduleMaxRPM;
     const float maxDriveAccelerationFPS = 7.603; // Feet per sec2
-    const float maxDriveAccelerationRPM = ((maxDriveAccelerationFPS * 60) / wheelCircumFeet) * moduleDriveRatio;
+    const float maxDriveAccelerationRPM = 2665.993;
     const float maxSteerVelocity = 189.2; // Radians per sec
 
     const int maxSteerCurrent = 20; // Maximum current to steer motor

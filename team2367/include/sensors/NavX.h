@@ -13,7 +13,13 @@ class NavX {
 
     void init() {
         gyro.Reset();
+        gyro.Calibrate();
 
+    }
+
+    Rotation2d getMagnetometerCW() 
+    {
+        return Rotation2d::fromDegrees(gyro.GetCompassHeading());
     }
 
 

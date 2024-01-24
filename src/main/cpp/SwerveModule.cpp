@@ -109,6 +109,15 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     double desAngle = desiredSetpoint.getRot2d().getRadians();
     double desVel = desiredSetpoint.getSpeedFPS();
 
+    double limitVel = ControlUtil::limitPositiveAcceleration(currVel, desVel, maxDriveAccelerationRPM, aTimer.Get().value());
+    aTimer.Reset();
+    if (steerID == 11) 
+    {
+        frc::SmartDashboard::PutNumber("LimitedVel", limitVel);
+        frc::SmartDashboard::PutNumber("DesiredVel", desVel);
+    }
+    
+
     double dist = fabs(currAngle - desAngle);
     bool flip = (dist > M_PI_2) && (((M_PI * 2) - dist) > M_PI_2);
 
