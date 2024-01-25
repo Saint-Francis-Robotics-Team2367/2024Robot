@@ -49,6 +49,20 @@ void Robot::TeleopPeriodic()
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
     mHeadingController.setSetpointPOV(dPad);
   }
+  else if (ctr.GetCircleButton() && mLimelight.isSpeakerTagDetected()) 
+  {
+    mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
+    Pose3d target = mLimelight.getTargetPoseRobotSpace();
+    frc::SmartDashboard::PutNumber("TargetX", target.x);
+    frc::SmartDashboard::PutNumber("TargetY", target.y);
+    frc::SmartDashboard::PutNumber("TargetZ", target.z);
+
+    double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / M_PI;
+    frc::SmartDashboard::PutNumber("angleOffset", angleOffset);
+    double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
+    mHeadingController.setSetpoint(zeroSetpoint);
+
+  }
   else
   {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);

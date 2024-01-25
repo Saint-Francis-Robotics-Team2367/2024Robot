@@ -29,6 +29,11 @@ public:
         outputMin = output_min;
     }
 
+    void setOutputRange(double min, double max) {
+        outputMax = max;
+        outputMin = min;
+    }
+
     HeadingControllerState getHeadingControllerState() {
         return mHeadingControllerState;
     }

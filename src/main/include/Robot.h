@@ -16,6 +16,7 @@
 #include "swerve/SwerveHeadingController.h"
 #include "util/TimeDelayedBool.h"
 #include <frc/Joystick.h>
+#include "sensors/Limelight.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -43,6 +44,7 @@ public:
   frc::PS5Controller ctr = frc::PS5Controller(0);
   SwerveDrive mDrive = SwerveDrive();
   NavX mGyro = NavX();
+  Limelight mLimelight;
   // frc::Joystick ctr = frc::Joystick(0);
 
   // Controllers
