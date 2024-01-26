@@ -118,14 +118,7 @@ public:
 
     bool isSpeakerTagDetected()
     {
-        if (isIn((int) LimelightHelpers::getFiducialID(), speakerCenterIDs))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return isIn((int) LimelightHelpers::getFiducialID(), speakerCenterIDs);
     }
 
     /*
