@@ -92,16 +92,15 @@ public:
         return xyCoords;
     }
 
-    bool isIn(int object, std::vector<int> vector)
-    { // use for checking which april tag it is
-        if (std::find(vector.begin(), vector.end(), object) != vector.end())
-        {
-            return true;
+    bool isIn(int object, std::vector<int> inp)
+    {
+        for (int i = 0; i < inp.size(); i++) {
+            if (inp[i] == object) 
+            {
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     Pose3d getTargetPoseRobotSpace()
@@ -119,7 +118,7 @@ public:
 
     bool isSpeakerTagDetected()
     {
-        if (targetDetected() && isIn(LimelightHelpers::getFiducialID(), speakerCenterIDs))
+        if (isIn((int) LimelightHelpers::getFiducialID(), speakerCenterIDs))
         {
             return true;
         }

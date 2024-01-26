@@ -87,15 +87,20 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     double desiredVx = desiredSpeeds.vxMetersPerSecond;
     double desiredVy = desiredSpeeds.vyMetersPerSecond;
 
-    if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon) 
+    if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon) 
     {
         SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
         SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
 
-        mFrontLeft.setDriveVelocitySetpoint(0.0);
-        mFrontRight.setDriveVelocitySetpoint(0.0);
-        mBackLeft.setDriveVelocitySetpoint(0.0);
-        mBackRight.setDriveVelocitySetpoint(0.0);
+        mFrontLeft.setModuleState(FLBRstop, true);
+        mFrontRight.setModuleState(FRBLstop, true);
+        mBackLeft.setModuleState(FRBLstop, true);
+        mBackRight.setModuleState(FLBRstop, true);
+
+        // mFrontLeft.setDriveVelocitySetpoint(0.0);
+        // mFrontRight.setDriveVelocitySetpoint(0.0);
+        // mBackLeft.setDriveVelocitySetpoint(0.0);
+        // mBackRight.setDriveVelocitySetpoint(0.0);
         return;
     }
 

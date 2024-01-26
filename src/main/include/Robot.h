@@ -17,6 +17,7 @@
 #include "util/TimeDelayedBool.h"
 #include <frc/Joystick.h>
 #include "sensors/Limelight.h"
+#include <frc/GenericHID.h>
 
 class Robot : public frc::TimedRobot
 {
@@ -45,6 +46,9 @@ public:
   NavX mGyro = NavX();
   Limelight mLimelight;
   // frc::Joystick ctr = frc::Joystick(0);
+
+  // Teleop Controls
+  double ctrPercent = 0.7;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);

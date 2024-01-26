@@ -18,7 +18,7 @@ private:
 
 public:
     enum HeadingControllerState {
-        OFF, SNAP, MAINTAIN
+        OFF, SNAP, ALIGN, MAINTAIN
     };
     HeadingControllerState mHeadingControllerState = OFF;
 
@@ -60,8 +60,11 @@ public:
             case SNAP:
                 mPIDCtr.SetPID(0.02, 0.0, 0.0);
                 break;
+            case ALIGN:
+                mPIDCtr.SetPID(0.02, 0.0, 0.0);
+                break;
             case MAINTAIN:
-                // maintain pids
+                mPIDCtr.SetPID(0.02, 0.0, 0.0);
                 break;
         }
         return std::clamp(mPIDCtr.Calculate(current_angle, mSetpoint), outputMin, outputMax);

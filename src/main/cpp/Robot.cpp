@@ -36,16 +36,23 @@ void Robot::TeleopPeriodic()
   double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1) * ctrPercent;
   double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1) * ctrPercent;
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
-
-  frc::SmartDashboard::PutNumber("leftX", leftX);
-  frc::SmartDashboard::PutNumber("leftY", leftY);
-
+  double leftTrigger = ctr.GetL2Axis();
   int dPad = ctr.GetPOV();
 
+  // Driver Information
+  frc::SmartDashboard::PutNumber("leftX", leftX);
+  frc::SmartDashboard::PutNumber("leftY", leftY);
+  frc::SmartDashboard::PutBoolean("TargetFound?", mLimelight.isSpeakerTagDetected());
+  if (!mGyro.gyro.IsConnected()) {
+    ctr.SetRumble(frc::GenericHID::RumbleType::kRightRumble, 0.5);
+  }
+  ctr.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
+
   // Teleop States
-  bool drive_translating = !(leftX == 0 && leftY == 0);
-  bool drive_turning = !(rightX == 0);
+  bool driveTranslating = !(leftX == 0 && leftY == 0);
+  bool driveTurning = !(rightX == 0);
   double rot = rightX;
+  bool preparingToShoot = leftTrigger > 0.2;
 
   // Decide drive modes
   if (dPad >= 0)
@@ -54,24 +61,28 @@ void Robot::TeleopPeriodic()
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
     mHeadingController.setSetpointPOV(dPad);
   }
-  else if (ctr.GetCircleButton() && mLimelight.isSpeakerTagDetected()) 
+  else if (preparingToShoot && !driveTurning) 
   {
-    mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
-    Pose3d target = mLimelight.getTargetPoseRobotSpace();
-    frc::SmartDashboard::PutNumber("TargetX", target.x);
-    frc::SmartDashboard::PutNumber("TargetY", target.y);
-    frc::SmartDashboard::PutNumber("TargetZ", target.z);
+    if (mLimelight.isSpeakerTagDetected()) {
+      Pose3d target = mLimelight.getTargetPoseRobotSpace();
+      double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / M_PI;
+      double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
+      mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+      mHeadingController.setSetpoint(zeroSetpoint);
+      // limit robot speed temporarily
+      leftX = (leftX / ctrPercent) * 0.3;
+      leftY = (leftY / ctrPercent) * 0.3;
 
-    double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / M_PI;
-    frc::SmartDashboard::PutNumber("angleOffset", angleOffset);
-    double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
-    mHeadingController.setSetpoint(zeroSetpoint);
-
+    } else {
+      ctr.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
+    }
   }
   else
   {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   }
+  
+  // Output heading controller if used
   rot = mHeadingController.getHeadingControllerState() == SwerveHeadingController::OFF
             ? rot
             : mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
