@@ -159,6 +159,55 @@ void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
     // TODO: Wait for modules to reach point
 }
 
+bool SwerveDrive::isRotationFinished(double startAngle, double currAngle, double percentageBound){
+    return ((currAngle < (startAngle + startAngle * percentageBound)) && (currAngle > (startAngle - startAngle * percentageBound)));
+    // return (currAngle < (startAngle *+ percentageBound)) || (currAngle > (startAngle *+ drivePercentageBound))
+
+}
+
+bool SwerveDrive::isDriveFinished(double percentageBound){
+    return (mBackLeft.isFinished(percentageBound) && mBackRight.isFinished(percentageBound) && mFrontLeft.isFinished(percentageBound) && mFrontRight.isFinished(percentageBound));
+
+}
+
+/**x
+ * Based on autoMove()
+ * Awaits movement
+ */
+void SwerveDrive::simpleAuto(double angleRadians, double distanceFeet)
+{
+    
+    static bool startFlag = true;
+    double rotPercentageBound = 0.05;
+    double drivePercentageBound = 0.05;
+
+    if (startFlag) {
+        // check the angle for one module (assume all else are aligned?)
+        startAngle = mBackRight.getModuleState().getRot2d().getRadians();
+        startFlag = false;
+    }
+
+    // orient all modules to match angleRadians (currAngle)
+    orientModules(angleRadians, angleRadians, angleRadians, angleRadians);
+    // record current angle of BR module
+    currAngle = mBackRight.getModuleState().getRot2d().getRadians();
+
+    // wait until rotation is finished
+    while (!isRotationFinished(startAngle, currAngle, rotPercentageBound));
+
+    // move all motors to match distanceFeet
+    mFrontLeft.setDrivePositionSetpoint(distanceFeet);
+    mFrontRight.setDrivePositionSetpoint(distanceFeet);
+    mBackLeft.setDrivePositionSetpoint(distanceFeet);
+    mBackRight.setDrivePositionSetpoint(distanceFeet);
+
+    // wait until drive movement is finished
+    while (isDriveFinished(drivePercentageBound));
+
+
+    
+}
+
 /**
  * Uses shuffleUI to print to driveTab
  * Uses gyro widget

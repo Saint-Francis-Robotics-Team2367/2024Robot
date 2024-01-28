@@ -52,14 +52,25 @@ private:
     // Module Level functions
     void runModules(); // Private - do not call outside of init
 
+    // Variables for simpleAuto()
+    double startAngle, currAngle;
+
 public:
     // TODO overload - pass Point2d + rotation, it figures it out
     // void Drive(Translation2d translation, Rotation2d rotation);
     void Drive(double rightX, double leftX, double leftY, double fieldRelativeGyro);
+    void Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented);
     void initModules();
     void enableModules();
     bool stopModules();
     void orientModules(double FL, double FR, double BL, double BR);
     void autoMove(double angleRadians, double distanceFeet);
     void displayDriveTelemetry();
+    void simpleAuto(double angleRadians, double distanceFeet);
+    bool isRotationFinished(double startAngle, double currAngle, double percentageBound);
+    bool isDriveFinished(double percentageBound);
+
+
+
+    
 };
