@@ -150,12 +150,12 @@ bool SwerveModule::isFinished(float percentageBound)
     if (driveMode == POSITION)
     {
         double pos = driveEnc.GetPosition();
-        return (pos < (drivePositionSetpoint * (1 + percentageBound))) && (pos > (drivePositionSetpoint * (1 - percentageBound)));
+        return ControlUtil::withinBoundPercent(pos, drivePositionSetpoint, percentageBound);
     }
     else
     {
         double pos = driveEnc.GetVelocity();
-        return (pos < (driveVelocitySetpoint * (1 + percentageBound))) && (pos > (driveVelocitySetpoint * (1 - percentageBound)));
+        return ControlUtil::withinBoundPercent(pos, driveVelocitySetpoint, percentageBound);
     }
 }
 

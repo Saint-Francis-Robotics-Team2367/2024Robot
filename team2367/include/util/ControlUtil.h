@@ -108,6 +108,12 @@ public:
         return desiredVelocity;
     }
 
+    static bool withinBoundPercent(double value, double desiredGoal, double boundPercent) 
+    {
+        return ((value < (desiredGoal + desiredGoal * boundPercent)) && (value > (desiredGoal - desiredGoal * boundPercent)));
+
+    }
+
     static double min(double a, double b)
     {
         if (a > b)

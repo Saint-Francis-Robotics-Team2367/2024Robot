@@ -150,38 +150,13 @@ void SwerveDrive::orientModules(double FL, double FR, double BL, double BR)
  */
 void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
 {
-    orientModules(angleRadians, angleRadians, angleRadians, angleRadians);
-    // TODO: Wait for modules w/ while loop
-    mFrontLeft.setDrivePositionSetpoint(distanceFeet);
-    mFrontRight.setDrivePositionSetpoint(distanceFeet);
-    mBackLeft.setDrivePositionSetpoint(distanceFeet);
-    mBackRight.setDrivePositionSetpoint(distanceFeet);
-    // TODO: Wait for modules to reach point
-}
-
-bool SwerveDrive::isRotationFinished(double startAngle, double currAngle, double percentageBound){
-    return ((currAngle < (startAngle + startAngle * percentageBound)) && (currAngle > (startAngle - startAngle * percentageBound)));
-    // return (currAngle < (startAngle *+ percentageBound)) || (currAngle > (startAngle *+ drivePercentageBound))
-
-}
-
-bool SwerveDrive::isDriveFinished(double percentageBound){
-    return (mBackLeft.isFinished(percentageBound) && mBackRight.isFinished(percentageBound) && mFrontLeft.isFinished(percentageBound) && mFrontRight.isFinished(percentageBound));
-
-}
-
-/**x
- * Based on autoMove()
- * Awaits movement
- */
-void SwerveDrive::simpleAuto(double angleRadians, double distanceFeet)
-{
-    
     static bool startFlag = true;
     double rotPercentageBound = 0.05;
     double drivePercentageBound = 0.05;
 
     if (startFlag) {
+        ShuffleUI::MakeWidget("Moving", "Auto", false);
+        ShuffleUI::MakeWidget("Rotating", "Auto", false);
         // check the angle for one module (assume all else are aligned?)
         startAngle = mBackRight.getModuleState().getRot2d().getRadians();
         startFlag = false;
@@ -189,11 +164,13 @@ void SwerveDrive::simpleAuto(double angleRadians, double distanceFeet)
 
     // orient all modules to match angleRadians (currAngle)
     orientModules(angleRadians, angleRadians, angleRadians, angleRadians);
-    // record current angle of BR module
-    currAngle = mBackRight.getModuleState().getRot2d().getRadians();
 
     // wait until rotation is finished
-    while (!isRotationFinished(startAngle, currAngle, rotPercentageBound));
+    // TODO: add timer
+    while (!ControlUtil::withinBoundPercent(mBackRight.getSteerEncoder().getRadians(), angleRadians, rotPercentageBound)) {
+        ShuffleUI::MakeWidget("Rotating", "Auto", true);
+    }
+    ShuffleUI::MakeWidget("Rotating", "Auto", false);
 
     // move all motors to match distanceFeet
     mFrontLeft.setDrivePositionSetpoint(distanceFeet);
@@ -202,10 +179,17 @@ void SwerveDrive::simpleAuto(double angleRadians, double distanceFeet)
     mBackRight.setDrivePositionSetpoint(distanceFeet);
 
     // wait until drive movement is finished
-    while (isDriveFinished(drivePercentageBound));
+    // TODO: add timer
+    while (!isDriveFinished(drivePercentageBound)) {
+        ShuffleUI::MakeWidget("Moving", "Auto", true);
+    }
+    ShuffleUI::MakeWidget("Moving", "Auto", false);
+}
 
+// TODO: move to library
+bool SwerveDrive::isDriveFinished(double percentageBound){
+    return (mBackLeft.isFinished(percentageBound) && mBackRight.isFinished(percentageBound) && mFrontLeft.isFinished(percentageBound) && mFrontRight.isFinished(percentageBound));
 
-    
 }
 
 /**

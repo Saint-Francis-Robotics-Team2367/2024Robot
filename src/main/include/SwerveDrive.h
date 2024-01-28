@@ -67,7 +67,6 @@ public:
     void autoMove(double angleRadians, double distanceFeet);
     void displayDriveTelemetry();
     void simpleAuto(double angleRadians, double distanceFeet);
-    bool isRotationFinished(double startAngle, double currAngle, double percentageBound);
     bool isDriveFinished(double percentageBound);
 
 
