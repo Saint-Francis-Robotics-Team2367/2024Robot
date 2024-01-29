@@ -220,6 +220,24 @@ void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
 }
 
 /**
+ * Resets odometry position 
+ * (used in auto config)
+*/
+void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot) {
+    m_odometry.ResetPosition(
+        m_NavX.getRotation2d(), 
+        {
+            mBackLeft.getModulePosition(), 
+            mFrontLeft.getModulePosition(), 
+            mFrontRight.getModulePosition(), 
+            mBackRight.getModulePosition() 
+        },
+        frc::Pose2d{trans, rot}
+    );
+    
+}
+
+/**
  * Uses shuffleUI to print to driveTab
  * Uses gyro widget
  * Flips angle gyro if module has negative velocity

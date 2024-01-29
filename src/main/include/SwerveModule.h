@@ -16,6 +16,8 @@
 #include "Constants.h"
 #include "util/ShuffleUI.h"
 #include "util/ControlUtil.h"
+#include "frc/kinematics/SwerveModulePosition.h"
+#include "frc/geometry/Rotation2d.h"
 
 // Steer PID values(custom, untuned)
 constexpr float steerP = 0.60; // prev 0.76
@@ -94,6 +96,7 @@ public:
     // TODO: Test this
     void setModuleState(SwerveModuleState setpt, bool takeShortestPath = true);
     SwerveModuleState moduleSetpointGenerator(SwerveModuleState prevSetpoint, SwerveModuleState desiredSetpoint);
+    frc::SwerveModulePosition getModulePosition(); 
 
     // Encoders
     Rotation2d getSteerEncoder();

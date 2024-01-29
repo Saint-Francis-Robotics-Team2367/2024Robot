@@ -11,6 +11,12 @@
 #include "util/ShuffleUI.h"
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <networktables/NetworkTableEntry.h>
+#include "sensors/NavX.h"
+
+#include "frc/kinematics/SwerveDriveKinematics.h"
+#include "frc/kinematics/SwerveDriveOdometry.h"
+#include <pathplanner/lib/path/PathPlannerTrajectory.h>
+#include <pathplanner/lib/path/PathPlannerPath.h>
 
 // Motor/CAN IDs
 #define FLsteerID 11
@@ -49,6 +55,29 @@ private:
 
     SwerveDriveKinematics m_kinematics = SwerveDriveKinematics(wheelPs);
 
+    NavX m_NavX = NavX(); 
+
+    // wpi lib class ver of kinemactics used to initialize odometry
+    frc::SwerveDriveKinematics<4> frckinematics{ 
+        frc::Translation2d{0.7239_m, 0.7239_m},
+        frc::Translation2d{0.7239_m, -0.7239_m},
+        frc::Translation2d{-0.7239_m, 0.7239_m},
+        frc::Translation2d{-0.7239_m, -0.7239_m},
+    };
+
+    frc::SwerveDriveOdometry<4> m_odometry{
+        frckinematics,
+        m_NavX.getRotation2d(), 
+        // might need to edit order of motors (double check)
+        {
+            mBackLeft.getModulePosition(), 
+            mFrontLeft.getModulePosition(), 
+            mFrontRight.getModulePosition(), 
+            mBackRight.getModulePosition() 
+        },
+        frc::Pose2d{0_m, 0_m, 0_deg}
+    };
+
     // Module Level functions
     void runModules(); // Private - do not call outside of init
 
@@ -62,5 +91,6 @@ public:
     bool stopModules();
     void orientModules(double FL, double FR, double BL, double BR);
     void autoMove(double angleRadians, double distanceFeet);
+    void resetOdometry(frc::Translation2d trans, frc::Rotation2d angle);
     void displayDriveTelemetry();
 };
