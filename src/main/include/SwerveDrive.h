@@ -18,6 +18,7 @@
 #include <pathplanner/lib/path/PathPlannerTrajectory.h>
 #include <pathplanner/lib/path/PathPlannerPath.h>
 
+
 // Motor/CAN IDs
 #define FLsteerID 11
 #define FLdriveID 18
@@ -78,10 +79,13 @@ private:
         frc::Pose2d{0_m, 0_m, 0_deg}
     };
 
+    
+    
     // Module Level functions
     void runModules(); // Private - do not call outside of init
 
 public:
+    char state = 't';
     // TODO overload - pass Point2d + rotation, it figures it out
     // void Drive(Translation2d translation, Rotation2d rotation);
     void Drive(double rightX, double leftX, double leftY, double fieldRelativeGyro);
@@ -92,5 +96,7 @@ public:
     void orientModules(double FL, double FR, double BL, double BR);
     void autoMove(double angleRadians, double distanceFeet);
     void resetOdometry(frc::Translation2d trans, frc::Rotation2d angle);
+    frc::Pose2d getOdometryPose();
+    void updateOdometry();
     void displayDriveTelemetry();
 };

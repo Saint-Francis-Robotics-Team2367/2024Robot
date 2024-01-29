@@ -20,12 +20,14 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   mDrive.enableModules();
+  mDrive.state = 'a';
 }
 void Robot::AutonomousPeriodic()
 {
 }
 void Robot::TeleopInit()
 {
+  mDrive.state = 't'; 
   mDrive.enableModules();
   mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);

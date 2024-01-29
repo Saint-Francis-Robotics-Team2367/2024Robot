@@ -237,6 +237,24 @@ void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot) {
     
 }
 
+frc::Pose2d SwerveDrive::getOdometryPose()
+{
+    return m_odometry.GetPose(); 
+}
+
+void SwerveDrive::updateOdometry() 
+{
+    m_odometry.Update(
+        -m_NavX.getRotation2d(), 
+        {
+            mBackLeft.getModulePosition(), 
+            mFrontLeft.getModulePosition(), 
+            mFrontRight.getModulePosition(), 
+            mBackRight.getModulePosition() 
+        }
+    );
+}
+
 /**
  * Uses shuffleUI to print to driveTab
  * Uses gyro widget

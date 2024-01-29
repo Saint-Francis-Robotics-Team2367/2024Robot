@@ -69,10 +69,10 @@ public:
     bool moduleInhibit = true;         // True to stop the motors
 
     // Module Constraints
-    const int maxRPMFreeSpeed = moduleMaxRPM;
-    const float maxDriveAccelerationFPS = 7.603; // Feet per sec2
-    const float maxDriveAccelerationRPM = 2665.993;
-    const float maxSteerVelocity = 189.2; // Radians per sec
+    static constexpr int maxRPMFreeSpeed = moduleMaxRPM;
+    static constexpr float maxDriveAccelerationFPS = 7.603; // Feet per sec2
+    static constexpr float maxDriveAccelerationRPM = 2665.993;
+    static constexpr float maxSteerVelocity = 189.2; // Radians per sec
 
     const int maxSteerCurrent = 20; // Maximum current to steer motor
     const int maxDriveCurrent = 20; // Maximum current to steer motor
