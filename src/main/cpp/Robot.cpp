@@ -18,7 +18,6 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   mDrive.enableModules();
-  mDrive.autoMove(M_PI / 4, 5);
 }
 void Robot::AutonomousPeriodic()
 {
