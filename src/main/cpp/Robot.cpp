@@ -38,15 +38,15 @@ void Robot::TeleopPeriodic()
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
   double leftTrigger = ctr.GetL2Axis();
   int dPad = ctr.GetPOV();
+  bool rumbleController = false;
 
   // Driver Information
   frc::SmartDashboard::PutNumber("leftX", leftX);
   frc::SmartDashboard::PutNumber("leftY", leftY);
   frc::SmartDashboard::PutBoolean("TargetFound?", mLimelight.isSpeakerTagDetected());
   if (!mGyro.gyro.IsConnected()) {
-    ctr.SetRumble(frc::GenericHID::RumbleType::kRightRumble, 0.5);
+    rumbleController = true;
   }
-  ctr.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
 
   // Teleop States
   bool driveTranslating = !(leftX == 0 && leftY == 0);
@@ -55,13 +55,13 @@ void Robot::TeleopPeriodic()
   bool preparingToShoot = leftTrigger > 0.2;
 
   // Decide drive modes
-  if (dPad >= 0)
+  if (dPad >= 0) // SNAP mode
   {
     // Snap condition
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
     mHeadingController.setSetpointPOV(dPad);
   }
-  else if (preparingToShoot && !driveTurning) 
+  else if (preparingToShoot && !driveTurning) // ALIGN(scoring) mode
   {
     if (mLimelight.isSpeakerTagDetected()) {
       Pose3d target = mLimelight.getTargetPoseRobotSpace();
@@ -74,10 +74,10 @@ void Robot::TeleopPeriodic()
       leftY = (leftY / ctrPercent) * 0.3;
 
     } else {
-      ctr.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
+      rumbleController = true;
     }
   }
-  else
+  else // Normal driving mode
   {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   }
@@ -99,6 +99,9 @@ void Robot::TeleopPeriodic()
     mGyro.getBoundedAngleCCW(),
     mGyro.gyro.IsConnected()
   );
+  if (rumbleController) {
+    ctr.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
+  }
 
   // Module Telemetry
   mDrive.displayDriveTelemetry();
