@@ -11,6 +11,7 @@
 #include "util/ShuffleUI.h"
 #include <thread>
 #include "SwerveDrive.h"
+#include "Trajectory.h"
 #include "util/ControlUtil.h"
 #include "sensors/NavX.h"
 #include "swerve/SwerveHeadingController.h"
@@ -43,6 +44,7 @@ public:
   // Modules/Devices
   frc::PS5Controller ctr = frc::PS5Controller(0);
   SwerveDrive mDrive = SwerveDrive();
+  Trajectory mTraj = Trajectory(mDrive);
   NavX mGyro = NavX();
   Limelight mLimelight;
   // frc::Joystick ctr = frc::Joystick(0);

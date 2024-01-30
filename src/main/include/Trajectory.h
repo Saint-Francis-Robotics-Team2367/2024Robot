@@ -23,12 +23,14 @@
 
 using namespace pathplanner; 
 
-class Trajectory : public SwerveDrive
+class Trajectory
 {
-private: 
-    
-
+private:
+    SwerveDrive &mDrive;
 public:
+    Trajectory(SwerveDrive &mDriveInput) : mDrive(mDriveInput) {
+    }
+
     void driveToState(PathPlannerTrajectory::State const &state);
 
     void follow(std::string const &traj_dir); // add max acc and vel

@@ -24,8 +24,8 @@ static frc::HolonomicDriveController controller{
  */
 void Trajectory::driveToState(PathPlannerTrajectory::State const &state) 
 {
-    frc::ChassisSpeeds const correction = controller.Calculate(getOdometryPose(), frc::Pose2d{state.position, state.heading}, state.velocity, state.targetHolonomicRotation);
-    Drive(ChassisSpeeds{correction.vx.value(), correction.vy.value(), correction.omega.value()},Rotation2d{state.targetHolonomicRotation.Radians().value()}, false);
+    frc::ChassisSpeeds const correction = controller.Calculate(mDrive.getOdometryPose(), frc::Pose2d{state.position, state.heading}, state.velocity, state.targetHolonomicRotation);
+    mDrive.Drive(ChassisSpeeds{correction.vx.value(), correction.vy.value(), correction.omega.value()},Rotation2d{state.targetHolonomicRotation.Radians().value()}, false);
 
 }
 
@@ -40,17 +40,17 @@ void Trajectory::follow(std::string const &traj_dir)
     auto const initialState = traj.getInitialState();
     auto const initialPose = initialState.position; 
 
-    resetOdometry(initialPose, initialState.targetHolonomicRotation); 
+    mDrive.resetOdometry(initialPose, initialState.targetHolonomicRotation); 
 
     frc::Timer trajTimer; 
     trajTimer.Start(); 
 
-    while ((state == 'a') && (trajTimer.Get() <= traj.getTotalTime())) {
+    while ((mDrive.state == 'a') && (trajTimer.Get() <= traj.getTotalTime())) {
         auto currentTime = trajTimer.Get();
         auto sample = traj.sample(currentTime);
 
         driveToState(sample);
-        updateOdometry(); 
+        mDrive.updateOdometry(); 
 
 
         using namespace std::chrono_literals;
@@ -59,7 +59,7 @@ void Trajectory::follow(std::string const &traj_dir)
         std::this_thread::sleep_for(20ms); 
 
 
-        stopModules();
+        mDrive.stopModules();
     }
 
 }

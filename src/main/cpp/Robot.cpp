@@ -21,6 +21,7 @@ void Robot::AutonomousInit()
 {
   mDrive.enableModules();
   mDrive.state = 'a';
+  mTraj.follow("Straight");
 }
 void Robot::AutonomousPeriodic()
 {
