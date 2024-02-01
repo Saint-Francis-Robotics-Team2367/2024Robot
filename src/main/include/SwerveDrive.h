@@ -26,7 +26,7 @@
 #define BL_CAN_ID 2 // updated
 
 #define BRsteerID 1
-#define BRdriveID 42
+#define BRdriveID 2
 #define BR_CAN_ID 0 // updated
 
 // #define maxRot
