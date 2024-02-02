@@ -10,7 +10,7 @@
 
 #include "util/ShuffleUI.h"
 #include <thread>
-#include "SwerveDrive.h"
+
 #include "util/ControlUtil.h"
 #include "sensors/NavX.h"
 #include "swerve/SwerveHeadingController.h"
@@ -18,6 +18,9 @@
 #include <frc/Joystick.h>
 #include "sensors/Limelight.h"
 #include <frc/GenericHID.h>
+
+#include "SwerveDrive.h"
+#include "Intake.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -45,6 +48,7 @@ public:
   SwerveDrive mDrive = SwerveDrive();
   NavX mGyro = NavX();
   Limelight mLimelight;
+  Intake mIntake;
   // frc::Joystick ctr = frc::Joystick(0);
 
   // Teleop Controls
