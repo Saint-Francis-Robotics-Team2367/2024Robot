@@ -44,8 +44,8 @@ public:
 
   // Modules/Devices
   frc::PS5Controller ctr = frc::PS5Controller(0);
-  SwerveDrive mDrive = SwerveDrive();
   NavX mGyro = NavX();
+  SwerveDrive mDrive = SwerveDrive(mGyro);
   Limelight mLimelight;
   // frc::Joystick ctr = frc::Joystick(0);
 

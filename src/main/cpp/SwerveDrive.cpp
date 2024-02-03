@@ -224,7 +224,7 @@ void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
 */
 void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot) {
     m_odometry.ResetPosition(
-        m_NavX.getRotation2d(), 
+        mGyro.getRotation2d(), 
         {
             mBackLeft.getModulePosition(), 
             mFrontLeft.getModulePosition(), 
@@ -250,7 +250,7 @@ frc::Pose2d SwerveDrive::getOdometryPose()
 void SwerveDrive::updateOdometry() 
 {
     m_odometry.Update(
-        -m_NavX.getRotation2d(), 
+        -mGyro.getRotation2d(), 
         {
             mBackLeft.getModulePosition(), 
             mFrontLeft.getModulePosition(), 

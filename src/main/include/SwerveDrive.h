@@ -33,7 +33,7 @@
 #define BL_CAN_ID 2 // updated
 
 #define BRsteerID 1
-#define BRdriveID 42
+#define BRdriveID 5
 #define BR_CAN_ID 0 // updated
 
 // #define maxRot
@@ -56,7 +56,7 @@ private:
 
     SwerveDriveKinematics m_kinematics = SwerveDriveKinematics(wheelPs);
 
-    NavX m_NavX = NavX(); 
+    NavX &mGyro; 
 
     // wpi lib class ver of kinemactics used to initialize odometry
     frc::SwerveDriveKinematics<4> frckinematics{ 
@@ -68,7 +68,7 @@ private:
 
     frc::SwerveDriveOdometry<4> m_odometry{
         frckinematics,
-        m_NavX.getRotation2d(), 
+        mGyro.getRotation2d(), 
         // might need to edit order of motors (double check)
         {
             mBackLeft.getModulePosition(), 
@@ -85,6 +85,9 @@ private:
     void runModules(); // Private - do not call outside of init
 
 public:
+    SwerveDrive(NavX &mGyroInput) : mGyro(mGyroInput) {
+    }
+
     char state = 't';
     // TODO overload - pass Point2d + rotation, it figures it out
     // void Drive(Translation2d translation, Rotation2d rotation);
