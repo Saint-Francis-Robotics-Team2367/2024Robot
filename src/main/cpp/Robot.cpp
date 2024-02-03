@@ -23,7 +23,8 @@ void Robot::AutonomousInit()
   mDrive.state = 'a';
 
   Trajectory mTraj = Trajectory(mDrive);
-  mTraj.follow("Straight");
+  // mTraj.follow("Straight");
+  mTraj.follow("Curve");
 }
 void Robot::AutonomousPeriodic()
 {

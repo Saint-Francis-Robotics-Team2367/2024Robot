@@ -34,7 +34,7 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
 */
 void Trajectory::follow(std::string const &traj_dir) 
 {
-    auto path = PathPlannerPath::fromPathFile("example path");
+    auto path = PathPlannerPath::fromPathFile(traj_dir);
     PathPlannerTrajectory traj = PathPlannerTrajectory(path, frc::ChassisSpeeds(), frc::Rotation2d(0_rad));
 
     auto const initialState = traj.getInitialState();
@@ -51,6 +51,8 @@ void Trajectory::follow(std::string const &traj_dir)
 
         driveToState(sample);
         mDrive.updateOdometry(); 
+
+        // note: odometry values are in feet; pathplanner values are in meters
         frc::SmartDashboard::PutNumber("curr pose x", mDrive.getOdometryPose().Translation().X().value());
         frc::SmartDashboard::PutNumber("curr pose y", mDrive.getOdometryPose().Translation().X().value());
 
