@@ -51,6 +51,8 @@ void Trajectory::follow(std::string const &traj_dir)
 
         driveToState(sample);
         mDrive.updateOdometry(); 
+        frc::SmartDashboard::PutNumber("curr pose x", mDrive.getOdometryPose().Translation().X().value());
+        frc::SmartDashboard::PutNumber("curr pose y", mDrive.getOdometryPose().Translation().X().value());
 
 
         using namespace std::chrono_literals;
@@ -58,8 +60,7 @@ void Trajectory::follow(std::string const &traj_dir)
         // refresh rate of holonomic drive controller's PID controllers (edit if needed)
         std::this_thread::sleep_for(20ms); 
 
-
-        mDrive.stopModules();
     }
+    mDrive.stopModules();
 
 }

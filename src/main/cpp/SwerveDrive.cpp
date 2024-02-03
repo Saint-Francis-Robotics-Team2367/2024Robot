@@ -13,7 +13,6 @@
 
 void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldRelativeGyro)
 {
-    
     if ((leftY == 0) && (leftX == 0) && (rightX == 0))
     {
 
@@ -237,11 +236,17 @@ void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot) {
     
 }
 
+/**
+ * Retrieves pose as recorded by the odometry
+*/
 frc::Pose2d SwerveDrive::getOdometryPose()
 {
     return m_odometry.GetPose(); 
 }
 
+/**
+ * Updates odometry with current module positions 
+*/
 void SwerveDrive::updateOdometry() 
 {
     m_odometry.Update(
