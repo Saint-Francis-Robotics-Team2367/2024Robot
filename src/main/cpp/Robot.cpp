@@ -16,13 +16,18 @@ void Robot::RobotPeriodic()
 }
 
 void Robot::AutonomousInit()
-{
+{ 
+  std::cout << "ENTER auto init" << std::endl;
   mDrive.enableModules();
   mDrive.autoMove(M_PI / 4, 5.0);
+  
+  std::cout << "EXIT auto init" << std::endl;
 }
+
 void Robot::AutonomousPeriodic()
 {
 }
+
 void Robot::TeleopInit()
 {
   mDrive.enableModules();
@@ -39,7 +44,6 @@ void Robot::TeleopPeriodic()
   leftX = ControlUtil::limitPositiveAcceleration(leftX, leftRawX, 0.1, 1.0);
   leftY = ControlUtil::limitPositiveAcceleration(leftY, leftRawY, 0.1, 1.0);
   
-
   int dPad = ctr.GetPOV();
 
   // Teleop States
