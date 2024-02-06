@@ -57,6 +57,7 @@ public:
     float driveVelocitySetpoint;
     float drivePositionSetpoint;
     float steerAngleSetpoint;
+    SwerveModuleState prevSetpoint = SwerveModuleState(0.0, Rotation2d(0.0));
 
     enum driveModeType
     {

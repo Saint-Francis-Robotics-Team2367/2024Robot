@@ -91,13 +91,17 @@ void SwerveModule::setModuleState(SwerveModuleState setpt, bool takeShortestPath
 {
     if (takeShortestPath) 
     {
-        SwerveModuleState outputs = moduleSetpointGenerator(getModuleState(), setpt);
+        SwerveModuleState outputs = moduleSetpointGenerator(prevSetpoint, setpt);
         setDriveVelocitySetpoint(outputs.getSpeedFPS());
         setSteerAngleSetpoint(outputs.getRot2d().getRadians());
+        prevSetpoint.setRot2d(outputs.getRot2d());
+        prevSetpoint.setSpeedFPS(outputs.getSpeedFPS());
     }
     else {
         driveVelocitySetpoint = setpt.getSpeedFPS();
         steerAngleSetpoint = setpt.getRot2d().getRadians();
+        prevSetpoint.setRot2d(setpt.getRot2d());
+        prevSetpoint.setSpeedFPS(setpt.getSpeedFPS());
     }
     
 }
@@ -109,17 +113,15 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     double desAngle = desiredSetpoint.getRot2d().getRadians();
     double desVel = desiredSetpoint.getSpeedFPS();
     
-    double limitVel = ControlUtil::limitPositiveAcceleration(currVel, desVel, maxDriveAccelerationRPM, 0.02);
+    double limitVel = ControlUtil::limitPositiveAcceleration(currVel, desVel, maxDriveAccelerationRPM, loopTime);
     
     if (steerID == 11)
     {
-        frc::SmartDashboard::PutNumber("TimerVal", aTimer.Get().value());
         frc::SmartDashboard::PutNumber("LimitedVel", limitVel);
         frc::SmartDashboard::PutNumber("DesiredVel", desVel);
         frc::SmartDashboard::PutBoolean("AccLimited?", desVel != limitVel);
     }
-    // desVel = limitVel;
-    aTimer.Reset();
+    desVel = limitVel;
     
 
     double dist = fabs(currAngle - desAngle);
