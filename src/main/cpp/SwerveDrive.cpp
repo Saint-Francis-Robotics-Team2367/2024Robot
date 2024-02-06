@@ -110,7 +110,12 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
         frc::SmartDashboard::PutBoolean("BOTCENTRIC!", true);
     }
 
-    std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(desiredSpeeds);
+    Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, desiredSpeeds.omegaRadiansPerSecond * loopTime);
+    Twist2d robotTwist = Pose2d::log(robotPoseVel);
+    ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
+
+
+    std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(newDesiredSpeeds);
     moduleStates = m_kinematics.desaturateWheelSpeeds(moduleStates, moduleMaxFPS);
     /**
      * Kinematics class returns module orientations in polar degrees

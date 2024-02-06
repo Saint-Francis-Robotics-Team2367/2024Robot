@@ -50,6 +50,14 @@ public:
         return radians;
     }
 
+    double getCos() {
+        return cos(radians);
+    }
+
+    double getSin() {
+        return sin(radians);
+    }
+
     /**
      * Bound from 0 to 2pi
     */
