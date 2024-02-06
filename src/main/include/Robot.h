@@ -53,6 +53,7 @@ public:
 
   // Teleop Controls
   double ctrPercent = 0.7;
+  double ctrPercentAim = 0.3;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);

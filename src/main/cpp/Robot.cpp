@@ -54,7 +54,7 @@ void Robot::TeleopPeriodic()
   // Teleop States
   bool driveTranslating = !(leftX == 0 && leftY == 0);
   bool driveTurning = !(rightX == 0);
-  double rot = rightX;
+  double rot = rightX * moduleMaxRot;
   bool preparingToShoot = leftTrigger > 0.2;
 
   // Decide drive modes
@@ -73,8 +73,8 @@ void Robot::TeleopPeriodic()
       mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
       mHeadingController.setSetpoint(zeroSetpoint);
       // limit robot speed temporarily
-      leftX = (leftX / ctrPercent) * 0.3;
-      leftY = (leftY / ctrPercent) * 0.3;
+      leftX = (leftX / ctrPercent) * ctrPercentAim;
+      leftY = (leftY / ctrPercent) * ctrPercentAim;
 
     } else {
       rumbleController = true;
@@ -98,7 +98,7 @@ void Robot::TeleopPeriodic()
 
   // Drive function
   mDrive.Drive(
-    ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, rot * moduleMaxRot), 
+    ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, rot), 
     mGyro.getBoundedAngleCCW(),
     mGyro.gyro.IsConnected()
   );
