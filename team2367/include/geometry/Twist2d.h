@@ -9,7 +9,7 @@ public:
     double dtheta;
 
 
-    Twist2d(double dx, double dy, double dtheta) {
+    Twist2d(double dx_, double dy_, double dtheta_) {
         dx = dx;
         dy = dy;
         dtheta = dtheta;

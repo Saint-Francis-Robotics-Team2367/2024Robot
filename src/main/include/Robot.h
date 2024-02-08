@@ -20,7 +20,7 @@
 #include <frc/GenericHID.h>
 
 #include "SwerveDrive.h"
-#include "Intake.h"
+// #include "Intake.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -48,7 +48,7 @@ public:
   SwerveDrive mDrive = SwerveDrive();
   NavX mGyro = NavX();
   Limelight mLimelight;
-  Intake mIntake;
+  // Intake mIntake;
   // frc::Joystick ctr = frc::Joystick(0);
 
   // Teleop Controls

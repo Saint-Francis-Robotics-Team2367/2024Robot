@@ -51,7 +51,7 @@ void Shooter::run()
         }
         else
         {
-            tiltController.SetReference(tiltSetpoint, rev::CANSparkBase::ControlType::kVelocity);
+            tiltController.SetReference(tiltSetpoint, rev::CANSparkBase::ControlType::kPosition);
         }
     }
 }

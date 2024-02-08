@@ -3,7 +3,7 @@
 #include <string>
 #include <util/ShuffleUI.h>
 
-#define intakeMotorID 6
+#define intakeMotorID 19
 
 class Intake
 {

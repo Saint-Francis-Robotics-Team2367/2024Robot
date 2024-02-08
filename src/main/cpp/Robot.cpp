@@ -9,7 +9,7 @@ void Robot::RobotInit()
 {
   mDrive.initModules();
   mGyro.init();
-  mIntake.init();
+  // mIntake.init();
 }
 void Robot::RobotPeriodic()
 {
@@ -40,7 +40,7 @@ void Robot::TeleopPeriodic()
   double leftTrigger = ctr.GetL2Axis();
   int dPad = ctr.GetPOV();
   bool rumbleController = false;
-  Intake::intakeState intakeMode = Intake::buttonsToState(ctr.GetL1Button(), ctr.GetR1Button());
+  // Intake::intakeState intakeMode = Intake::buttonsToState(ctr.GetL1Button(), ctr.GetR1Button());
   
 
   // Driver Information
@@ -102,7 +102,7 @@ void Robot::TeleopPeriodic()
     mGyro.getBoundedAngleCCW(),
     mGyro.gyro.IsConnected()
   );
-  mIntake.setState(intakeMode, true, 1.0);
+  // mIntake.setState(intakeMode, true, 1.0);
   if (rumbleController) {
     ctr.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
   }

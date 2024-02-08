@@ -16,8 +16,8 @@ void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldR
     if ((leftY == 0) && (leftX == 0) && (rightX == 0))
     {
 
-        SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
-        SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
+        // SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
+        // SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
 
         // mFrontLeft.setModuleState(FLBRstop, false);
         // mFrontRight.setModuleState(FRBLstop, false);
@@ -88,18 +88,18 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
 
     if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon) 
     {
-        SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
-        SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
+        // SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
+        // SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
 
-        mFrontLeft.setModuleState(FLBRstop, true);
-        mFrontRight.setModuleState(FRBLstop, true);
-        mBackLeft.setModuleState(FRBLstop, true);
-        mBackRight.setModuleState(FLBRstop, true);
+        // mFrontLeft.setModuleState(FLBRstop, true);
+        // mFrontRight.setModuleState(FRBLstop, true);
+        // mBackLeft.setModuleState(FRBLstop, true);
+        // mBackRight.setModuleState(FLBRstop, true);
 
-        // mFrontLeft.setDriveVelocitySetpoint(0.0);
-        // mFrontRight.setDriveVelocitySetpoint(0.0);
-        // mBackLeft.setDriveVelocitySetpoint(0.0);
-        // mBackRight.setDriveVelocitySetpoint(0.0);
+        mFrontLeft.setDriveVelocitySetpoint(0.0);
+        mFrontRight.setDriveVelocitySetpoint(0.0);
+        mBackLeft.setDriveVelocitySetpoint(0.0);
+        mBackRight.setDriveVelocitySetpoint(0.0);
         return;
     }
 
@@ -109,13 +109,15 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     } else {
         frc::SmartDashboard::PutBoolean("BOTCENTRIC!", true);
     }
+    // ShuffleUI::MakeWidget("origX", "drive", desiredSpeeds.vxMetersPerSecond);
+    // ShuffleUI::MakeWidget("origY", "drive", desiredSpeeds.vyMetersPerSecond);
+    // Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
+    // Twist2d robotTwist = Pose2d::log(robotPoseVel);
+    // ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
+    // ShuffleUI::MakeWidget("DesX", "drive", newDesiredSpeeds.vxMetersPerSecond);
+    // ShuffleUI::MakeWidget("DesY", "drive", newDesiredSpeeds.vyMetersPerSecond);
 
-    Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, desiredSpeeds.omegaRadiansPerSecond * loopTime);
-    Twist2d robotTwist = Pose2d::log(robotPoseVel);
-    ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
-
-
-    std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(newDesiredSpeeds);
+    std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(desiredSpeeds);
     moduleStates = m_kinematics.desaturateWheelSpeeds(moduleStates, moduleMaxFPS);
     /**
      * Kinematics class returns module orientations in polar degrees

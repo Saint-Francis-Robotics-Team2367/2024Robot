@@ -91,7 +91,7 @@ void SwerveModule::setModuleState(SwerveModuleState setpt, bool takeShortestPath
 {
     if (takeShortestPath) 
     {
-        SwerveModuleState outputs = moduleSetpointGenerator(prevSetpoint, setpt);
+        SwerveModuleState outputs = moduleSetpointGenerator(getModuleState(), setpt);
         setDriveVelocitySetpoint(outputs.getSpeedFPS());
         setSteerAngleSetpoint(outputs.getRot2d().getRadians());
         prevSetpoint.setRot2d(outputs.getRot2d());
@@ -121,7 +121,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
         frc::SmartDashboard::PutNumber("DesiredVel", desVel);
         frc::SmartDashboard::PutBoolean("AccLimited?", desVel != limitVel);
     }
-    desVel = limitVel;
+    // desVel = limitVel;
     
 
     double dist = fabs(currAngle - desAngle);
