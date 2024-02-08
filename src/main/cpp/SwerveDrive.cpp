@@ -222,9 +222,7 @@ void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
  * Resets odometry position 
  * (used in auto config)
 */
-void SwerveDrive::resetOdometry(Translation2d trans, frc::Rotation2d rot) {
-    frc::Translation2d trans2{units::meter_t(trans.x()), units::meter_t(trans.y())};
-
+void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot) {
     m_odometry.ResetPosition(
         mGyro.getRotation2d(), 
         {
@@ -233,17 +231,17 @@ void SwerveDrive::resetOdometry(Translation2d trans, frc::Rotation2d rot) {
             mFrontRight.getModulePosition(), 
             mBackRight.getModulePosition() 
         },
-        frc::Pose2d{trans2, rot}
+        frc::Pose2d{trans, rot}
     );
     
 }
 
 /**
- * Retrieves pose as recorded by the odometry
+ * Retrieves odometry pose in feet 
 */
 frc::Pose2d SwerveDrive::getOdometryPose()
 {
-    return m_odometry.GetPose(); 
+    return m_odometry.GetPose();
 }
 
 /**

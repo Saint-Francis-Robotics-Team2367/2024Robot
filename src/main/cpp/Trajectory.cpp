@@ -21,6 +21,7 @@ static frc::HolonomicDriveController controller{
 
 /**
  * Drives robot to the next state on trajectory
+ * note: odometry must be in meters!!
  */
 void Trajectory::driveToState(PathPlannerTrajectory::State const &state) 
 {
@@ -43,8 +44,7 @@ void Trajectory::follow(std::string const &traj_dir)
     PathPlannerTrajectory traj = PathPlannerTrajectory(path, frc::ChassisSpeeds(), frc::Rotation2d(0_rad));
 
     auto const initialState = traj.getInitialState();
-    auto const initialPose = Translation2d{initialState.position.X().value() * 3.281, initialState.position.Y().value() * 3.281}; // in feet 
-
+    auto const initialPose = initialState.position; 
     mDrive.resetOdometry(initialPose, initialState.heading); 
 
     frc::Timer trajTimer; 
@@ -57,8 +57,8 @@ void Trajectory::follow(std::string const &traj_dir)
         driveToState(sample);
         mDrive.updateOdometry(); 
 
-        frc::SmartDashboard::PutNumber("curr pose x", mDrive.getOdometryPose().Translation().X().value());
-        frc::SmartDashboard::PutNumber("curr pose y", mDrive.getOdometryPose().Translation().Y().value());
+        frc::SmartDashboard::PutNumber("curr pose x meters", mDrive.getOdometryPose().Translation().X().value());
+        frc::SmartDashboard::PutNumber("curr pose y meters", mDrive.getOdometryPose().Translation().Y().value());
 
 
         using namespace std::chrono_literals;

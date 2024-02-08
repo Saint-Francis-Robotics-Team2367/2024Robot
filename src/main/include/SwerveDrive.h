@@ -98,7 +98,7 @@ public:
     bool stopModules();
     void orientModules(double FL, double FR, double BL, double BR);
     void autoMove(double angleRadians, double distanceFeet);
-    void resetOdometry(Translation2d trans, frc::Rotation2d angle);
+    void resetOdometry(frc::Translation2d trans, frc::Rotation2d angle);
     frc::Pose2d getOdometryPose();
     void updateOdometry();
     void displayDriveTelemetry();
