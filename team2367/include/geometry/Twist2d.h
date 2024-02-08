@@ -10,9 +10,9 @@ public:
 
 
     Twist2d(double dx_, double dy_, double dtheta_) {
-        dx = dx;
-        dy = dy;
-        dtheta = dtheta;
+        dx = dx_;
+        dy = dy_;
+        dtheta = dtheta_;
     }
 
     double norm() {

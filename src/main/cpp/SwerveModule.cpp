@@ -42,6 +42,7 @@ void SwerveModule::initMotors()
     m_pidController.SetFF(kFF);
     m_pidController.SetOutputRange(kMinOutput, kMaxOutput);
     steerCTR.EnableContinuousInput(0, 2 * M_PI);
+    steerCTR.SetIZone(steerIZone);
 
     // driveMotor->SetClosedLoopRampRate(0.5);
 
@@ -187,6 +188,9 @@ void SwerveModule::run()
     // Constantly enforce motor configurations
     steerMotor->SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
     driveMotor->SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
+
+    steerMotor->SetSmartCurrentLimit(PowerModule::swerveSteerCurrent);
+    driveMotor->SetSmartCurrentLimit(PowerModule::swerveDriveCurrent);
     
 
 

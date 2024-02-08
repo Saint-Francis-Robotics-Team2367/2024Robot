@@ -9,10 +9,12 @@ void Robot::RobotInit()
 {
   mDrive.initModules();
   mGyro.init();
+  
   // mIntake.init();
 }
 void Robot::RobotPeriodic()
 {
+
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
   frc::SmartDashboard::PutNumber("Mag", mGyro.getMagnetometerCW().getDegrees());
   frc::SmartDashboard::PutNumber("GyroConnected?", mGyro.gyro.IsConnected());
@@ -27,6 +29,7 @@ void Robot::AutonomousPeriodic()
 }
 void Robot::TeleopInit()
 {
+  PowerModule::init(true);
   mDrive.enableModules();
   mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
@@ -109,6 +112,7 @@ void Robot::TeleopPeriodic()
 
   // Module Telemetry
   mDrive.displayDriveTelemetry();
+  PowerModule::updateCurrentLimits();
 }
 
 void Robot::DisabledInit()

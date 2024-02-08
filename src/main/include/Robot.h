@@ -18,6 +18,7 @@
 #include <frc/Joystick.h>
 #include "sensors/Limelight.h"
 #include <frc/GenericHID.h>
+#include "control/PowerModule.h"
 
 #include "SwerveDrive.h"
 // #include "Intake.h"
@@ -57,4 +58,6 @@ public:
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
+  // PowerModule mPowerModule;
+  
 };
