@@ -4,6 +4,7 @@
 #include "SwerveModule.h"
 #include "Constants.h"
 #include "Robot.h"
+#include "geometry/Translation2d.h"
 
 #include <pathplanner/lib/path/PathPlannerTrajectory.h>
 #include <pathplanner/lib/path/PathPlannerPath.h>

@@ -19,12 +19,14 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
+  mGyro.init(); 
   mDrive.enableModules();
   mDrive.state = 'a';
 
   Trajectory mTraj = Trajectory(mDrive);
-  // mTraj.follow("Straight");
-  mTraj.follow("Curve");
+  mTraj.follow("Straight");
+  // mTraj.follow("Curve");
+
 }
 void Robot::AutonomousPeriodic()
 {

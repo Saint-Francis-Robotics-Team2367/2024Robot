@@ -13,7 +13,7 @@ static frc::HolonomicDriveController controller{
     frc::PIDController{revkP, 0, 0},
     frc::PIDController{revkP, 0, 0},
     frc::ProfiledPIDController<units::radian>{
-        10, -0.003, 0,
+        steerP, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
             units::radians_per_second_t(SwerveModule::maxSteerVelocity),
             units::radians_per_second_squared_t(SwerveModule::maxDriveAccelerationRPM)}}}; // need max angular acceleration 
@@ -25,7 +25,12 @@ static frc::HolonomicDriveController controller{
 void Trajectory::driveToState(PathPlannerTrajectory::State const &state) 
 {
     frc::ChassisSpeeds const correction = controller.Calculate(mDrive.getOdometryPose(), frc::Pose2d{state.position, state.heading}, state.velocity, state.targetHolonomicRotation);
-    mDrive.Drive(ChassisSpeeds{correction.vx.value(), correction.vy.value(), correction.omega.value()},Rotation2d{state.targetHolonomicRotation.Radians().value()}, false);
+
+    double vx_feet = correction.vx.value() * 3.281; 
+    double vy_feet = correction.vy.value() * 3.281;
+    double rotCompass = Rotation2d::compassToPolar(state.targetHolonomicRotation.Radians().value());
+    
+    mDrive.Drive(ChassisSpeeds{vx_feet, vy_feet, correction.omega.value()}, Rotation2d{rotCompass}, false);
 
 }
 
@@ -38,9 +43,9 @@ void Trajectory::follow(std::string const &traj_dir)
     PathPlannerTrajectory traj = PathPlannerTrajectory(path, frc::ChassisSpeeds(), frc::Rotation2d(0_rad));
 
     auto const initialState = traj.getInitialState();
-    auto const initialPose = initialState.position; 
+    auto const initialPose = Translation2d{initialState.position.X().value() * 3.281, initialState.position.Y().value() * 3.281}; // in feet 
 
-    mDrive.resetOdometry(initialPose, initialState.targetHolonomicRotation); 
+    mDrive.resetOdometry(initialPose, initialState.heading); 
 
     frc::Timer trajTimer; 
     trajTimer.Start(); 
@@ -52,9 +57,8 @@ void Trajectory::follow(std::string const &traj_dir)
         driveToState(sample);
         mDrive.updateOdometry(); 
 
-        // note: odometry values are in feet; pathplanner values are in meters
         frc::SmartDashboard::PutNumber("curr pose x", mDrive.getOdometryPose().Translation().X().value());
-        frc::SmartDashboard::PutNumber("curr pose y", mDrive.getOdometryPose().Translation().X().value());
+        frc::SmartDashboard::PutNumber("curr pose y", mDrive.getOdometryPose().Translation().Y().value());
 
 
         using namespace std::chrono_literals;

@@ -155,8 +155,10 @@ SwerveModuleState SwerveModule::getModuleState()
 frc::SwerveModulePosition SwerveModule::getModulePosition() {
     frc::SwerveModulePosition pos; 
 
-    pos.angle = frc::Rotation2d(units::radian_t(getSteerEncoder().getRadians())); 
-    pos.distance = units::meter_t(getDriveEncoderPos());
+    pos.angle = frc::Rotation2d(units::radian_t(Rotation2d::polarToCompass(getSteerEncoder().getRadians()))); 
+
+    // changes from encoder rotations to meters 
+    pos.distance = units::meter_t(getDriveEncoderPos() * moduleDriveRatio * wheelCircumFeet / 3.281);
 
     return pos; 
 }
@@ -235,6 +237,9 @@ double SwerveModule::getDriveEncoderVel()
     return driveEnc.GetVelocity();
 }
 
+/**
+ * in rotations 
+*/
 double SwerveModule::getDriveEncoderPos()
 {
     return driveEnc.GetPosition();

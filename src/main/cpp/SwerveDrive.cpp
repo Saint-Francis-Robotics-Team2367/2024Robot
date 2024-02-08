@@ -83,7 +83,7 @@ void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldR
 
 void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented)
 {
-    double desiredVx = desiredSpeeds.vxMetersPerSecond;
+    double desiredVx = desiredSpeeds.vxMetersPerSecond; // FEET PER SECOND
     double desiredVy = desiredSpeeds.vyMetersPerSecond;
 
     if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon) 
@@ -222,7 +222,9 @@ void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
  * Resets odometry position 
  * (used in auto config)
 */
-void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot) {
+void SwerveDrive::resetOdometry(Translation2d trans, frc::Rotation2d rot) {
+    frc::Translation2d trans2{units::meter_t(trans.x()), units::meter_t(trans.y())};
+
     m_odometry.ResetPosition(
         mGyro.getRotation2d(), 
         {
@@ -231,7 +233,7 @@ void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot) {
             mFrontRight.getModulePosition(), 
             mBackRight.getModulePosition() 
         },
-        frc::Pose2d{trans, rot}
+        frc::Pose2d{trans2, rot}
     );
     
 }
