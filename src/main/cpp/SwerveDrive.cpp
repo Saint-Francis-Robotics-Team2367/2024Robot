@@ -109,13 +109,14 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     } else {
         frc::SmartDashboard::PutBoolean("BOTCENTRIC!", true);
     }
-    // ShuffleUI::MakeWidget("origX", "drive", desiredSpeeds.vxMetersPerSecond);
-    // ShuffleUI::MakeWidget("origY", "drive", desiredSpeeds.vyMetersPerSecond);
-    // Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
-    // Twist2d robotTwist = Pose2d::log(robotPoseVel);
-    // ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
-    // ShuffleUI::MakeWidget("DesX", "drive", newDesiredSpeeds.vxMetersPerSecond);
-    // ShuffleUI::MakeWidget("DesY", "drive", newDesiredSpeeds.vyMetersPerSecond);
+    
+    ShuffleUI::MakeWidget("origX", "drive", desiredSpeeds.vxMetersPerSecond);
+    ShuffleUI::MakeWidget("origY", "drive", desiredSpeeds.vyMetersPerSecond);
+    Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
+    Twist2d robotTwist = Pose2d::log(robotPoseVel);
+    ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
+    ShuffleUI::MakeWidget("DesX", "drive", newDesiredSpeeds.vxMetersPerSecond);
+    ShuffleUI::MakeWidget("DesY", "drive", newDesiredSpeeds.vyMetersPerSecond);
 
     std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(desiredSpeeds);
     moduleStates = m_kinematics.desaturateWheelSpeeds(moduleStates, moduleMaxFPS);
