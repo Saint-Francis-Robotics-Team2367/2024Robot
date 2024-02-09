@@ -52,7 +52,7 @@ void Robot::TeleopPeriodic()
   }
 
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
-  double leftTrigger = ctr.GetR2Axis();
+  double rightTrigger = ctr.GetR2Axis();
   int dPad = ctr.GetPOV();
   bool rumbleController = false;
   // Intake::intakeState intakeMode = Intake::buttonsToState(ctr.GetL1Button(), ctr.GetR1Button());
@@ -70,7 +70,7 @@ void Robot::TeleopPeriodic()
   bool driveTranslating = !(leftX == 0 && leftY == 0);
   bool driveTurning = !(rightX == 0);
   double rot = rightX * moduleMaxRot;
-  bool preparingToShoot = leftTrigger > 0.2;
+  bool preparingToShoot = rightTrigger > 0.2;
 
   // Decide drive modes
   if (dPad >= 0) // SNAP mode
