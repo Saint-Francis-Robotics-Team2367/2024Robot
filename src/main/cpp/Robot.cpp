@@ -9,7 +9,7 @@ void Robot::RobotInit()
 {
   mDrive.initModules();
   mGyro.init();
-  
+
   // mIntake.init();
 }
 void Robot::RobotPeriodic()
@@ -38,31 +38,26 @@ void Robot::TeleopPeriodic()
 {
   // Controller inputs
   bool boost = ctr.GetL2Axis() > 0;
-  float boostMult = 0.8;
-  
+
   double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1);
   double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1);
 
-  if (!boost) {
-    leftX *= ctrPercent;
-    leftY *= ctrPercent;
-  } else {
-    leftX *= boostMult;
-    leftY *= boostMult;
-  }
+  leftX = ControlUtil::boostScaler(leftX, boost, boostPercent, ctrPercent);
+  leftY = ControlUtil::boostScaler(leftY, boost, boostPercent, ctrPercent);
 
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
+
   double rightTrigger = ctr.GetR2Axis();
   int dPad = ctr.GetPOV();
   bool rumbleController = false;
   // Intake::intakeState intakeMode = Intake::buttonsToState(ctr.GetL1Button(), ctr.GetR1Button());
-  
 
   // Driver Information
   frc::SmartDashboard::PutNumber("leftX", leftX);
   frc::SmartDashboard::PutNumber("leftY", leftY);
   frc::SmartDashboard::PutBoolean("TargetFound?", mLimelight.isSpeakerTagDetected());
-  if (!mGyro.gyro.IsConnected()) {
+  if (!mGyro.gyro.IsConnected())
+  {
     rumbleController = true;
   }
 
@@ -81,7 +76,8 @@ void Robot::TeleopPeriodic()
   }
   else if (preparingToShoot && !driveTurning) // ALIGN(scoring) mode
   {
-    if (mLimelight.isSpeakerTagDetected()) {
+    if (mLimelight.isSpeakerTagDetected())
+    {
       Pose3d target = mLimelight.getTargetPoseRobotSpace();
       double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / M_PI;
       double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
@@ -90,8 +86,9 @@ void Robot::TeleopPeriodic()
       // limit robot speed temporarily
       leftX = (leftX / ctrPercent) * ctrPercentAim;
       leftY = (leftY / ctrPercent) * ctrPercentAim;
-
-    } else {
+    }
+    else
+    {
       rumbleController = true;
     }
   }
@@ -99,7 +96,7 @@ void Robot::TeleopPeriodic()
   {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   }
-  
+
   // Output heading controller if used
   rot = mHeadingController.getHeadingControllerState() == SwerveHeadingController::OFF
             ? rot
@@ -113,12 +110,12 @@ void Robot::TeleopPeriodic()
 
   // Drive function
   mDrive.Drive(
-    ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, rot), 
-    mGyro.getBoundedAngleCCW(),
-    mGyro.gyro.IsConnected()
-  );
+      ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, rot),
+      mGyro.getBoundedAngleCCW(),
+      mGyro.gyro.IsConnected());
   // mIntake.setState(intakeMode, true, 1.0);
-  if (rumbleController) {
+  if (rumbleController)
+  {
     ctr.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
   }
 

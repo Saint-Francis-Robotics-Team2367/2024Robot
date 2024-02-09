@@ -53,7 +53,8 @@ public:
   // frc::Joystick ctr = frc::Joystick(0);
 
   // Teleop Controls
-  double ctrPercent = 0.5;
+  float ctrPercent = 0.5;
+  float boostPercent = 0.8;
   double ctrPercentAim = 0.3;
 
   // Controllers

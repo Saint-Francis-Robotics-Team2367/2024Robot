@@ -112,14 +112,12 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     }
 
     
-
-    ShuffleUI::MakeWidget("origX", "drive", desiredSpeeds.vxMetersPerSecond);
-    ShuffleUI::MakeWidget("origY", "drive", desiredSpeeds.vyMetersPerSecond);
     Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
     Twist2d robotTwist = Pose2d::log(robotPoseVel);
     ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
-    ShuffleUI::MakeWidget("DesX", "drive", newDesiredSpeeds.vxMetersPerSecond);
-    ShuffleUI::MakeWidget("DesY", "drive", newDesiredSpeeds.vyMetersPerSecond);
+    ShuffleUI::MakeWidget("Xspeed", "drive", newDesiredSpeeds.vxMetersPerSecond);
+    ShuffleUI::MakeWidget("Yspeed", "drive", newDesiredSpeeds.vyMetersPerSecond);
+    ShuffleUI::MakeWidget("Rot", "drive", newDesiredSpeeds.omegaRadiansPerSecond);
 
     std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(newDesiredSpeeds);
     moduleStates = m_kinematics.desaturateWheelSpeeds(moduleStates, moduleMaxFPS);
@@ -138,8 +136,9 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     {
         double speed = moduleStates[i].getSpeedFPS();
         speed = ((speed * 60) / wheelCircumFeet) * moduleDriveRatio;
-        SwerveModuleState temp = SwerveModuleState(speed, moduleStates[i].getRot2d().getRadians());
-        moduleStates[i] = temp;
+        // SwerveModuleState temp = SwerveModuleState(speed, moduleStates[i].getRot2d().getRadians());
+        moduleStates[i].setSpeedFPS(speed);
+        // moduleStates[i] = temp;
 
         // frc::SmartDashboard::PutNumber(std::to_string(i) + "vel", speed);
         // frc::SmartDashboard::PutNumber(std::to_string(i) + "angle", moduleStates[i].getRot2d().getDegrees());
