@@ -83,32 +83,44 @@ void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldR
 
 void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented)
 {
-    double desiredVx = desiredSpeeds.vxMetersPerSecond; // FEET PER SECOND
+    double desiredVx = desiredSpeeds.vxMetersPerSecond;
     double desiredVy = desiredSpeeds.vyMetersPerSecond;
-
-    if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon) 
-    {
-        SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
-        SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
-
-        mFrontLeft.setModuleState(FLBRstop, true);
-        mFrontRight.setModuleState(FRBLstop, true);
-        mBackLeft.setModuleState(FRBLstop, true);
-        mBackRight.setModuleState(FLBRstop, true);
-
-        // mFrontLeft.setDriveVelocitySetpoint(0.0);
-        // mFrontRight.setDriveVelocitySetpoint(0.0);
-        // mBackLeft.setDriveVelocitySetpoint(0.0);
-        // mBackRight.setDriveVelocitySetpoint(0.0);
-        return;
-    }
-
     if (useFieldOriented) {
         desiredSpeeds = ChassisSpeeds::fromFieldRelativeSpeeds(desiredVx, desiredVy, desiredSpeeds.omegaRadiansPerSecond, fieldRelativeGyro);
         frc::SmartDashboard::PutBoolean("BOTCENTRIC!", false);
     } else {
         frc::SmartDashboard::PutBoolean("BOTCENTRIC!", true);
     }
+    desiredVx = desiredSpeeds.vxMetersPerSecond;
+    desiredVy = desiredSpeeds.vyMetersPerSecond;
+
+
+    if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon) 
+    {
+        // SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
+        // SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
+
+        // mFrontLeft.setModuleState(FLBRstop, true);
+        // mFrontRight.setModuleState(FRBLstop, true);
+        // mBackLeft.setModuleState(FRBLstop, true);
+        // mBackRight.setModuleState(FLBRstop, true);
+
+        mFrontLeft.setDriveVelocitySetpoint(0.0);
+        mFrontRight.setDriveVelocitySetpoint(0.0);
+        mBackLeft.setDriveVelocitySetpoint(0.0);
+        mBackRight.setDriveVelocitySetpoint(0.0);
+        return;
+    }
+
+    
+
+    // ShuffleUI::MakeWidget("origX", "drive", desiredSpeeds.vxMetersPerSecond);
+    // ShuffleUI::MakeWidget("origY", "drive", desiredSpeeds.vyMetersPerSecond);
+    // Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
+    // Twist2d robotTwist = Pose2d::log(robotPoseVel);
+    // ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
+    // ShuffleUI::MakeWidget("DesX", "drive", newDesiredSpeeds.vxMetersPerSecond);
+    // ShuffleUI::MakeWidget("DesY", "drive", newDesiredSpeeds.vyMetersPerSecond);
 
     std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(desiredSpeeds);
     moduleStates = m_kinematics.desaturateWheelSpeeds(moduleStates, moduleMaxFPS);
@@ -139,6 +151,9 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     mFrontRight.setModuleState(moduleStates[3], true);
     mBackLeft.setModuleState(moduleStates[0], true);
     mBackRight.setModuleState(moduleStates[2], true);
+
+    frc::SmartDashboard::PutNumber("desired speeds vx", desiredSpeeds.vxMetersPerSecond);
+    frc::SmartDashboard::PutNumber("desired speeds vy", desiredSpeeds.vyMetersPerSecond);
 }
 
 /**

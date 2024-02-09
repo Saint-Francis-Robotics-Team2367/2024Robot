@@ -31,7 +31,7 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
     double vy_feet = correction.vy.value() * 3.281;
     double rotCompass = Rotation2d::compassToPolar(state.targetHolonomicRotation.Radians().value());
     
-    mDrive.Drive(ChassisSpeeds{vx_feet, vy_feet, correction.omega.value()}, Rotation2d{rotCompass}, false);
+    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, correction.omega.value()}, Rotation2d{rotCompass}, false);
 
 }
 
