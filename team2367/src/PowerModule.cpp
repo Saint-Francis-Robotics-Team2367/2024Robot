@@ -1,4 +1,5 @@
 #include "control/PowerModule.h"
+#include <frc/DriverStation.h>
 
 
 
@@ -18,7 +19,7 @@ void PowerModule::init(bool enableCurrentCutter)
 
 void PowerModule::updateCurrentLimits()
 {
-    int cutAmt;
+    int cutAmt = 0;
     if (PowerModule::reduceCurrentsOverTime);
     {
         cutAmt = 5 * floor(robotTimer.Get().value() / 50);
@@ -28,8 +29,9 @@ void PowerModule::updateCurrentLimits()
         {
             swerveDriveCurrent = 5;
         }
-    }
-    ShuffleUI::MakeWidget("SwerveDrive Current", "Power", swerveDriveCurrent);
+    ShuffleUI::MakeWidget("SwerveDrive Current", "Power", PowerModule::swerveDriveCurrent);
     ShuffleUI::MakeWidget("Timer", "Power", robotTimer.Get().value());
     ShuffleUI::MakeWidget("CutAmt", "Power", cutAmt);
+    }
+    
 }

@@ -85,6 +85,14 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
 {
     double desiredVx = desiredSpeeds.vxMetersPerSecond;
     double desiredVy = desiredSpeeds.vyMetersPerSecond;
+    if (useFieldOriented) {
+        desiredSpeeds = ChassisSpeeds::fromFieldRelativeSpeeds(desiredVx, desiredVy, desiredSpeeds.omegaRadiansPerSecond, fieldRelativeGyro);
+        frc::SmartDashboard::PutBoolean("BOTCENTRIC!", false);
+    } else {
+        frc::SmartDashboard::PutBoolean("BOTCENTRIC!", true);
+    }
+    desiredVx = desiredSpeeds.vxMetersPerSecond;
+    desiredVy = desiredSpeeds.vyMetersPerSecond;
 
     if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon) 
     {
@@ -103,12 +111,7 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
         return;
     }
 
-    if (useFieldOriented) {
-        desiredSpeeds = ChassisSpeeds::fromFieldRelativeSpeeds(desiredVx, desiredVy, desiredSpeeds.omegaRadiansPerSecond, fieldRelativeGyro);
-        frc::SmartDashboard::PutBoolean("BOTCENTRIC!", false);
-    } else {
-        frc::SmartDashboard::PutBoolean("BOTCENTRIC!", true);
-    }
+    
 
     ShuffleUI::MakeWidget("origX", "drive", desiredSpeeds.vxMetersPerSecond);
     ShuffleUI::MakeWidget("origY", "drive", desiredSpeeds.vyMetersPerSecond);
@@ -173,6 +176,7 @@ void SwerveDrive::runModules()
         mFrontRight.run();
         mBackLeft.run();
         mBackRight.run();
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 

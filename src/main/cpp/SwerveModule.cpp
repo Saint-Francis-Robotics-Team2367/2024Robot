@@ -40,6 +40,7 @@ void SwerveModule::initMotors()
     m_pidController.SetP(kP);
     m_pidController.SetI(kI);
     m_pidController.SetFF(kFF);
+    m_pidController.SetIAccum(0.0);
     m_pidController.SetOutputRange(kMinOutput, kMaxOutput);
     steerCTR.EnableContinuousInput(0, 2 * M_PI);
     steerCTR.SetIZone(steerIZone);
@@ -114,7 +115,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     double desAngle = desiredSetpoint.getRot2d().getRadians();
     double desVel = desiredSetpoint.getSpeedFPS();
     
-    double limitVel = ControlUtil::limitPositiveAcceleration(currVel, desVel, maxDriveAccelerationRPM, loopTime);
+    double limitVel = ControlUtil::limitAcceleration(currVel, desVel, maxDriveAccelerationRPM, loopTime);
     
     if (steerID == 11)
     {
@@ -122,7 +123,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
         frc::SmartDashboard::PutNumber("DesiredVel", desVel);
         frc::SmartDashboard::PutBoolean("AccLimited?", desVel != limitVel);
     }
-    // desVel = limitVel;
+    desVel = limitVel;
     
 
     double dist = fabs(currAngle - desAngle);
@@ -137,7 +138,8 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
         double angleDist = std::min(fabs(setpointAngle - currAngle), (M_PI * 2) - fabs(setpointAngle - currAngle));
 
-        setpointVel = -(desVel * (-angleDist / M_PI_2) + desVel);
+        // setpointVel = -(desVel * (-angleDist / M_PI_2) + desVel);
+        setpointVel = ControlUtil::scaleSwerveVelocity(desVel, angleDist, true);
     }
     else
     {
@@ -145,7 +147,8 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
         double angleDist = std::min(fabs(setpointAngle - currAngle), (M_PI * 2) - fabs(setpointAngle - currAngle));
 
-        setpointVel = desVel * (-angleDist / M_PI_2) + desVel;
+        // setpointVel = desVel * (-angleDist / M_PI_2) + desVel;
+        setpointVel = ControlUtil::scaleSwerveVelocity(desVel, angleDist, true);
     }
     return SwerveModuleState(setpointVel, Rotation2d(setpointAngle));
 }
@@ -185,10 +188,6 @@ bool SwerveModule::isFinished(float percentageBound)
  */
 void SwerveModule::run()
 {
-    // Constantly enforce motor configurations
-    steerMotor->SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
-    driveMotor->SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
-
     steerMotor->SetSmartCurrentLimit(PowerModule::swerveSteerCurrent);
     driveMotor->SetSmartCurrentLimit(PowerModule::swerveDriveCurrent);
     

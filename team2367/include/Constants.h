@@ -5,7 +5,7 @@
 // #define steerEncConvFactor 12.8 * 2 * M_PI
 
 // Controller Settings
-#define ctrDeadzone 0.05
+#define ctrDeadzone 0.09
 
 // Module Constraints
 #define moduleMaxFPS 16.254667 // feet per sec

@@ -19,10 +19,10 @@
 #include "control/PowerModule.h"
 
 // Steer PID values(custom, untuned)
-constexpr float steerP = 0.50; // prev 0.76
-constexpr float steerI = 0.11;
+constexpr float steerP = 0.60; // prev 0.76
+constexpr float steerI = 0.0;
 constexpr float steerD = 0.0;
-constexpr float steerIZone = 0.05;
+constexpr float steerIZone = 0.0;
 
 // Drive Velocity PID Values(Defaults from REV)
 constexpr float revkP = 6e-5;
@@ -75,8 +75,8 @@ public:
     const float maxDriveAccelerationRPM = 2665.993 * (25.8 / 7.6);
     const float maxSteerVelocity = 189.2; // Radians per sec
 
-    const int maxSteerCurrent = 20; // Maximum current to steer motor
-    const int maxDriveCurrent = 20; // Maximum current to steer motor
+    const int maxSteerCurrent = 10; // Maximum current to steer motor
+    const int maxDriveCurrent = 40; // Maximum current to steer motor
 
     // TODO: Brownout module
     double currentSteerOutput = 0.0;

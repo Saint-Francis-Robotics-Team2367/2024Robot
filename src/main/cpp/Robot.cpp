@@ -29,7 +29,7 @@ void Robot::AutonomousPeriodic()
 }
 void Robot::TeleopInit()
 {
-  PowerModule::init(true);
+  PowerModule::init(false);
   mDrive.enableModules();
   mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
@@ -37,10 +37,22 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
   // Controller inputs
-  double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1) * ctrPercent;
-  double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1) * ctrPercent;
+  bool boost = ctr.GetL2Axis() > 0;
+  float boostMult = 0.8;
+  
+  double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1);
+  double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1);
+
+  if (!boost) {
+    leftX *= ctrPercent;
+    leftY *= ctrPercent;
+  } else {
+    leftX *= boostMult;
+    leftY *= boostMult;
+  }
+
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
-  double leftTrigger = ctr.GetL2Axis();
+  double leftTrigger = ctr.GetR2Axis();
   int dPad = ctr.GetPOV();
   bool rumbleController = false;
   // Intake::intakeState intakeMode = Intake::buttonsToState(ctr.GetL1Button(), ctr.GetR1Button());
