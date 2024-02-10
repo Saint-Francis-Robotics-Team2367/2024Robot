@@ -17,6 +17,7 @@
 #include "util/TimeDelayedBool.h"
 #include <frc/Joystick.h>
 #include "sensors/Limelight.h"
+#include "util/SlewRateLimiter.h"
 #include <frc/GenericHID.h>
 #include "control/PowerModule.h"
 
@@ -59,6 +60,8 @@ public:
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
+  SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
+  SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
   // PowerModule mPowerModule;
   
 };

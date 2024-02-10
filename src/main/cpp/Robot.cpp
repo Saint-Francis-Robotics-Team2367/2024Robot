@@ -33,6 +33,8 @@ void Robot::TeleopInit()
   mDrive.enableModules();
   mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
+  xStickLimiter.reset(0.0);
+  yStickLimiter.reset(0.0);
 }
 void Robot::TeleopPeriodic()
 {
@@ -44,6 +46,9 @@ void Robot::TeleopPeriodic()
 
   leftX = ControlUtil::boostScaler(leftX, boost, boostPercent, ctrPercent);
   leftY = ControlUtil::boostScaler(leftY, boost, boostPercent, ctrPercent);
+
+  leftX = xStickLimiter.calculate(leftX);
+  leftY = yStickLimiter.calculate(leftY);
 
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
 
