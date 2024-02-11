@@ -16,12 +16,12 @@ static frc::HolonomicDriveController controller{
         steerP, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
             units::radians_per_second_t(SwerveModule::maxSteerVelocity),
-            units::radians_per_second_squared_t(SwerveModule::maxDriveAccelerationRPM)}}}; // need max angular acceleration 
+            units::radians_per_second_squared_t(SwerveModule::maxDriveAccelerationRadPS)}}}; 
 
 
 /**
  * Drives robot to the next state on trajectory
- * note: odometry must be in meters!!
+ * Odometry must be in meters
  */
 void Trajectory::driveToState(PathPlannerTrajectory::State const &state) 
 {

@@ -26,8 +26,8 @@ void Robot::AutonomousInit()
   Trajectory mTraj = Trajectory(mDrive);
   // mTraj.follow("Straight");
   // mTraj.follow("Curve");
-  // mTraj.follow("Backwards");
-  mTraj.follow("Rotations");
+  mTraj.follow("Backwards");
+  // mTraj.follow("Rotations");
 
 }
 void Robot::AutonomousPeriodic()

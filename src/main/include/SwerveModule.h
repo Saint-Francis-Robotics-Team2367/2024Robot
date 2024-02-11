@@ -72,6 +72,7 @@ public:
     static constexpr int maxRPMFreeSpeed = moduleMaxRPM;
     static constexpr float maxDriveAccelerationFPS = 7.603; // Feet per sec2
     static constexpr float maxDriveAccelerationRPM = 2665.993;
+    static constexpr float maxDriveAccelerationRadPS = 279.182133792; // Radians per sec2
     static constexpr float maxSteerVelocity = 189.2; // Radians per sec
 
     const int maxSteerCurrent = 20; // Maximum current to steer motor
