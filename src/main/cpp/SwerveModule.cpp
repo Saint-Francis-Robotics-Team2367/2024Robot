@@ -85,6 +85,10 @@ void SwerveModule::setDriveVelocitySetpoint(float setpt)
     driveMode = VELOCITY;
 }
 
+void SwerveModule::setDriveCurrentLimit(int limit) {
+    driveMotor->SetSmartCurrentLimit(limit);
+}
+
 /**
  * speedFPS attribute should be in RPM
  * Sets Drive Velocity & Steer Angle
@@ -123,7 +127,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
         frc::SmartDashboard::PutNumber("DesiredVel", desVel);
         frc::SmartDashboard::PutBoolean("AccLimited?", desVel != limitVel);
     }
-    desVel = limitVel;
+    // desVel = limitVel;
     
 
     double dist = fabs(currAngle - desAngle);
@@ -139,7 +143,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
         double angleDist = std::min(fabs(setpointAngle - currAngle), (M_PI * 2) - fabs(setpointAngle - currAngle));
 
         // setpointVel = -(desVel * (-angleDist / M_PI_2) + desVel);
-        setpointVel = ControlUtil::scaleSwerveVelocity(desVel, angleDist, true);
+        setpointVel = -ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
     }
     else
     {
@@ -148,7 +152,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
         double angleDist = std::min(fabs(setpointAngle - currAngle), (M_PI * 2) - fabs(setpointAngle - currAngle));
 
         // setpointVel = desVel * (-angleDist / M_PI_2) + desVel;
-        setpointVel = ControlUtil::scaleSwerveVelocity(desVel, angleDist, true);
+        setpointVel = ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
     }
     return SwerveModuleState(setpointVel, Rotation2d(setpointAngle));
 }
@@ -188,11 +192,6 @@ bool SwerveModule::isFinished(float percentageBound)
  */
 void SwerveModule::run()
 {
-    steerMotor->SetSmartCurrentLimit(PowerModule::swerveSteerCurrent);
-    driveMotor->SetSmartCurrentLimit(PowerModule::swerveDriveCurrent);
-    
-
-
     if (moduleInhibit) // Thread is in standby mode
     {
 

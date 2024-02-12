@@ -23,7 +23,10 @@ public:
         double elapsedTime = currentTime - prevTime;
         float range = maxChange * elapsedTime;
         prevTime = currentTime;
-        return std::clamp(input, previousInput - range, previousInput + range);
+        
+        double output = std::clamp(input, previousInput - range, previousInput + range);
+        previousInput = input;
+        return output;
     }
     void reset(double value)
     {

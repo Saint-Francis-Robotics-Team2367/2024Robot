@@ -55,13 +55,13 @@ public:
 
   // Teleop Controls
   float ctrPercent = 0.5;
-  float boostPercent = 0.8;
+  float boostPercent = 0.9;
   double ctrPercentAim = 0.3;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
   SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
-  // PowerModule mPowerModule;
+  PowerModule mPowerModule;
   
 };

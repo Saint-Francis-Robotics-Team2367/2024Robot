@@ -175,7 +175,7 @@ void SwerveDrive::runModules()
         mFrontRight.run();
         mBackLeft.run();
         mBackRight.run();
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
@@ -227,6 +227,14 @@ void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
     mBackLeft.setDrivePositionSetpoint(distanceFeet);
     mBackRight.setDrivePositionSetpoint(distanceFeet);
     // TODO: Wait for modules to reach point
+}
+
+void SwerveDrive::setDriveCurrentLimit(int limit) {
+    mFrontRight.setDriveCurrentLimit(limit);
+    mFrontLeft.setDriveCurrentLimit(limit);
+    mBackLeft.setDriveCurrentLimit(limit);
+    mBackRight.setDriveCurrentLimit(limit);
+    ShuffleUI::MakeWidget("DriveLimit", "drive", limit);
 }
 
 /**

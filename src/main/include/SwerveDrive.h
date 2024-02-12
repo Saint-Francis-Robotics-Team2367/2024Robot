@@ -27,7 +27,7 @@
 #define BLdriveID 10
 #define BL_CAN_ID 2 // updated
 
-#define BRsteerID 1
+#define BRsteerID 6
 #define BRdriveID 5
 #define BR_CAN_ID 0 // updated
 
@@ -64,5 +64,6 @@ public:
     bool stopModules();
     void orientModules(double FL, double FR, double BL, double BR);
     void autoMove(double angleRadians, double distanceFeet);
+    void setDriveCurrentLimit(int limit);
     void displayDriveTelemetry();
 };

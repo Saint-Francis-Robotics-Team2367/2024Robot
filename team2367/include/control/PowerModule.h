@@ -2,24 +2,50 @@
 
 #include <frc/Timer.h>
 #include <util/ShuffleUI.h>
+#include <frc/PowerDistribution.h>
 
-#define swerveSteerStartCurrent 10
 #define swerveDriveStartCurrent 40
 #define totalMatchSeconds 150
 
-class PowerModule 
+class PowerModule
 {
-    private:
-    static bool reduceCurrentsOverTime;
+private:
+    bool reduceCurrentsOnBrownout;
+    int currentIncrement = 5; // amps
+    int timeToIncrement = 5; // seconds
 
+public:
+    frc::Timer updateTimer = frc::Timer();
+    int driveCurrentLimit = swerveDriveStartCurrent;
 
-    public:
-    static frc::Timer robotTimer;
-    static int swerveSteerCurrent;
-    static int swerveDriveCurrent;
+    frc::PowerDistribution mPDH = frc::PowerDistribution(1, frc::PowerDistribution::ModuleType::kRev);
 
-
-    static void init(bool enableCurrentCutter);
-    static void updateCurrentLimits();
-
+    void init(bool enable)
+    {
+        reduceCurrentsOnBrownout = enable;
+        updateTimer.Reset();
+        updateTimer.Start();
+    }
+    int updateDriveCurrentLimit()
+    {
+        if (reduceCurrentsOnBrownout)
+        {
+            if (mPDH.GetFaults().Brownout > 0)
+            {
+                driveCurrentLimit -= currentIncrement;
+                mPDH.ClearStickyFaults();
+                updateTimer.Reset();
+            }
+            else if (driveCurrentLimit < swerveDriveStartCurrent)
+            {
+                double timeSinceUpdate = updateTimer.Get().value();
+                if (timeSinceUpdate > 5)
+                {
+                    driveCurrentLimit += currentIncrement;
+                    updateTimer.Reset();
+                }
+            }
+        }
+        return driveCurrentLimit;
+    }
 };
