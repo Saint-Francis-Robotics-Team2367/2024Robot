@@ -76,7 +76,8 @@ public:
     const float maxSteerVelocity = 189.2; // Radians per sec
 
     const int maxSteerCurrent = 10; // Maximum current to steer motor
-    const int maxDriveCurrent = 40; // Maximum current to steer motor
+    const int maxDriveCurrent = swerveDriveStartCurrent; // Maximum current to steer motor
+    // Must match with power module.h start value
 
     // TODO: Brownout module
     double currentSteerOutput = 0.0;

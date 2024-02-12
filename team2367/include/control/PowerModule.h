@@ -39,13 +39,14 @@ public:
             else if (driveCurrentLimit < swerveDriveStartCurrent)
             {
                 double timeSinceUpdate = updateTimer.Get().value();
-                if (timeSinceUpdate > 5)
+                if (timeSinceUpdate > timeToIncrement)
                 {
                     driveCurrentLimit += currentIncrement;
                     updateTimer.Reset();
                 }
             }
         }
+        // ShuffleUI::MakeWidget("driveCurrent", "Power", driveCurrentLimit);
         return driveCurrentLimit;
     }
 };

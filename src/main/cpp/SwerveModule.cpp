@@ -15,6 +15,8 @@ void SwerveModule::initMotors()
     // Resetting Motor settings, Encoders, putting it in brake mode
     steerMotor->RestoreFactoryDefaults();
     driveMotor->RestoreFactoryDefaults();
+    steerMotor->ClearFaults();
+    driveMotor->ClearFaults();
 
     steerMotor->SetInverted(true);
     driveMotor->SetInverted(true);
