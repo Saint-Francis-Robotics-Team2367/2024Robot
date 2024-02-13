@@ -64,6 +64,8 @@ public:
             double angleToTagDegrees = limelightAngleDegrees + ty;
             frc::SmartDashboard::PutNumber("vertical angle", angleToTagDegrees);
             return angleToTagDegrees;
+        } else {
+            return NULL;
         }
     }
 
@@ -94,7 +96,7 @@ public:
 
     bool isIn(int object, std::vector<int> inp)
     {
-        for (int i = 0; i < inp.size(); i++) {
+        for (unsigned int i = 0; i < inp.size(); i++) {
             if (inp[i] == object) 
             {
                 return true;

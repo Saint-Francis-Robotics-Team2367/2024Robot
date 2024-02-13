@@ -130,4 +130,25 @@ public:
             return a;
         }
     }
+
+
+    /**
+     *  * Increases allowed max velocity to boostPercent when boost boolean is true
+     * Otherwise sets allowed maxVelocity to its normal percentage limit
+    */
+    static double boostScaler(double axis, bool boost, float boostPercent, float normalPercent) 
+    {
+        if (boost) {
+            return axis * boostPercent;
+        } 
+        return axis * normalPercent;
+    }
+
+    static double scaleSwerveVelocity(double desiredVelocity, double angleError, bool quartic) 
+    {
+        int n = quartic ? 4 : 2; // n is quadratic or quartic
+        return (pow(2 / M_PI, n) * desiredVelocity) * pow(angleError - M_PI_2, n);
+
+
+    }
 };

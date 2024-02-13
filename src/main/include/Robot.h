@@ -10,9 +10,7 @@
 
 #include "util/ShuffleUI.h"
 #include <thread>
-#include "SwerveDrive.h"
-#include "SwerveModule.h"
-#include "Trajectory.h"
+
 #include "util/ControlUtil.h"
 #include "sensors/NavX.h"
 #include "swerve/SwerveHeadingController.h"
@@ -20,6 +18,12 @@
 #include <frc/Joystick.h>
 #include "sensors/Limelight.h"
 #include <frc/GenericHID.h>
+#include "control/PowerModule.h"
+
+#include "SwerveDrive.h"
+#include "SwerveModule.h"
+#include "Trajectory.h"
+
 
 class Robot : public frc::TimedRobot
 {
@@ -50,7 +54,9 @@ public:
   // frc::Joystick ctr = frc::Joystick(0);
 
   // Teleop Controls
-  double ctrPercent = 0.7;
+  double ctrPercent = 0.5; 
+  float boostPercent = 0.9;
+  double ctrPercentAim = 0.3;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
