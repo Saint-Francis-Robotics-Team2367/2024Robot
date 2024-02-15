@@ -56,10 +56,6 @@ private:
     double shooterVelocitySetpoint;
 
 public:
-    // Shooter(SwerveDrive &mDriveInput) : mDrive(mDriveInput) {
-
-    // }
-
     double intakeMotorVelocity(double robotVelocity);
     double heightAtAngle(double shooterVelocity, double x, double theta, double robotVelocity);
     double findLaunchAngle(double velocity, double x, double y, Limelight limelight);
