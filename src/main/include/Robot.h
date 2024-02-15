@@ -22,6 +22,9 @@
 #include "control/PowerModule.h"
 
 #include "SwerveDrive.h"
+#include "SwerveModule.h"
+#include "Trajectory.h"
+#include "Shooter.h"
 // #include "Intake.h"
 
 class Robot : public frc::TimedRobot
@@ -47,14 +50,15 @@ public:
 
   // Modules/Devices
   frc::PS5Controller ctr = frc::PS5Controller(0);
-  SwerveDrive mDrive = SwerveDrive();
   NavX mGyro = NavX();
+  SwerveDrive mDrive = SwerveDrive(mGyro);
   Limelight mLimelight;
-  // Intake mIntake;
+  Shooter mShooter; 
+  Intake mIntake;
   // frc::Joystick ctr = frc::Joystick(0);
 
   // Teleop Controls
-  float ctrPercent = 0.5;
+  double ctrPercent = 0.5; 
   float boostPercent = 0.9;
   double ctrPercentAim = 0.3;
 

@@ -12,7 +12,6 @@
 
 void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldRelativeGyro)
 {
-    
     if ((leftY == 0) && (leftX == 0) && (rightX == 0))
     {
 
@@ -149,6 +148,9 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     mFrontRight.setModuleState(moduleStates[3], true);
     mBackLeft.setModuleState(moduleStates[0], true);
     mBackRight.setModuleState(moduleStates[2], true);
+
+    frc::SmartDashboard::PutNumber("desired speeds vx", desiredSpeeds.vxMetersPerSecond);
+    frc::SmartDashboard::PutNumber("desired speeds vy", desiredSpeeds.vyMetersPerSecond);
 }
 
 /**
@@ -235,6 +237,48 @@ void SwerveDrive::setDriveCurrentLimit(int limit) {
     mBackLeft.setDriveCurrentLimit(limit);
     mBackRight.setDriveCurrentLimit(limit);
     ShuffleUI::MakeWidget("DriveLimit", "drive", limit);
+}
+
+/**
+ * Resets odometry position 
+ * (used in auto config)
+*/
+void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot) {
+    m_odometry.ResetPosition(
+        mGyro.getRotation2d(), 
+        {
+            mBackLeft.getModulePosition(), 
+            mFrontLeft.getModulePosition(), 
+            mFrontRight.getModulePosition(), 
+            mBackRight.getModulePosition() 
+        },
+        frc::Pose2d{trans, rot}
+    );
+    
+}
+
+/**
+ * Retrieves odometry pose in feet 
+*/
+frc::Pose2d SwerveDrive::getOdometryPose()
+{
+    return m_odometry.GetPose();
+}
+
+/**
+ * Updates odometry with current module positions 
+*/
+void SwerveDrive::updateOdometry() 
+{
+    m_odometry.Update(
+        -mGyro.getRotation2d(), 
+        {
+            mBackLeft.getModulePosition(), 
+            mFrontLeft.getModulePosition(), 
+            mFrontRight.getModulePosition(), 
+            mBackRight.getModulePosition() 
+        }
+    );
 }
 
 /**

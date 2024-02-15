@@ -16,6 +16,8 @@
 #include "Constants.h"
 #include "util/ShuffleUI.h"
 #include "util/ControlUtil.h"
+#include "frc/kinematics/SwerveModulePosition.h"
+#include "frc/geometry/Rotation2d.h"
 #include "control/PowerModule.h"
 
 // Steer PID values(custom, untuned)
@@ -70,10 +72,11 @@ public:
     bool moduleInhibit = true;         // True to stop the motors
 
     // Module Constraints
-    const int maxRPMFreeSpeed = moduleMaxRPM;
-    const float maxDriveAccelerationFPS = 25.8; //7.603; // Feet per sec2
-    const float maxDriveAccelerationRPM = 2665.993 * (25.8 / 7.6);
-    const float maxSteerVelocity = 189.2; // Radians per sec
+    static constexpr int maxRPMFreeSpeed = moduleMaxRPM;
+    static constexpr float maxDriveAccelerationFPS = 25.8 // 7.603; // Feet per sec2
+    static constexpr float maxDriveAccelerationRPM = 2665.993 * (25.8 / 7.6);
+    static constexpr float maxDriveAccelerationRadPS = 279.182133792; // Radians per sec2
+    static constexpr float maxSteerVelocity = 189.2; // Radians per sec
 
     const int maxSteerCurrent = 10; // Maximum current to steer motor
     const int maxDriveCurrent = swerveDriveStartCurrent; // Maximum current to steer motor
@@ -99,6 +102,7 @@ public:
     // TODO: Test this
     void setModuleState(SwerveModuleState setpt, bool takeShortestPath = true);
     SwerveModuleState moduleSetpointGenerator(SwerveModuleState prevSetpoint, SwerveModuleState desiredSetpoint);
+    frc::SwerveModulePosition getModulePosition(); 
 
     // Encoders
     Rotation2d getSteerEncoder();

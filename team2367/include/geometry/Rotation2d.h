@@ -3,6 +3,9 @@
 #include "Constants.h"
 #include <cmath>
 
+#define M_PI 3.14
+#define M_PI_2 3.14
+
 class Rotation2d
 {
 private:
