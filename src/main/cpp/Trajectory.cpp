@@ -70,3 +70,32 @@ void Trajectory::follow(std::string const &traj_dir)
     mDrive.stopModules();
 
 }
+
+/**
+ * Calls sequences of follow functions for set paths 
+*/
+void Trajectory::followPath(int num) {
+    switch (num) {
+        // straight, shoot 
+        case 1: 
+            follow("Straight"); 
+            mShooter.runAuto(mLimelight);
+            break;
+
+        // straight, shoot, straight
+        case 2: 
+            follow("Straight"); 
+            if (mShooter.runAuto(mLimelight)) {
+                follow("Straight");
+            }
+            break;
+
+        case 3: 
+            break;
+
+        // straight 
+        default: 
+            follow("Straight");
+            break; 
+    }
+}

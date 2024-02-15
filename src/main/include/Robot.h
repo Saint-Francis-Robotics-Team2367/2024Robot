@@ -23,6 +23,7 @@
 #include "SwerveDrive.h"
 #include "SwerveModule.h"
 #include "Trajectory.h"
+#include "Shooter.h"
 
 
 class Robot : public frc::TimedRobot
@@ -51,6 +52,7 @@ public:
   NavX mGyro = NavX();
   SwerveDrive mDrive = SwerveDrive(mGyro);
   Limelight mLimelight;
+  Shooter mShooter; 
   // frc::Joystick ctr = frc::Joystick(0);
 
   // Teleop Controls

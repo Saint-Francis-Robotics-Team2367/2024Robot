@@ -126,7 +126,7 @@ double Shooter::findLaunchAngle(double velocity, double x, double y, Limelight l
     return best_angle;
 }
 
-void Shooter::runAuto(Limelight limelight) {
+bool Shooter::runAuto(Limelight limelight) {
     double angle = findLaunchAngle(getMotorVelocity(), limelight.getDistanceToWall(), 0, limelight);
 
     setAngleSetpoint(angle);
@@ -138,4 +138,7 @@ void Shooter::runAuto(Limelight limelight) {
     }
 
     run();
+
+    // once finished, return true 
+    return true; 
 }

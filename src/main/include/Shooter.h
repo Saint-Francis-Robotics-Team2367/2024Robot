@@ -55,8 +55,6 @@ private:
     double tiltSetpoint;
     double shooterVelocitySetpoint;
 
-    SwerveDrive &mDrive; 
-
 public:
     // Shooter(SwerveDrive &mDriveInput) : mDrive(mDriveInput) {
 
@@ -77,5 +75,5 @@ public:
     double getAnglePosition();
     double getMotorVelocity();
 
-    void runAuto(Limelight limelight); 
+    bool runAuto(Limelight limelight); 
 };

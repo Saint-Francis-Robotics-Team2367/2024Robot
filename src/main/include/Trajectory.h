@@ -3,7 +3,9 @@
 #include "SwerveDrive.h"
 #include "SwerveModule.h"
 #include "Constants.h"
+#include "Shooter.h"
 #include "Robot.h"
+#include "sensors/Limelight.h"
 #include "geometry/Translation2d.h"
 
 #include <pathplanner/lib/path/PathPlannerTrajectory.h>
@@ -28,13 +30,21 @@ class Trajectory
 {
 private:
     SwerveDrive &mDrive;
+    Shooter &mShooter; 
+    Limelight &mLimelight;
+
 public:
-    Trajectory(SwerveDrive &mDriveInput) : mDrive(mDriveInput) {
-    }
+    Trajectory(SwerveDrive &mDriveInput, Shooter &mShooterInput, Limelight &mLimelightInput) : mDrive(mDriveInput), 
+                                                                                               mShooter(mShooterInput),
+                                                                                               mLimelight(mLimelightInput) 
+    {
+    };
 
     void driveToState(PathPlannerTrajectory::State const &state);
 
-    void follow(std::string const &traj_dir); // add max acc and vel
+    void follow(std::string const &traj_dir); 
+
+    void followPath(int num); 
         
     void testHolonomic(frc::Pose2d const &target_pose,
         units::velocity::meters_per_second_t const &velocity,
