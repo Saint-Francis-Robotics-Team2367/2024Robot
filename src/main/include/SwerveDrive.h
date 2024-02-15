@@ -3,6 +3,8 @@
 #include "SwerveModule.h"
 #include "geometry/Rotation2d.h"
 #include "swerve/ChassisSpeeds.h"
+#include "geometry/Pose2d.h"
+#include "geometry/Twist2d.h"
 #include "geometry/Translation2d.h"
 #include "Constants.h"
 #include "swerve/SwerveDriveKinematics.h"
@@ -101,6 +103,7 @@ public:
     void resetOdometry(frc::Translation2d trans, frc::Rotation2d angle);
     frc::Pose2d getOdometryPose();
     void updateOdometry();
+    void setDriveCurrentLimit(int limit);
     void displayDriveTelemetry();
 
 };

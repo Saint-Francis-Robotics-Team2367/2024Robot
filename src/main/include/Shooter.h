@@ -57,6 +57,7 @@ private:
 
 public:
     double intakeMotorVelocity(double robotVelocity);
+  
     double heightAtAngle(double shooterVelocity, double x, double theta, double robotVelocity);
     double findLaunchAngle(double velocity, double x, double y, Limelight limelight);
 
@@ -70,6 +71,6 @@ public:
 
     double getAnglePosition();
     double getMotorVelocity();
-
+  
     bool runAuto(Limelight limelight); 
 };

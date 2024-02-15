@@ -1,4 +1,3 @@
-
 #include "SwerveDrive.h"
 #include <cmath>
 #include <string>
@@ -16,8 +15,8 @@ void SwerveDrive::Drive(double rightX, double leftX, double leftY, double fieldR
     if ((leftY == 0) && (leftX == 0) && (rightX == 0))
     {
 
-        SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
-        SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
+        // SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
+        // SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
 
         // mFrontLeft.setModuleState(FLBRstop, false);
         // mFrontRight.setModuleState(FRBLstop, false);
@@ -94,7 +93,6 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     desiredVx = desiredSpeeds.vxMetersPerSecond;
     desiredVy = desiredSpeeds.vyMetersPerSecond;
 
-
     if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon) 
     {
         // SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
@@ -113,16 +111,14 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     }
 
     
+    Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
+    Twist2d robotTwist = Pose2d::log(robotPoseVel);
+    ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
+    ShuffleUI::MakeWidget("Xspeed", "drive", newDesiredSpeeds.vxMetersPerSecond);
+    ShuffleUI::MakeWidget("Yspeed", "drive", newDesiredSpeeds.vyMetersPerSecond);
+    ShuffleUI::MakeWidget("Rot", "drive", newDesiredSpeeds.omegaRadiansPerSecond);
 
-    // ShuffleUI::MakeWidget("origX", "drive", desiredSpeeds.vxMetersPerSecond);
-    // ShuffleUI::MakeWidget("origY", "drive", desiredSpeeds.vyMetersPerSecond);
-    // Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
-    // Twist2d robotTwist = Pose2d::log(robotPoseVel);
-    // ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
-    // ShuffleUI::MakeWidget("DesX", "drive", newDesiredSpeeds.vxMetersPerSecond);
-    // ShuffleUI::MakeWidget("DesY", "drive", newDesiredSpeeds.vyMetersPerSecond);
-
-    std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(desiredSpeeds);
+    std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(newDesiredSpeeds);
     moduleStates = m_kinematics.desaturateWheelSpeeds(moduleStates, moduleMaxFPS);
     /**
      * Kinematics class returns module orientations in polar degrees
@@ -139,8 +135,9 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     {
         double speed = moduleStates[i].getSpeedFPS();
         speed = ((speed * 60) / wheelCircumFeet) * moduleDriveRatio;
-        SwerveModuleState temp = SwerveModuleState(speed, moduleStates[i].getRot2d().getRadians());
-        moduleStates[i] = temp;
+        // SwerveModuleState temp = SwerveModuleState(speed, moduleStates[i].getRot2d().getRadians());
+        moduleStates[i].setSpeedFPS(speed);
+        // moduleStates[i] = temp;
 
         // frc::SmartDashboard::PutNumber(std::to_string(i) + "vel", speed);
         // frc::SmartDashboard::PutNumber(std::to_string(i) + "angle", moduleStates[i].getRot2d().getDegrees());
@@ -180,6 +177,7 @@ void SwerveDrive::runModules()
         mFrontRight.run();
         mBackLeft.run();
         mBackRight.run();
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
@@ -231,6 +229,14 @@ void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
     mBackLeft.setDrivePositionSetpoint(distanceFeet);
     mBackRight.setDrivePositionSetpoint(distanceFeet);
     // TODO: Wait for modules to reach point
+}
+
+void SwerveDrive::setDriveCurrentLimit(int limit) {
+    mFrontRight.setDriveCurrentLimit(limit);
+    mFrontLeft.setDriveCurrentLimit(limit);
+    mBackLeft.setDriveCurrentLimit(limit);
+    mBackRight.setDriveCurrentLimit(limit);
+    ShuffleUI::MakeWidget("DriveLimit", "drive", limit);
 }
 
 /**

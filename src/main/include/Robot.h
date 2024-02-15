@@ -17,6 +17,7 @@
 #include "util/TimeDelayedBool.h"
 #include <frc/Joystick.h>
 #include "sensors/Limelight.h"
+#include "util/SlewRateLimiter.h"
 #include <frc/GenericHID.h>
 #include "control/PowerModule.h"
 
@@ -24,7 +25,7 @@
 #include "SwerveModule.h"
 #include "Trajectory.h"
 #include "Shooter.h"
-
+// #include "Intake.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -53,6 +54,7 @@ public:
   SwerveDrive mDrive = SwerveDrive(mGyro);
   Limelight mLimelight;
   Shooter mShooter; 
+  Intake mIntake;
   // frc::Joystick ctr = frc::Joystick(0);
 
   // Teleop Controls
@@ -62,4 +64,8 @@ public:
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
+  SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
+  SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
+  PowerModule mPowerModule;
+  
 };
