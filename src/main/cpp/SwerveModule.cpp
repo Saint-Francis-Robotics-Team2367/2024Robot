@@ -15,6 +15,8 @@ void SwerveModule::initMotors()
     // Resetting Motor settings, Encoders, putting it in brake mode
     steerMotor->RestoreFactoryDefaults();
     driveMotor->RestoreFactoryDefaults();
+    steerMotor->ClearFaults();
+    driveMotor->ClearFaults();
 
     steerMotor->SetInverted(true);
     driveMotor->SetInverted(true);
@@ -40,8 +42,10 @@ void SwerveModule::initMotors()
     m_pidController.SetP(kP);
     m_pidController.SetI(kI);
     m_pidController.SetFF(kFF);
+    m_pidController.SetIAccum(0.0);
     m_pidController.SetOutputRange(kMinOutput, kMaxOutput);
     steerCTR.EnableContinuousInput(0, 2 * M_PI);
+    steerCTR.SetIZone(steerIZone);
 
     // driveMotor->SetClosedLoopRampRate(0.5);
 
@@ -83,6 +87,10 @@ void SwerveModule::setDriveVelocitySetpoint(float setpt)
     driveMode = VELOCITY;
 }
 
+void SwerveModule::setDriveCurrentLimit(int limit) {
+    driveMotor->SetSmartCurrentLimit(limit);
+}
+
 /**
  * speedFPS attribute should be in RPM
  * Sets Drive Velocity & Steer Angle
@@ -94,10 +102,14 @@ void SwerveModule::setModuleState(SwerveModuleState setpt, bool takeShortestPath
         SwerveModuleState outputs = moduleSetpointGenerator(getModuleState(), setpt);
         setDriveVelocitySetpoint(outputs.getSpeedFPS());
         setSteerAngleSetpoint(outputs.getRot2d().getRadians());
+        prevSetpoint.setRot2d(outputs.getRot2d());
+        prevSetpoint.setSpeedFPS(outputs.getSpeedFPS());
     }
     else {
         driveVelocitySetpoint = setpt.getSpeedFPS();
         steerAngleSetpoint = setpt.getRot2d().getRadians();
+        prevSetpoint.setRot2d(setpt.getRot2d());
+        prevSetpoint.setSpeedFPS(setpt.getSpeedFPS());
     }
     
 }
@@ -108,6 +120,17 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     double currVel = currState.getSpeedFPS();
     double desAngle = desiredSetpoint.getRot2d().getRadians();
     double desVel = desiredSetpoint.getSpeedFPS();
+    
+    double limitVel = ControlUtil::limitAcceleration(currVel, desVel, maxDriveAccelerationRPM, loopTime);
+    
+    if (steerID == 11)
+    {
+        frc::SmartDashboard::PutNumber("LimitedVel", limitVel);
+        frc::SmartDashboard::PutNumber("DesiredVel", desVel);
+        frc::SmartDashboard::PutBoolean("AccLimited?", desVel != limitVel);
+    }
+    // desVel = limitVel;
+    
 
     double dist = fabs(currAngle - desAngle);
     bool flip = (dist > M_PI_2) && (((M_PI * 2) - dist) > M_PI_2);
@@ -121,7 +144,8 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
         double angleDist = std::min(fabs(setpointAngle - currAngle), (M_PI * 2) - fabs(setpointAngle - currAngle));
 
-        setpointVel = -(desVel * (-angleDist / M_PI_2) + desVel);
+        // setpointVel = -(desVel * (-angleDist / M_PI_2) + desVel);
+        setpointVel = -ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
     }
     else
     {
@@ -129,7 +153,8 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
         double angleDist = std::min(fabs(setpointAngle - currAngle), (M_PI * 2) - fabs(setpointAngle - currAngle));
 
-        setpointVel = desVel * (-angleDist / M_PI_2) + desVel;
+        // setpointVel = desVel * (-angleDist / M_PI_2) + desVel;
+        setpointVel = ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
     }
     return SwerveModuleState(setpointVel, Rotation2d(setpointAngle));
 }
@@ -169,12 +194,6 @@ bool SwerveModule::isFinished(float percentageBound)
  */
 void SwerveModule::run()
 {
-    // Constantly enforce motor configurations
-    steerMotor->SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
-    driveMotor->SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
-    
-
-
     if (moduleInhibit) // Thread is in standby mode
     {
 

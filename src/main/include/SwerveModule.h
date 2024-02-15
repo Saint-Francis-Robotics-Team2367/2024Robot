@@ -16,11 +16,13 @@
 #include "Constants.h"
 #include "util/ShuffleUI.h"
 #include "util/ControlUtil.h"
+#include "control/PowerModule.h"
 
 // Steer PID values(custom, untuned)
-constexpr float steerP = 0.60; // prev 0.76
-constexpr float steerI = 0.0;
+constexpr float steerP = 0.50; // prev 0.76
+constexpr float steerI = 0.11;
 constexpr float steerD = 0.0;
+constexpr float steerIZone = 0.05;
 
 // Drive Velocity PID Values(Defaults from REV)
 constexpr float revkP = 6e-5;
@@ -57,6 +59,7 @@ public:
     float driveVelocitySetpoint;
     float drivePositionSetpoint;
     float steerAngleSetpoint;
+    SwerveModuleState prevSetpoint = SwerveModuleState(0.0, Rotation2d(0.0));
 
     enum driveModeType
     {
@@ -68,12 +71,13 @@ public:
 
     // Module Constraints
     const int maxRPMFreeSpeed = moduleMaxRPM;
-    const float maxDriveAccelerationFPS = 7.603; // Feet per sec2
-    const float maxDriveAccelerationRPM = ((maxDriveAccelerationFPS * 60) / wheelCircumFeet) * moduleDriveRatio;
+    const float maxDriveAccelerationFPS = 25.8; //7.603; // Feet per sec2
+    const float maxDriveAccelerationRPM = 2665.993 * (25.8 / 7.6);
     const float maxSteerVelocity = 189.2; // Radians per sec
 
-    const int maxSteerCurrent = 20; // Maximum current to steer motor
-    const int maxDriveCurrent = 20; // Maximum current to steer motor
+    const int maxSteerCurrent = 10; // Maximum current to steer motor
+    const int maxDriveCurrent = swerveDriveStartCurrent; // Maximum current to steer motor
+    // Must match with power module.h start value
 
     // TODO: Brownout module
     double currentSteerOutput = 0.0;
@@ -90,6 +94,7 @@ public:
 
     void setDrivePositionSetpoint(float setpt);
     void setDriveVelocitySetpoint(float setpt);
+    void setDriveCurrentLimit(int limit);
 
     // TODO: Test this
     void setModuleState(SwerveModuleState setpt, bool takeShortestPath = true);

@@ -80,32 +80,43 @@ public:
     static float limitPositiveAcceleration(float previousVelocity, float desiredVelocity, float maxAcc, float dt)
     {
         float range = maxAcc * dt;
-        if (previousVelocity > 0 && desiredVelocity > 0)
-        {
-            if (previousVelocity + range < desiredVelocity)
-            {
-                desiredVelocity = previousVelocity + range;
-            }
-        }
-        else if (previousVelocity < 0 && desiredVelocity < 0)
-        {
-            if (previousVelocity - range > desiredVelocity)
-            {
-                desiredVelocity = previousVelocity - range;
-            }
-        }
-        else
-        {
-            if (previousVelocity < 0)
-            {
-                desiredVelocity = previousVelocity + range;
-            }
-            else
-            {
-                desiredVelocity = previousVelocity - range;
-            }
+        if (std::signbit(desiredVelocity) == std::signbit(previousVelocity) && std::abs(desiredVelocity) > std::abs(previousVelocity)) {
+            float maxAllowedVelocity = std::abs(previousVelocity) + range;
+            float minAllowedVelocity = std::abs(previousVelocity) - range;
+            return std::clamp(desiredVelocity, minAllowedVelocity, maxAllowedVelocity);
         }
         return desiredVelocity;
+
+        // if (fabs(desiredVelocity) < kEpsilon) {
+        //     return desiredVelocity;
+        // }
+
+        // if (previousVelocity > 0 && desiredVelocity > 0)
+        // {
+        //     if (previousVelocity + range < desiredVelocity)
+        //     {
+        //         desiredVelocity = previousVelocity + range;
+        //     }
+        // }
+        // else if (previousVelocity < 0 && desiredVelocity < 0)
+        // {
+        //     if (previousVelocity - range > desiredVelocity)
+        //     {
+        //         desiredVelocity = previousVelocity - range;
+        //     }
+        // }
+        // else
+        // {
+        //     if (previousVelocity < 0)
+        //     {
+        //         desiredVelocity = previousVelocity + range;
+        //     }
+        //     else
+        //     {
+        //         desiredVelocity = previousVelocity - range;
+        //     }
+        // }
+        // return desiredVelocity;
     }
 
     static double min(double a, double b)
@@ -118,5 +129,26 @@ public:
         {
             return a;
         }
+    }
+
+
+    /**
+     *  * Increases allowed max velocity to boostPercent when boost boolean is true
+     * Otherwise sets allowed maxVelocity to its normal percentage limit
+    */
+    static double boostScaler(double axis, bool boost, float boostPercent, float normalPercent) 
+    {
+        if (boost) {
+            return axis * boostPercent;
+        } 
+        return axis * normalPercent;
+    }
+
+    static double scaleSwerveVelocity(double desiredVelocity, double angleError, bool quartic) 
+    {
+        int n = quartic ? 4 : 2; // n is quadratic or quartic
+        return (pow(2 / M_PI, n) * desiredVelocity) * pow(angleError - M_PI_2, n);
+
+
     }
 };

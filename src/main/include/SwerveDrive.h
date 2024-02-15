@@ -3,6 +3,8 @@
 #include "SwerveModule.h"
 #include "geometry/Rotation2d.h"
 #include "swerve/ChassisSpeeds.h"
+#include "geometry/Pose2d.h"
+#include "geometry/Twist2d.h"
 #include "geometry/Translation2d.h"
 #include "Constants.h"
 #include "swerve/SwerveDriveKinematics.h"
@@ -25,8 +27,8 @@
 #define BLdriveID 10
 #define BL_CAN_ID 2 // updated
 
-#define BRsteerID 1
-#define BRdriveID 42
+#define BRsteerID 6
+#define BRdriveID 5
 #define BR_CAN_ID 0 // updated
 
 // #define maxRot
@@ -56,10 +58,12 @@ public:
     // TODO overload - pass Point2d + rotation, it figures it out
     // void Drive(Translation2d translation, Rotation2d rotation);
     void Drive(double rightX, double leftX, double leftY, double fieldRelativeGyro);
+    void Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented);
     void initModules();
     void enableModules();
     bool stopModules();
     void orientModules(double FL, double FR, double BL, double BR);
     void autoMove(double angleRadians, double distanceFeet);
+    void setDriveCurrentLimit(int limit);
     void displayDriveTelemetry();
 };

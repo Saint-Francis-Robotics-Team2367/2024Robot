@@ -10,12 +10,19 @@
 
 #include "util/ShuffleUI.h"
 #include <thread>
-#include "SwerveDrive.h"
+
 #include "util/ControlUtil.h"
 #include "sensors/NavX.h"
 #include "swerve/SwerveHeadingController.h"
 #include "util/TimeDelayedBool.h"
 #include <frc/Joystick.h>
+#include "sensors/Limelight.h"
+#include "util/SlewRateLimiter.h"
+#include <frc/GenericHID.h>
+#include "control/PowerModule.h"
+
+#include "SwerveDrive.h"
+// #include "Intake.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -39,16 +46,22 @@ public:
   void SimulationPeriodic() override;
 
   // Modules/Devices
-  // frc::XboxController ctr = frc::XboxController(0);
   frc::PS5Controller ctr = frc::PS5Controller(0);
   SwerveDrive mDrive = SwerveDrive();
   NavX mGyro = NavX();
+  Limelight mLimelight;
+  // Intake mIntake;
   // frc::Joystick ctr = frc::Joystick(0);
 
-  double leftX = 0;
-  double leftY = 0;
-
+  // Teleop Controls
+  float ctrPercent = 0.5;
+  float boostPercent = 0.9;
+  double ctrPercentAim = 0.3;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
+  SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
+  SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
+  PowerModule mPowerModule;
+  
 };

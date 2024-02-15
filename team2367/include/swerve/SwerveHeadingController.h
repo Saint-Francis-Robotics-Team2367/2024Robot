@@ -18,7 +18,7 @@ private:
 
 public:
     enum HeadingControllerState {
-        OFF, SNAP, MAINTAIN
+        OFF, SNAP, ALIGN, MAINTAIN
     };
     HeadingControllerState mHeadingControllerState = OFF;
 
@@ -27,6 +27,11 @@ public:
         mPIDCtr.EnableContinuousInput(0, 360);
         outputMax = output_max;
         outputMin = output_min;
+    }
+
+    void setOutputRange(double min, double max) {
+        outputMax = max;
+        outputMin = min;
     }
 
     HeadingControllerState getHeadingControllerState() {
@@ -55,8 +60,11 @@ public:
             case SNAP:
                 mPIDCtr.SetPID(0.02, 0.0, 0.0);
                 break;
+            case ALIGN:
+                mPIDCtr.SetPID(0.02, 0.0, 0.0);
+                break;
             case MAINTAIN:
-                // maintain pids
+                mPIDCtr.SetPID(0.02, 0.0, 0.0);
                 break;
         }
         return std::clamp(mPIDCtr.Calculate(current_angle, mSetpoint), outputMin, outputMax);
