@@ -1,6 +1,5 @@
 #pragma once
 
-#include <bits/stdc++.h>
 #include <frc/Timer.h>
 
 class SlewRateLimiter
