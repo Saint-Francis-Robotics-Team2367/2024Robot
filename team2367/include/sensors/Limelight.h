@@ -66,7 +66,9 @@ public:
             double angleToTagDegrees = limelightAngleDegrees + ty;
             frc::SmartDashboard::PutNumber("vertical angle", angleToTagDegrees);
             return angleToTagDegrees;
-        } else {
+        }
+        else
+        {
             return NULL;
         }
     }
@@ -98,8 +100,9 @@ public:
 
     bool isIn(int object, std::vector<int> inp)
     {
-        for (unsigned int i = 0; i < inp.size(); i++) {
-            if (inp[i] == object) 
+        for (unsigned int i = 0; i < inp.size(); i++)
+        {
+            if (inp[i] == object)
             {
                 return true;
             }
@@ -122,7 +125,7 @@ public:
 
     bool isSpeakerTagDetected()
     {
-        return isIn((int) LimelightHelpers::getFiducialID(), speakerCenterIDs);
+        return isIn((int)LimelightHelpers::getFiducialID(), speakerCenterIDs);
     }
 
     /*

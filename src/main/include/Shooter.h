@@ -68,5 +68,5 @@ public:
     double getAnglePosition();
     double getMotorVelocity();
 
-    bool runAuto(Limelight limelight); 
+    bool runAuto(Limelight limelight);
 };

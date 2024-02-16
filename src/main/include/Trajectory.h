@@ -23,30 +23,27 @@
 #include <chrono>
 #include <frc/Timer.h>
 
-
-using namespace pathplanner; 
+using namespace pathplanner;
 
 class Trajectory
 {
 private:
     SwerveDrive &mDrive;
-    Shooter &mShooter; 
+    Shooter &mShooter;
     Limelight &mLimelight;
 
 public:
-    Trajectory(SwerveDrive &mDriveInput, Shooter &mShooterInput, Limelight &mLimelightInput) : mDrive(mDriveInput), 
+    Trajectory(SwerveDrive &mDriveInput, Shooter &mShooterInput, Limelight &mLimelightInput) : mDrive(mDriveInput),
                                                                                                mShooter(mShooterInput),
-                                                                                               mLimelight(mLimelightInput) 
-    {
-    };
+                                                                                               mLimelight(mLimelightInput){};
 
     void driveToState(PathPlannerTrajectory::State const &state);
 
-    void follow(std::string const &traj_dir); 
+    void follow(std::string const &traj_dir);
 
-    void followPath(int num); 
-        
+    void followPath(int num);
+
     void testHolonomic(frc::Pose2d const &target_pose,
-        units::velocity::meters_per_second_t const &velocity,
-        frc::Rotation2d const &target_rot);
+                       units::velocity::meters_per_second_t const &velocity,
+                       frc::Rotation2d const &target_rot);
 };

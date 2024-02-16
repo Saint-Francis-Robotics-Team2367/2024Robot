@@ -8,16 +8,19 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
 {
     double desiredVx = desiredSpeeds.vxMetersPerSecond;
     double desiredVy = desiredSpeeds.vyMetersPerSecond;
-    if (useFieldOriented) {
+    if (useFieldOriented)
+    {
         desiredSpeeds = ChassisSpeeds::fromFieldRelativeSpeeds(desiredVx, desiredVy, desiredSpeeds.omegaRadiansPerSecond, fieldRelativeGyro);
         frc::SmartDashboard::PutBoolean("BOTCENTRIC!", false);
-    } else {
+    }
+    else
+    {
         frc::SmartDashboard::PutBoolean("BOTCENTRIC!", true);
     }
     desiredVx = desiredSpeeds.vxMetersPerSecond;
     desiredVy = desiredSpeeds.vyMetersPerSecond;
 
-    if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon) 
+    if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon)
     {
         // SwerveModuleState FLBRstop = SwerveModuleState(0.0, M_PI / 4);
         // SwerveModuleState FRBLstop = SwerveModuleState(0.0, 7 * M_PI / 4);
@@ -34,7 +37,6 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
         return;
     }
 
-    
     Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
     Twist2d robotTwist = Pose2d::log(robotPoseVel);
     ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
@@ -155,7 +157,8 @@ void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
     // TODO: Wait for modules to reach point
 }
 
-void SwerveDrive::setDriveCurrentLimit(int limit) {
+void SwerveDrive::setDriveCurrentLimit(int limit)
+{
     mFrontRight.setDriveCurrentLimit(limit);
     mFrontLeft.setDriveCurrentLimit(limit);
     mBackLeft.setDriveCurrentLimit(limit);
@@ -163,45 +166,39 @@ void SwerveDrive::setDriveCurrentLimit(int limit) {
 }
 
 /**
- * Resets odometry position 
+ * Resets odometry position
  * (used in auto config)
-*/
-void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot) {
+ */
+void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot)
+{
     m_odometry.ResetPosition(
-        mGyro.getRotation2d(), 
-        {
-            mBackLeft.getModulePosition(), 
-            mFrontLeft.getModulePosition(), 
-            mFrontRight.getModulePosition(), 
-            mBackRight.getModulePosition() 
-        },
-        frc::Pose2d{trans, rot}
-    );
-    
+        mGyro.getRotation2d(),
+        {mBackLeft.getModulePosition(),
+         mFrontLeft.getModulePosition(),
+         mFrontRight.getModulePosition(),
+         mBackRight.getModulePosition()},
+        frc::Pose2d{trans, rot});
 }
 
 /**
- * Retrieves odometry pose in feet 
-*/
+ * Retrieves odometry pose in feet
+ */
 frc::Pose2d SwerveDrive::getOdometryPose()
 {
     return m_odometry.GetPose();
 }
 
 /**
- * Updates odometry with current module positions 
-*/
-void SwerveDrive::updateOdometry() 
+ * Updates odometry with current module positions
+ */
+void SwerveDrive::updateOdometry()
 {
     m_odometry.Update(
-        -mGyro.getRotation2d(), 
-        {
-            mBackLeft.getModulePosition(), 
-            mFrontLeft.getModulePosition(), 
-            mFrontRight.getModulePosition(), 
-            mBackRight.getModulePosition() 
-        }
-    );
+        -mGyro.getRotation2d(),
+        {mBackLeft.getModulePosition(),
+         mFrontLeft.getModulePosition(),
+         mFrontRight.getModulePosition(),
+         mBackRight.getModulePosition()});
 }
 
 /**
@@ -211,5 +208,4 @@ void SwerveDrive::updateOdometry()
  */
 void SwerveDrive::displayDriveTelemetry()
 {
-    
 }

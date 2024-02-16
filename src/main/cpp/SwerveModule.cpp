@@ -87,7 +87,8 @@ void SwerveModule::setDriveVelocitySetpoint(float setpt)
     driveMode = VELOCITY;
 }
 
-void SwerveModule::setDriveCurrentLimit(int limit) {
+void SwerveModule::setDriveCurrentLimit(int limit)
+{
     driveMotor->SetSmartCurrentLimit(limit);
 }
 
@@ -97,7 +98,7 @@ void SwerveModule::setDriveCurrentLimit(int limit) {
  */
 void SwerveModule::setModuleState(SwerveModuleState setpt, bool takeShortestPath)
 {
-    if (takeShortestPath) 
+    if (takeShortestPath)
     {
         SwerveModuleState outputs = moduleSetpointGenerator(getModuleState(), setpt);
         setDriveVelocitySetpoint(outputs.getSpeedFPS());
@@ -105,13 +106,13 @@ void SwerveModule::setModuleState(SwerveModuleState setpt, bool takeShortestPath
         prevSetpoint.setRot2d(outputs.getRot2d());
         prevSetpoint.setSpeedFPS(outputs.getSpeedFPS());
     }
-    else {
+    else
+    {
         driveVelocitySetpoint = setpt.getSpeedFPS();
         steerAngleSetpoint = setpt.getRot2d().getRadians();
         prevSetpoint.setRot2d(setpt.getRot2d());
         prevSetpoint.setSpeedFPS(setpt.getSpeedFPS());
     }
-    
 }
 
 SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currState, SwerveModuleState desiredSetpoint)
@@ -120,9 +121,9 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     double currVel = currState.getSpeedFPS();
     double desAngle = desiredSetpoint.getRot2d().getRadians();
     double desVel = desiredSetpoint.getSpeedFPS();
-    
+
     double limitVel = ControlUtil::limitAcceleration(currVel, desVel, maxDriveAccelerationRPM, loopTime);
-    
+
     if (steerID == 11)
     {
         frc::SmartDashboard::PutNumber("LimitedVel", limitVel);
@@ -130,7 +131,6 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
         frc::SmartDashboard::PutBoolean("AccLimited?", desVel != limitVel);
     }
     // desVel = limitVel;
-    
 
     double dist = fabs(currAngle - desAngle);
     bool flip = (dist > M_PI_2) && (((M_PI * 2) - dist) > M_PI_2);
@@ -167,15 +167,16 @@ SwerveModuleState SwerveModule::getModuleState()
     return SwerveModuleState(vel, angle);
 }
 
-frc::SwerveModulePosition SwerveModule::getModulePosition() {
-    frc::SwerveModulePosition pos; 
+frc::SwerveModulePosition SwerveModule::getModulePosition()
+{
+    frc::SwerveModulePosition pos;
 
-    pos.angle = frc::Rotation2d(units::radian_t(Rotation2d::polarToCompass(getSteerEncoder().getRadians()))); 
+    pos.angle = frc::Rotation2d(units::radian_t(Rotation2d::polarToCompass(getSteerEncoder().getRadians())));
 
-    // changes from encoder rotations to feet to meters 
+    // changes from encoder rotations to feet to meters
     pos.distance = units::meter_t(getDriveEncoderPos() * moduleDriveRatio * wheelCircumFeet / 3.281);
 
-    return pos; 
+    return pos;
 }
 
 /**
@@ -215,7 +216,7 @@ void SwerveModule::run()
     else
     {
         // Steer PID
-        
+
         currentSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
         steerMotor->Set(currentSteerOutput);
 
@@ -247,13 +248,12 @@ double SwerveModule::getDriveEncoderVel()
 }
 
 /**
- * in rotations 
-*/
+ * in rotations
+ */
 double SwerveModule::getDriveEncoderPos()
 {
     return driveEnc.GetPosition();
 }
-
 
 /**
  * Set moduleInhibit to true

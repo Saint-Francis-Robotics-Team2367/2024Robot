@@ -64,5 +64,4 @@ public:
   SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
   PowerModule mPowerModule;
-  
 };

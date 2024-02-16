@@ -11,11 +11,13 @@ private:
     int intakeCurrentLimit = 10;
     rev::CANSparkMax *intakeMotor = new rev::CANSparkMax(intakeMotorID, rev::CANSparkMax::MotorType::kBrushed);
     void calculateIntakeVelocity(double robotVelocityLinear);
-    
-    
+
 public:
-    enum intakeState {
-        IN, OUT, STOP
+    enum intakeState
+    {
+        IN,
+        OUT,
+        STOP
     };
     static intakeState buttonsToState(bool inButton, bool outButton);
     static std::string getEnumString(intakeState state);

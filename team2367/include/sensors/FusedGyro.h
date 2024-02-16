@@ -3,7 +3,8 @@
 #include "geometry/Rotation2d.h"
 #include "NavX.h"
 
-class FusedGyro {
+class FusedGyro
+{
 
 private:
     NavX mGyro = NavX();
@@ -13,13 +14,12 @@ private:
     double maxDriftDegrees = 10;
     // Range for sensors to be in to proportion drift
     double driftBoundDegrees = 10;
-    //Degrees
+    // Degrees
     double previousRawGyro;
 
-
 public:
-
-    void init() {
+    void init()
+    {
         mGyro.init();
         trueAngle = mGyro.getBoundedAngleCW();
         previousRawGyro = trueAngle.getDegrees();
@@ -29,13 +29,14 @@ public:
      * Input in Clockwise positive
      * Run in robot periodic
      * Input should me limelight or magnetometer
-    */
-    void updatePeriodic(Rotation2d trueDetectedAngle) {
+     */
+    void updatePeriodic(Rotation2d trueDetectedAngle)
+    {
         // Convert all angles to 0-360 deg, CW positive, compass system
         double parentAngle = Rotation2d::degreesBound(trueDetectedAngle.getDegrees());
         double currTrueAngle = Rotation2d::degreesBound(trueAngle.getDegrees());
         double currGyroChange = mGyro.getBoundedAngleCW().getDegrees() - previousRawGyro;
-        
+
         // Determine drift direction
         bool driftPositive = false;
         double positiveDistance = Rotation2d::degreesBound(parentAngle - currTrueAngle);
@@ -46,10 +47,12 @@ public:
         double driftIncrement;
 
         // Determine bounds
-        if (fabs(angleError) < driftBoundDegrees) 
+        if (fabs(angleError) < driftBoundDegrees)
         {
             driftIncrement = ((driftBoundDegrees - angleError) / driftBoundDegrees) * maxDriftDegrees;
-        } else {
+        }
+        else
+        {
             driftIncrement = maxDriftDegrees;
         }
         driftIncrement = driftPositive ? driftIncrement : -driftIncrement;
@@ -60,14 +63,14 @@ public:
     }
 
     // Get angle with clockwise positive
-    Rotation2d getAngleCW() {
+    Rotation2d getAngleCW()
+    {
         return trueAngle;
     }
 
     // Get angle with counterclockwise positive
-    Rotation2d getAngleCCW() {
+    Rotation2d getAngleCCW()
+    {
         return Rotation2d::fromDegrees(Rotation2d::degreesBound(-trueAngle.getDegrees()));
     }
-
-
 };

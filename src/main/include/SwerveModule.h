@@ -69,15 +69,15 @@ public:
         VELOCITY
     };
     driveModeType driveMode = VELOCITY; // whether we are controlling module velocity or position
-    bool moduleInhibit = true;         // True to stop the motors
+    bool moduleInhibit = true;          // True to stop the motors
 
     // Module Constraints
     const int maxRPMFreeSpeed = moduleMaxRPM;
-    const float maxDriveAccelerationFPS = 25.8; //7.603; // Feet per sec2
+    const float maxDriveAccelerationFPS = 25.8; // 7.603; // Feet per sec2
     const float maxDriveAccelerationRPM = 2665.993 * (25.8 / 7.6);
     const float maxSteerVelocity = 189.2; // Radians per sec
 
-    const int maxSteerCurrent = 10; // Maximum current to steer motor
+    const int maxSteerCurrent = 10;                      // Maximum current to steer motor
     const int maxDriveCurrent = swerveDriveStartCurrent; // Maximum current to steer motor
     // Must match with power module.h start value
 
@@ -101,7 +101,7 @@ public:
     // TODO: Test this
     void setModuleState(SwerveModuleState setpt, bool takeShortestPath = true);
     SwerveModuleState moduleSetpointGenerator(SwerveModuleState prevSetpoint, SwerveModuleState desiredSetpoint);
-    frc::SwerveModulePosition getModulePosition(); 
+    frc::SwerveModulePosition getModulePosition();
 
     // Encoders
     Rotation2d getSteerEncoder();

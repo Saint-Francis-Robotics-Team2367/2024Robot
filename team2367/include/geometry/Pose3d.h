@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-class Pose3d 
+class Pose3d
 {
 public:
     double x;
@@ -11,7 +11,8 @@ public:
     double pitch;
     double yaw;
 
-    Pose3d(std::vector<double> pose) {
+    Pose3d(std::vector<double> pose)
+    {
         this->x = pose[0];
         this->y = pose[1];
         this->z = pose[2];
@@ -19,8 +20,4 @@ public:
         this->pitch = pose[4];
         this->yaw = pose[5];
     }
-
-
-
-
 };

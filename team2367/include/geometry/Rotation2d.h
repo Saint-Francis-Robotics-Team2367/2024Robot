@@ -11,20 +11,19 @@ class Rotation2d
 private:
     double radians;
 
-
 public:
-
-    Rotation2d() {
+    Rotation2d()
+    {
         radians = 0.0;
-
     }
-    
+
     Rotation2d(double angleRadians)
     {
         radians = angleRadians;
     }
 
-    Rotation2d(double x, double y) {
+    Rotation2d(double x, double y)
+    {
         radians = atan2(y, x);
     }
 
@@ -53,22 +52,24 @@ public:
         return radians;
     }
 
-    double getCos() {
+    double getCos()
+    {
         return cos(radians);
     }
 
-    double getSin() {
+    double getSin()
+    {
         return sin(radians);
     }
 
     /**
      * Bound from 0 to 2pi
-    */
-    inline static double radiansBound(double input_radians) {
+     */
+    inline static double radiansBound(double input_radians)
+    {
         double deg = (180 / M_PI) * input_radians;
         double output = fmod(fmod(deg, 360) + 360, 360) * (M_PI / 180);
         return output;
-
     }
 
     /**
@@ -76,8 +77,9 @@ public:
      * Polar: 0=right, positive=counterclockwise
      * Compass: 0=forward, positive=clockwise
      * Input in radians
-    */
-    inline static double compassToPolar(double angleRadians) {
+     */
+    inline static double compassToPolar(double angleRadians)
+    {
         double angle = radiansBound(angleRadians);
         angle = -angle + M_PI_2;
         return radiansBound(angle);
@@ -87,26 +89,26 @@ public:
      * Polar: 0=right, positive=counterclockwise
      * Compass: 0=forward, positive=clockwise
      * Input in radians
-    */
-    inline static double polarToCompass(double angleRadians) {
+     */
+    inline static double polarToCompass(double angleRadians)
+    {
         double angle = radiansBound(angleRadians);
         angle = -angle + M_PI_2;
         return radiansBound(angle);
     }
 
-
     /**
      * Bound from 0-360
-    */
-    inline static double degreesBound(double input_degrees) {
+     */
+    inline static double degreesBound(double input_degrees)
+    {
         double deg = input_degrees;
         double output = fmod(fmod(deg, 360) + 360, 360);
         return output;
     }
 
-    inline static Rotation2d fromDegrees(double degrees) {
+    inline static Rotation2d fromDegrees(double degrees)
+    {
         return Rotation2d(degrees * M_PI / 180);
     }
-
-
 };
