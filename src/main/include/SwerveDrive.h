@@ -3,6 +3,8 @@
 #include "SwerveModule.h"
 #include "geometry/Rotation2d.h"
 #include "swerve/ChassisSpeeds.h"
+#include "geometry/Pose2d.h"
+#include "geometry/Twist2d.h"
 #include "geometry/Translation2d.h"
 #include "Constants.h"
 #include "swerve/SwerveDriveKinematics.h"
@@ -91,7 +93,6 @@ public:
     char state = 't';
     // TODO overload - pass Point2d + rotation, it figures it out
     // void Drive(Translation2d translation, Rotation2d rotation);
-    void Drive(double rightX, double leftX, double leftY, double fieldRelativeGyro);
     void Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented);
     void initModules();
     void enableModules();
@@ -102,5 +103,6 @@ public:
     frc::Pose2d getOdometryPose();
     void updateOdometry();
     void displayDriveTelemetry();
+    void setDriveCurrentLimit(int limit);
 
 };

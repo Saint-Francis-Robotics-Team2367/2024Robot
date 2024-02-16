@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <cmath>

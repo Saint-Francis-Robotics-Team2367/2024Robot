@@ -96,17 +96,20 @@ double Shooter::getAnglePosition()
     return anglePosition;
 }
 
-double Shooter::heightAtAngle(double shooterVelocity, double x, double theta, double robotVelocity) {
-    double thetaRadians = theta * M_PI / 180.0;
-    double timeOfFlight = x / ((shooterVelocity * cos(thetaRadians))+robotVelocity);
-    double height = shooterVelocity * timeOfFlight * sin(thetaRadians) - 0.5 * 9.81 * pow(timeOfFlight, 2);
+double Shooter::heightAtAngle(double velocity, double x, double theta)
+{
+    double theta_rad = theta * M_PI / 180.0;
+    double time_of_flight = x / (velocity * cos(theta_rad));
+    double height = velocity * time_of_flight * sin(theta_rad) - 0.5 * 9.81 * pow(time_of_flight, 2);
     return height;
 }
 
-double Shooter::findLaunchAngle(double velocity, double x, double y, Limelight limelight) {
-    
-    auto func = [&](double theta) {
-        return std::abs(heightAtAngle(velocity, x, theta, 0) - y); // REPLACE WITH MDRIVE.GETVELOCITY
+double Shooter::findLaunchAngle(double velocity, double x, double y)
+{
+
+    auto func = [&](double theta)
+    {
+        return std::abs(heightAtAngle(velocity, x, theta) - y);
     };
 
     double min_angle = 0.0;
@@ -115,30 +118,15 @@ double Shooter::findLaunchAngle(double velocity, double x, double y, Limelight l
     double min_error = std::numeric_limits<double>::max();
     double best_angle = 0.0;
 
-    for (double angle = min_angle; angle <= max_angle; angle += step) {
+    for (double angle = min_angle; angle <= max_angle; angle += step)
+    {
         double error = func(angle);
-        if (error < min_error) {
+        if (error < min_error)
+        {
             min_error = error;
             best_angle = angle;
         }
     }
-
-    return best_angle;
 }
-
 bool Shooter::runAuto(Limelight limelight) {
-    double angle = findLaunchAngle(getMotorVelocity(), limelight.getDistanceToWall(), 0, limelight);
-
-    setAngleSetpoint(angle);
-    setMotorVelocitySetpoint(5700); 
-
-    // wait until angles and vel reach desired 
-    while(!getMotorVelocity() == 5700 || !getAnglePosition() == angle){
-
-    }
-
-    run();
-
-    // once finished, return true 
-    return true; 
 }

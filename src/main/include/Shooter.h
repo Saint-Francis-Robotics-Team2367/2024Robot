@@ -7,9 +7,6 @@
 #include <rev/SparkRelativeEncoder.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#include "SwerveDrive.h"
-#include "SwerveModule.h"
-
 #define bottomMotorID 0 // change later
 #define topMotorID 1
 #define tiltMotorID 2
@@ -57,8 +54,8 @@ private:
 
 public:
     double intakeMotorVelocity(double robotVelocity);
-    double heightAtAngle(double shooterVelocity, double x, double theta, double robotVelocity);
-    double findLaunchAngle(double velocity, double x, double y, Limelight limelight);
+    double heightAtAngle(double velocity, double x, double theta);
+    double findLaunchAngle(double velocity, double x, double y);
 
     void init();
     void run();

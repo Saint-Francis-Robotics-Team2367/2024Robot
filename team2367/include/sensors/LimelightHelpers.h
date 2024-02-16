@@ -1,6 +1,4 @@
-///
-//https://github.com/LimelightVision/limelightlib-wpicpp
-///
+#pragma once
 
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"

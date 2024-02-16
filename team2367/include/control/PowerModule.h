@@ -28,6 +28,7 @@ public:
     }
     int updateDriveCurrentLimit()
     {
+        ShuffleUI::MakeWidget("brownout", "Power", (int) mPDH.GetFaults().Brownout);
         if (reduceCurrentsOnBrownout)
         {
             if (mPDH.GetFaults().Brownout > 0)
@@ -46,7 +47,7 @@ public:
                 }
             }
         }
-        // ShuffleUI::MakeWidget("driveCurrent", "Power", driveCurrentLimit);
+        ShuffleUI::MakeWidget("driveCurrent", "Power", driveCurrentLimit);
         return driveCurrentLimit;
     }
 };

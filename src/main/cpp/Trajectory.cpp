@@ -15,8 +15,8 @@ static frc::HolonomicDriveController controller{
     frc::ProfiledPIDController<units::radian>{
         steerP, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
-            units::radians_per_second_t(SwerveModule::maxSteerVelocity),
-            units::radians_per_second_squared_t(SwerveModule::maxDriveAccelerationRadPS)}}}; 
+            units::radians_per_second_t(189.2),
+            units::radians_per_second_squared_t(2665.993 * (25.8 / 7.6))}}}; 
 
 
 /**
