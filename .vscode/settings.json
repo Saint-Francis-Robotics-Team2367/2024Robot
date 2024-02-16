@@ -92,11 +92,6 @@
     "typeinfo": "cpp",
     "valarray": "cpp",
     "variant": "cpp",
-<<<<<<< HEAD
-    "*.inc": "cpp"
-  },
-  "cmake.configureOnOpen": true
-=======
     "*.inc": "cpp",
     "__bit_reference": "cpp",
     "__config": "cpp",
@@ -125,5 +120,4 @@
     "stacktrace": "cpp",
     "syncstream": "cpp"
   }
->>>>>>> devTest
 }
