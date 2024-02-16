@@ -73,7 +73,7 @@ public:
 
     // Module Constraints
     static constexpr int maxRPMFreeSpeed = moduleMaxRPM;
-    static constexpr float maxDriveAccelerationFPS = 25.8 // 7.603; // Feet per sec2
+    static constexpr float maxDriveAccelerationFPS = 25.8; // 7.603; // Feet per sec2
     static constexpr float maxDriveAccelerationRPM = 2665.993 * (25.8 / 7.6);
     static constexpr float maxDriveAccelerationRadPS = 279.182133792; // Radians per sec2
     static constexpr float maxSteerVelocity = 189.2; // Radians per sec
