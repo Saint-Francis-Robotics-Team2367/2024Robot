@@ -44,7 +44,7 @@ void SwerveModule::initMotors()
     m_pidController.SetFF(kFF);
     m_pidController.SetIAccum(0.0);
     m_pidController.SetOutputRange(kMinOutput, kMaxOutput);
-    steerCTR.EnableContinuousInput(0, 2 * M_PI);
+    steerCTR.EnableContinuousInput(0, 2 * PI);
     steerCTR.SetIZone(steerIZone);
 
     // driveMotor->SetClosedLoopRampRate(0.5);
@@ -133,27 +133,27 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     // desVel = limitVel;
 
     double dist = fabs(currAngle - desAngle);
-    bool flip = (dist > M_PI_2) && (((M_PI * 2) - dist) > M_PI_2);
+    bool flip = (dist > PI_2) && (((PI * 2) - dist) > PI_2);
 
     double setpointAngle;
     double setpointVel;
 
     if (flip)
     {
-        setpointAngle = Rotation2d::radiansBound(desAngle + M_PI);
+        setpointAngle = Rotation2d::radiansBound(desAngle + PI);
 
-        double angleDist = std::min(fabs(setpointAngle - currAngle), (M_PI * 2) - fabs(setpointAngle - currAngle));
+        double angleDist = std::min(fabs(setpointAngle - currAngle), (PI * 2) - fabs(setpointAngle - currAngle));
 
-        // setpointVel = -(desVel * (-angleDist / M_PI_2) + desVel);
+        // setpointVel = -(desVel * (-angleDist / PI_2) + desVel);
         setpointVel = -ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
     }
     else
     {
         setpointAngle = desAngle;
 
-        double angleDist = std::min(fabs(setpointAngle - currAngle), (M_PI * 2) - fabs(setpointAngle - currAngle));
+        double angleDist = std::min(fabs(setpointAngle - currAngle), (PI * 2) - fabs(setpointAngle - currAngle));
 
-        // setpointVel = desVel * (-angleDist / M_PI_2) + desVel;
+        // setpointVel = desVel * (-angleDist / PI_2) + desVel;
         setpointVel = ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
     }
     return SwerveModuleState(setpointVel, Rotation2d(setpointAngle));

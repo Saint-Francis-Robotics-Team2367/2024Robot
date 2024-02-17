@@ -98,7 +98,7 @@ double Shooter::getAnglePosition()
 
 double Shooter::heightAtAngle(double velocity, double x, double theta)
 {
-    double theta_rad = theta * M_PI / 180.0;
+    double theta_rad = theta * PI / 180.0;
     double time_of_flight = x / (velocity * cos(theta_rad));
     double height = velocity * time_of_flight * sin(theta_rad) - 0.5 * 9.81 * pow(time_of_flight, 2);
     return height;
