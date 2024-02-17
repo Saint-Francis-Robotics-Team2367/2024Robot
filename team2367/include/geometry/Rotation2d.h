@@ -3,8 +3,8 @@
 #include "Constants.h"
 #include <cmath>
 
-#define M_PI 3.14
-#define M_PI_2 3.14
+#define PI 3.14
+#define PI_2 3.14
 
 class Rotation2d
 {
@@ -67,8 +67,8 @@ public:
      */
     inline static double radiansBound(double input_radians)
     {
-        double deg = (180 / M_PI) * input_radians;
-        double output = fmod(fmod(deg, 360) + 360, 360) * (M_PI / 180);
+        double deg = (180 / PI) * input_radians;
+        double output = fmod(fmod(deg, 360) + 360, 360) * (PI / 180);
         return output;
     }
 
@@ -81,7 +81,7 @@ public:
     inline static double compassToPolar(double angleRadians)
     {
         double angle = radiansBound(angleRadians);
-        angle = -angle + M_PI_2;
+        angle = -angle + PI_2;
         return radiansBound(angle);
     }
 
@@ -93,7 +93,7 @@ public:
     inline static double polarToCompass(double angleRadians)
     {
         double angle = radiansBound(angleRadians);
-        angle = -angle + M_PI_2;
+        angle = -angle + PI_2;
         return radiansBound(angle);
     }
 
@@ -109,6 +109,6 @@ public:
 
     inline static Rotation2d fromDegrees(double degrees)
     {
-        return Rotation2d(degrees * M_PI / 180);
+        return Rotation2d(degrees * PI / 180);
     }
 };

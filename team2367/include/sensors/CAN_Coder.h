@@ -17,12 +17,12 @@ public:
 
     Rotation2d getPosition()
     {
-        return Rotation2d(encoder.GetPosition() * (M_PI / 180));
+        return Rotation2d(encoder.GetPosition() * (PI / 180));
     }
 
     Rotation2d getAbsolutePosition()
     {
-        return Rotation2d(encoder.GetAbsolutePosition() * (M_PI / 180));
+        return Rotation2d(encoder.GetAbsolutePosition() * (PI / 180));
     }
 
     double getVelocity()
