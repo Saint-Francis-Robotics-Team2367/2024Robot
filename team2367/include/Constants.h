@@ -1,6 +1,7 @@
 #pragma once
 
 #define PI 3.14159265359
+#define PI_2 1.57079633
 // #define driveEncConvFactor 6.86 * 2 * PI
 // #define steerEncConvFactor 12.8 * 2 * PI
 
