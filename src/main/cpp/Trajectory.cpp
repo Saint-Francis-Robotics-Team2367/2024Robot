@@ -34,9 +34,9 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
 /**
  * Follows pathplanner trajectory
  */
-void Trajectory::follow(std::string const &traj_dir)
+void Trajectory::follow(std::string const &traj_dir_file_path)
 {
-    auto path = PathPlannerPath::fromPathFile(traj_dir);
+    auto path = PathPlannerPath::fromPathFile(traj_dir_file_path);
     PathPlannerTrajectory traj = PathPlannerTrajectory(path, frc::ChassisSpeeds(), frc::Rotation2d(0_rad));
 
     auto const initialState = traj.getInitialState();
