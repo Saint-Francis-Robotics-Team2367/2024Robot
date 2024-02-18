@@ -40,6 +40,9 @@ private:
     float maxTiltSetpoint = 61;
     void setAllMotors(double input);
 
+    // Preset Positions
+    const float highSetpoint = -20.0;
+    const float stowSetpoint = 60.0;
 
 public:
     enum armPosition {

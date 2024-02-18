@@ -83,10 +83,10 @@ void Arm::setPosition(armPosition desiredPosition)
     switch(desiredPosition) 
     {
         case HIGH:
-            setpoint = -20.0;
+            setpoint = highSetpoint;
             break;
         case STOW:
-            setpoint = 60.0;
+            setpoint = stowSetpoint;
             break;
     }
     tiltSetpoint = setpoint;
