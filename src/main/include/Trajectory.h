@@ -39,7 +39,7 @@ public:
 
     void driveToState(PathPlannerTrajectory::State const &state);
 
-    void follow(std::string const &traj_dir);
+    void follow(std::string const &traj_dir_file_path);
 
     void followPath(int num);
 
