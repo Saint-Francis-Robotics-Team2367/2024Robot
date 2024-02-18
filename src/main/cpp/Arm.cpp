@@ -80,14 +80,19 @@ void Arm::setPosition(float desiredAngle) // setpoint in degrees
 void Arm::setPosition(armPosition desiredPosition)
 {
     float setpoint;
-    switch(desiredPosition) 
+    switch (desiredPosition)
     {
-        case HIGH:
-            setpoint = highSetpoint;
-            break;
-        case STOW:
-            setpoint = stowSetpoint;
-            break;
+    case HIGH:
+        setpoint = highSetpoint;
+        break;
+    case STOW:
+        setpoint = stowSetpoint;
+        break;
     }
     tiltSetpoint = setpoint;
+}
+
+void Arm::incrementPosition(float increment)
+{
+    setPosition(tiltSetpoint + increment);
 }

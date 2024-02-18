@@ -24,7 +24,7 @@ constexpr float encoderToArmRatio = 12.0 / 54.0;
 constexpr float armMinFromVertical = 84.0;
 constexpr float shooterToArmAngle = 46.0;
 
-class Arm 
+class Arm
 {
 private:
     rev::CANSparkMax leftSideLead = rev::CANSparkMax(leftFrontMotorID, rev::CANSparkBase::MotorType::kBrushless);
@@ -45,8 +45,10 @@ private:
     const float stowSetpoint = 60.0;
 
 public:
-    enum armPosition {
-        HIGH, STOW
+    enum armPosition
+    {
+        HIGH,
+        STOW
     };
     void init();
     void runPeriodic();
@@ -57,6 +59,5 @@ public:
     Rotation2d getShooterAngle();
     void setPosition(float desiredAngle);
     void setPosition(armPosition desiredPosition);
-
-
+    void incrementPosition(float increment);
 };
