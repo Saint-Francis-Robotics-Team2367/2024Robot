@@ -21,7 +21,6 @@ void Arm::init()
 
     tiltEncoder.Reset();
     stopTiltMotor = true;
-    motorThread = std::thread(&Arm::run, this);
 }
 
 void Arm::setAllMotors(double input)
@@ -42,24 +41,21 @@ Rotation2d Arm::getShooterAngle()
     return Rotation2d((M_PI_2) - (getAxleAngle().getRadians() + (armMinFromVertical * M_PI / 180)) + (shooterToArmAngle * M_PI / 180));
 }
 
-void Arm::run()
+void Arm::runPeriodic()
 {
-    while (true)
+    if (stopTiltMotor == true)
     {
-        if (stopTiltMotor == true)
-        {
-            leftSideLead.StopMotor();
-            leftSideFollow.StopMotor();
-            rightSideLead.StopMotor();
-            rightSideFollow.StopMotor();
-        }
-        else
-        {
-            double output = -tiltController.Calculate(getShooterAngle().getDegrees(), tiltSetpoint);
-            output = std::clamp(output, -0.06, 0.1);
-            setAllMotors(output);
-            frc::SmartDashboard::PutNumber("PIDout", output);
-        }
+        leftSideLead.StopMotor();
+        leftSideFollow.StopMotor();
+        rightSideLead.StopMotor();
+        rightSideFollow.StopMotor();
+    }
+    else
+    {
+        double output = -tiltController.Calculate(getShooterAngle().getDegrees(), tiltSetpoint);
+        output = std::clamp(output, -0.06, 0.1);
+        setAllMotors(output);
+        frc::SmartDashboard::PutNumber("PIDout", output);
     }
 }
 
@@ -73,15 +69,15 @@ void Arm::enableMotors()
     stopTiltMotor = false;
 }
 
-void Arm::setAngleSetpoint(float setpoint) // setpoint in degrees
+void Arm::setPosition(float desiredAngle) // setpoint in degrees
 {
-    if (setpoint <= maxTiltSetpoint)
+    if (desiredAngle <= maxTiltSetpoint)
     {
-        tiltSetpoint = setpoint; // converted to revolutions
+        tiltSetpoint = desiredAngle; // converted to revolutions
     }
 }
 
-void Arm::setAngleSetpoint(armPosition desiredPosition)
+void Arm::setPosition(armPosition desiredPosition)
 {
     float setpoint;
     switch(desiredPosition) 

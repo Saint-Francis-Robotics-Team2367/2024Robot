@@ -9,25 +9,16 @@
 #include <rev/SparkRelativeEncoder.h>
 #include <thread>
 
-#define leftFrontMotorID 9
-#define leftBackMotorID 11
-#define rightFrontMotorID 10
-#define rightBackMotorID 12
+constexpr int leftFrontMotorID = 9;
+constexpr int leftBackMotorID = 11;
+constexpr int rightFrontMotorID = 10;
+constexpr int rightBackMotorID = 12;
 
-#define revkP 6e-5
-#define revkI 1e-6
-#define revkD 0.0
-#define revkFF 0.000015
+constexpr int tiltControllerP = 0.02;
+constexpr int tiltControllerI = 0.0;
+constexpr int tiltControllerD = 0.0;
 
-#define bottomRollerID 14
-#define topRollerID 15
-
-#define tiltControllerP 0.02
-#define tiltControllerI 0.0
-#define tiltControllerD 0.0
-
-#define armCurrentLimit 20
-#define shooterCurrentLimit 20
+constexpr int armCurrentLimit = 20;
 
 constexpr float encoderToArmRatio = 12.0 / 54.0;
 constexpr float armMinFromVertical = 84.0;
@@ -47,8 +38,6 @@ private:
     bool stopTiltMotor = true;
     double tiltSetpoint;
     float maxTiltSetpoint = 61;
-
-    std::thread motorThread;
     void setAllMotors(double input);
 
 
@@ -57,14 +46,14 @@ public:
         HIGH, STOW
     };
     void init();
-    void run();
+    void runPeriodic();
     void enableMotors();
     void disableMotors();
 
     Rotation2d getAxleAngle();
     Rotation2d getShooterAngle();
-    void setAngleSetpoint(float setpoint);
-    void setAngleSetpoint(armPosition desiredPosition);
+    void setPosition(float desiredAngle);
+    void setPosition(armPosition desiredPosition);
 
 
 };
