@@ -17,9 +17,9 @@ private:
     void setStdCurrentLimit(double current);
     //void calculateIntakeVelocity(double robotVelocityLinear);
 
-    rev::CANSparkMax *intakeMotor = new rev::CANSparkMax(intakeMotorID, rev::CANSparkMax::MotorType::kBrushed);
-    rev::SparkPIDController intakeController = intakeMotor->GetPIDController();
-    rev::SparkRelativeEncoder intakeEncoder = intakeMotor->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
+    rev::CANSparkMax intakeMotor = rev::CANSparkMax(intakeMotorID, rev::CANSparkMax::MotorType::kBrushed);
+    rev::SparkPIDController intakeController = intakeMotor.GetPIDController();
+    rev::SparkRelativeEncoder intakeEncoder = intakeMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
 
 public:
     enum Dir

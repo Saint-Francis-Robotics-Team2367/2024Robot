@@ -2,14 +2,14 @@
 
 void Intake::enable()
 {
-    intakeMotor->RestoreFactoryDefaults();
-    intakeMotor->SetSmartCurrentLimit(intakeCurrentLimit);
-    intakeMotor->SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
+    intakeMotor.RestoreFactoryDefaults();
+    intakeMotor.SetSmartCurrentLimit(intakeCurrentLimit);
+    intakeMotor.SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
     //currentState = intakeState::STOP;
 }
 
 void Intake::disable() {
-    intakeMotor->StopMotor();
+    intakeMotor.StopMotor();
 }
 
 void Intake::setSpeed(double speed) {
@@ -22,16 +22,16 @@ void Intake::intake() {
 
 void Intake::clear(Dir direction) {
     if (direction==OUT) {
-        intakeMotor->Set(-1);
+        intakeMotor.Set(-1);
     }
 }
 
 void Intake::setClearCurrentLimit(double current) {
-    intakeMotor->SetSmartCurrentLimit(current);
+    intakeMotor.SetSmartCurrentLimit(current);
 }
 
 void Intake::setStdCurrentLimit(double current) {
-    intakeMotor->SetSmartCurrentLimit(current);
+    intakeMotor.SetSmartCurrentLimit(current);
 }
 
 /*
