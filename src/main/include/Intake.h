@@ -1,32 +1,42 @@
 #pragma once
 #include <rev/CANSparkMax.h>
+#include <rev/SparkPIDController.h>
+#include <rev/SparkRelativeEncoder.h>
 #include <string>
 #include <util/ShuffleUI.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
-#define intakeMotorID 19
+constexpr unsigned int intakeMotorID = 19;
+constexpr unsigned int clearingCurrentLimit = 60;
+constexpr unsigned int intakeCurrentLimit = 10;
 
 class Intake
 {
 private:
-    int intakeCurrentLimit = 10;
-    rev::CANSparkMax *intakeMotor = new rev::CANSparkMax(intakeMotorID, rev::CANSparkMax::MotorType::kBrushed);
-    void calculateIntakeVelocity(double robotVelocityLinear);
+    int intakeSpeed = 5700;
+
+    // Clear Thresholds
+    const int clearCurrentThreshold = 40;
+    const int clearVelocityThreshold = 100;
+
+    rev::CANSparkMax intakeMotor = rev::CANSparkMax(intakeMotorID, rev::CANSparkMax::MotorType::kBrushed);
+    rev::SparkPIDController intakeController = intakeMotor.GetPIDController();
+    rev::SparkRelativeEncoder intakeEncoder = intakeMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
+
+    void clear();
 
 public:
     enum intakeState
     {
         IN,
-        OUT,
+        CLEAR,
         STOP
     };
-    static intakeState buttonsToState(bool inButton, bool outButton);
-    static std::string getEnumString(intakeState state);
 
-    intakeState currentState;
     void init();
-    void setState(intakeState state, bool printState, double power = 1.0);
-    void intake(double percentSpeed);
-    void exhaust(double percentSpeed);
-    void stop();
-    // bool noteDetected();
+    void disable();
+    void setIntakeState(intakeState state);
+    void setIntakeSpeed(double speed);
+
+
 };
