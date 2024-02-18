@@ -1,13 +1,40 @@
 #include "Intake.h"
 
-void Intake::init()
+void Intake::enable()
 {
     intakeMotor->RestoreFactoryDefaults();
     intakeMotor->SetSmartCurrentLimit(intakeCurrentLimit);
     intakeMotor->SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
-    currentState = intakeState::STOP;
+    //currentState = intakeState::STOP;
 }
 
+void Intake::disable() {
+    intakeMotor->StopMotor();
+}
+
+void Intake::setSpeed(double speed) {
+    intakeSpeed = speed;
+}
+
+void Intake::intake() {
+    intakeController.SetReference(intakeSpeed, rev::CANSparkBase::ControlType::kVelocity);
+}
+
+void Intake::clear(Dir direction) {
+    if (direction==OUT) {
+        intakeMotor->Set(-1);
+    }
+}
+
+void Intake::setClearCurrentLimit(double current) {
+    intakeMotor->SetSmartCurrentLimit(current);
+}
+
+void Intake::setStdCurrentLimit(double current) {
+    intakeMotor->SetSmartCurrentLimit(current);
+}
+
+/*
 std::string Intake::getEnumString(intakeState state)
 {
     switch (state)
@@ -41,21 +68,6 @@ void Intake::setState(intakeState state, bool printState, double power)
     }
 }
 
-void Intake::intake(double percentSpeed)
-{
-    intakeMotor->Set(percentSpeed);
-}
-
-void Intake::exhaust(double percentSpeed)
-{
-    intakeMotor->Set(-percentSpeed);
-}
-
-void Intake::stop()
-{
-    intakeMotor->StopMotor();
-}
-
 Intake::intakeState Intake::buttonsToState(bool inButton, bool outButton)
 {
     if (inButton)
@@ -70,4 +82,4 @@ Intake::intakeState Intake::buttonsToState(bool inButton, bool outButton)
     {
         return intakeState::STOP;
     }
-}
+}*/
