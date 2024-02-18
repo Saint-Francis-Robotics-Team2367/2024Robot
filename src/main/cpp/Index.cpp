@@ -31,3 +31,7 @@ bool Index::isDistanceFinished(float percentageBound)
     double pos = indexEncoder.GetPosition();
     return (pos < (distanceSetpoint * (1 + percentageBound))) && (pos > (distanceSetpoint * (1 - percentageBound)));
 }
+
+int Index::getSensorProximity() {
+    return colorSensor.GetProximity();
+}
