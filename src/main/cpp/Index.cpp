@@ -23,7 +23,7 @@ void Index::setVelocity(double vel){
 }
 
 void Index::setDistance(){
-    
+
 }
 
 

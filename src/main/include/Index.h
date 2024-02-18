@@ -13,7 +13,7 @@ class Index{
 
     rev::SparkPIDController indexPID;
     rev::CANSparkMax indexMotor;
-    rev::SparkRelativeEncoder indexEncoder;
+    rev::SparkRelativeEncoder indexEncoder = indexMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
 
     void enableIndex(){}
     void disableIndex(){}
