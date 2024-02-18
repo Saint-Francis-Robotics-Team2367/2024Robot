@@ -46,7 +46,7 @@ void Trajectory::follow(std::string const &traj_dir)
     frc::Timer trajTimer;
     trajTimer.Start();
 
-    while ((mDrive.state == 'a') && (trajTimer.Get() <= traj.getTotalTime()))
+    while ((mDrive.state == DriveState::Auto) && (trajTimer.Get() <= traj.getTotalTime()))
     {
         auto currentTime = trajTimer.Get();
         auto sample = traj.sample(currentTime);
