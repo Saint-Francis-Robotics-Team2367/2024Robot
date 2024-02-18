@@ -4,39 +4,39 @@
 #include <rev/SparkRelativeEncoder.h>
 #include <string>
 #include <util/ShuffleUI.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
-#define intakeMotorID 19
+constexpr unsigned int intakeMotorID = 19;
+constexpr unsigned int clearingCurrentLimit = 60;
+constexpr unsigned int intakeCurrentLimit = 10;
 
 class Intake
 {
 private:
-    int intakeCurrentLimit = 10;
-    double intakeSpeed = 5700;
+    int intakeSpeed = 5700;
 
-    void setClearCurrentLimit(double current);
-    void setStdCurrentLimit(double current);
-    //void calculateIntakeVelocity(double robotVelocityLinear);
+    // Clear Thresholds
+    const int clearCurrentThreshold = 40;
+    const int clearVelocityThreshold = 100;
 
     rev::CANSparkMax intakeMotor = rev::CANSparkMax(intakeMotorID, rev::CANSparkMax::MotorType::kBrushed);
     rev::SparkPIDController intakeController = intakeMotor.GetPIDController();
     rev::SparkRelativeEncoder intakeEncoder = intakeMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
 
+    void clear();
+
 public:
-    enum Dir
+    enum intakeState
     {
         IN,
-        OUT,
+        CLEAR,
         STOP
     };
 
-    void enable();
+    void init();
     void disable();
-    void setSpeed(double speed);
-    void intake();
-    void clear(Dir direction);
+    void setIntakeState(intakeState state);
+    void setIntakeSpeed(double speed);
 
-    //static intakeState buttonsToState(bool inButton, bool outButton);
-    //static std::string getEnumString(intakeState state);
-    //intakeState currentState;
-    //void setState(intakeState state, bool printState, double power = 1.0);
+
 };
