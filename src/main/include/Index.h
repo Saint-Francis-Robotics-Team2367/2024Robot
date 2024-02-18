@@ -2,22 +2,22 @@
 #include <rev/CANSparkMax.h>
 #include <rev/SparkRelativeEncoder.h>
 
+constexpr int indexMotorID = 10;
+constexpr int indexCurrentLimit = 10;
 
-class Index{
-    double speed;
-    double indexP;
-    double indexI;
-    double indexD;
-    int indexMotorID;
-    int maxRPM = 5700;
+class Index
+{
+    float distanceSetpoint;
+    float velocitySetpoint;
 
-    rev::SparkPIDController indexPID;
-    rev::CANSparkMax indexMotor;
-    rev::SparkRelativeEncoder indexEncoder = indexMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
+    bool inDistanceMode = false;
+    rev::CANSparkMax indexMotor = rev::CANSparkMax(indexMotorID, rev::CANSparkLowLevel::MotorType::kBrushless);
+    rev::SparkPIDController indexController = indexMotor.GetPIDController();
+    rev::SparkRelativeEncoder indexEncoder = indexMotor.GetEncoder();
 
-    void enableIndex(){}
-    void disableIndex(){}
-    void setVelocity(double vel){}
-    void setDistance(){}
+    void init();
+    void disable();
+    void setVelocity(double velocity);
+    void setDistance(double distance);
+    bool isDistanceFinished(float percentageBound);
 };
-

@@ -1,29 +1,33 @@
 #include "Index.h"
 
-void Index::enableIndex(){
-    indexPID.SetD(indexD, indexMotorID);
-    indexPID.SetP(indexP, indexMotorID);
-    indexPID.SetI(indexI, indexMotorID);
-    setVelocity(maxRPM);
-    indexPID.SetReference(speed, rev::CANSparkBase::ControlType::kVelocity);
-    
-
-    indexMotor.Set(speed/maxRPM);
-    
+void Index::init()
+{
+    indexMotor.RestoreFactoryDefaults();
+    indexMotor.ClearFaults();
+    indexMotor.SetSmartCurrentLimit(indexCurrentLimit);
 }
 
-void Index::disableIndex(){
-    setVelocity(0);
-    indexPID.SetReference(speed,rev::CANSparkBase::ControlType::kVelocity);
-
+void Index::disable()
+{
+    indexMotor.StopMotor();
 }
 
-void Index::setVelocity(double vel){
-    speed = vel;
+void Index::setVelocity(double velocity)
+{
+    inDistanceMode = false;
+    velocitySetpoint = velocity;
+    indexController.SetReference(velocitySetpoint, rev::CANSparkLowLevel::ControlType::kVelocity);
 }
 
-void Index::setDistance(){
-
+void Index::setDistance(double distance)
+{
+    inDistanceMode = true;
+    distanceSetpoint = distance;
+    indexController.SetReference(distanceSetpoint, rev::CANSparkLowLevel::ControlType::kPosition);
 }
 
-
+bool Index::isDistanceFinished(float percentageBound)
+{
+    double pos = indexEncoder.GetPosition();
+    return (pos < (distanceSetpoint * (1 + percentageBound))) && (pos > (distanceSetpoint * (1 - percentageBound)));
+}
