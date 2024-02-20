@@ -53,7 +53,7 @@ public:
     void init();
     void runPeriodic();
     void enableMotors();
-    void disableMotors();
+    void disable();
 
     Rotation2d getAxleAngle();
     Rotation2d getShooterAngle();

@@ -43,25 +43,18 @@ Rotation2d Arm::getShooterAngle()
 
 void Arm::runPeriodic()
 {
-    if (stopTiltMotor == true)
-    {
-        leftSideLead.StopMotor();
-        leftSideFollow.StopMotor();
-        rightSideLead.StopMotor();
-        rightSideFollow.StopMotor();
-    }
-    else
-    {
-        double output = -tiltController.Calculate(getShooterAngle().getDegrees(), tiltSetpoint);
-        output = std::clamp(output, -0.06, 0.1);
-        setAllMotors(output);
-        frc::SmartDashboard::PutNumber("PIDout", output);
-    }
+    double output = -tiltController.Calculate(getShooterAngle().getDegrees(), tiltSetpoint);
+    output = std::clamp(output, -0.06, 0.1);
+    setAllMotors(output);
+    frc::SmartDashboard::PutNumber("PIDout", output);
 }
 
-void Arm::disableMotors()
+void Arm::disable()
 {
-    stopTiltMotor = true;
+    leftSideLead.StopMotor();
+    leftSideFollow.StopMotor();
+    rightSideLead.StopMotor();
+    rightSideFollow.StopMotor();
 }
 
 void Arm::enableMotors()
