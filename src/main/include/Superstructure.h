@@ -1,6 +1,8 @@
 #include <thread>
 #include "Intake.h"
 #include "Shooter.h"
+#include "Index.h"
+#include "Arm.h"
 
 class Superstructure
 {
@@ -11,6 +13,8 @@ private:
 public:
     Intake mIntake;
     Shooter mShooter;
+    Index mIndex;
+    Arm mArm;
 
     void init();
     void periodic();
