@@ -52,7 +52,6 @@ public:
     };
     void init();
     void runPeriodic();
-    void enableMotors();
     void disable();
 
     Rotation2d getAxleAngle();

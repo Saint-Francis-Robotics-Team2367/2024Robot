@@ -57,11 +57,6 @@ void Arm::disable()
     rightSideFollow.StopMotor();
 }
 
-void Arm::enableMotors()
-{
-    stopTiltMotor = false;
-}
-
 void Arm::setPosition(float desiredAngle) // setpoint in degrees
 {
     if (desiredAngle <= maxTiltSetpoint)
