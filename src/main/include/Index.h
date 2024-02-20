@@ -8,6 +8,7 @@ constexpr int indexCurrentLimit = 10;
 
 class Index
 {
+private:
     float distanceSetpoint;
     float velocitySetpoint;
 
@@ -17,6 +18,7 @@ class Index
     rev::SparkRelativeEncoder indexEncoder = indexMotor.GetEncoder();
     rev::ColorSensorV3 colorSensor = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
 
+public:
     void init();
     void disable();
     void setVelocity(double velocity);
