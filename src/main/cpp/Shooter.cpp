@@ -2,131 +2,67 @@
 
 void Shooter::init()
 {
-    bottomMotor->RestoreFactoryDefaults();
-    topMotor->RestoreFactoryDefaults();
+    topRollerMotor.RestoreFactoryDefaults();
+    bottomRollerMotor.RestoreFactoryDefaults();
 
-    bottomMotor->SetSmartCurrentLimit(20);
-    topMotor->SetSmartCurrentLimit(20);
-    tiltMotor->SetSmartCurrentLimit(10);
+    topRollerMotor.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
+    topRollerMotor.SetSmartCurrentLimit(shooterCurrentLimit);
+    bottomRollerMotor.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
+    bottomRollerMotor.SetSmartCurrentLimit(shooterCurrentLimit);
 
-    bottomMotor->SetInverted(true); // check later
-    topMotor->SetInverted(false);
-    tiltMotor->SetInverted(false);
+    topRollerController.SetP(revkP);
+    topRollerController.SetI(revkI);
+    topRollerController.SetD(revkD);
+    topRollerController.SetFF(revkFF);
 
-    tiltController.SetP(anglekP); // change these
-    tiltController.SetI(anglekI);
-    tiltController.SetD(anglekD);
-
-    topShooterController.SetP(revkP);
-    topShooterController.SetI(revkI);
-    topShooterController.SetD(revkD);
-    topShooterController.SetFF(revkFF);
-
-    bottomShooterController.SetP(revkP);
-    bottomShooterController.SetI(revkI);
-    bottomShooterController.SetD(revkD);
-    bottomShooterController.SetFF(revkFF);
-
-    motorThread = std::thread(&Shooter::run, this);
+    bottomRollerController.SetP(revkP);
+    bottomRollerController.SetI(revkI);
+    bottomRollerController.SetD(revkD);
+    bottomRollerController.SetFF(revkFF);
 }
 
-void Shooter::run()
+void Shooter::disable()
 {
-    while (true)
-    {
-        if (stopShooterMotor == true)
-        {
-            bottomMotor->StopMotor();
-            topMotor->StopMotor();
-        }
-        else
-        {
-            bottomShooterController.SetReference(shooterVelocitySetpoint, rev::CANSparkBase::ControlType::kVelocity);
-            topShooterController.SetReference(shooterVelocitySetpoint, rev::CANSparkBase::ControlType::kVelocity);
-        }
+    topRollerMotor.StopMotor();
+    bottomRollerMotor.StopMotor();
+}
 
-        if (stopTiltMotor)
-        {
-            tiltMotor->StopMotor();
-        }
-        else
-        {
-            tiltController.SetReference(tiltSetpoint, rev::CANSparkBase::ControlType::kPosition);
-        }
+void Shooter::setSpeed(float rotationsPerMinute)
+{
+    if (rotationsPerMinute <= maxVelocitySetpoint)
+    {
+        topRollerController.SetReference(rotationsPerMinute, rev::CANSparkLowLevel::ControlType::kVelocity);
+        bottomRollerController.SetReference(rotationsPerMinute, rev::CANSparkLowLevel::ControlType::kVelocity);
     }
 }
 
-void Shooter::stopMotors()
+void Shooter::setSpeed(shooterSpeeds speed)
 {
-    stopTiltMotor = true;
-    stopShooterMotor = true;
-}
-
-void Shooter::enableMotors()
-{
-    stopTiltMotor = false;
-    stopShooterMotor = false;
-    tiltSetpoint = 0;
-}
-
-void Shooter::setAngleSetpoint(float setpoint) // setpoint in degrees
-{
-    if (setpoint <= maxTiltAngle)
+    switch (speed)
     {
-        tiltSetpoint = setpoint / 360; // converted to revolutions
+    case HIGH:
+        setSpeed(maxVelocitySetpoint);
+        break;
+    case LOW:
+        setSpeed(lowVelocitySetpoint);
+        break;
+    case STOP:
+        setSpeed(0.0);
+        break;
     }
 }
 
-void Shooter::setMotorVelocitySetpoint(float setpoint)
+void Shooter::setDistance(float distance) 
 {
-    if (setpoint < maxVelocity)
-    {
-        shooterVelocitySetpoint = setpoint; // velocity in RPM
-    }
+    topRollerEncoder.SetPosition(0.0);
+    bottomRollerEncoder.SetPosition(0.0);
+    distanceSetpoint = distance;
+    topRollerController.SetReference(distanceSetpoint, rev::CANSparkLowLevel::ControlType::kPosition);
+    bottomRollerController.SetReference(distanceSetpoint, rev::CANSparkLowLevel::ControlType::kPosition);
 }
 
-double Shooter::getMotorVelocity()
+bool Shooter::isDistanceFinished(float percentageBound)
 {
-    return topShooterEncoder.GetVelocity();
-}
-
-double Shooter::getAnglePosition()
-{
-    double anglePosition = (tiltEncoder.GetPosition() * (2 * PI)); // converted to radians
-    return anglePosition;
-}
-
-double Shooter::heightAtAngle(double velocity, double x, double theta)
-{
-    double theta_rad = theta * PI / 180.0;
-    double time_of_flight = x / (velocity * cos(theta_rad));
-    double height = velocity * time_of_flight * sin(theta_rad) - 0.5 * 9.81 * pow(time_of_flight, 2);
-    return height;
-}
-
-double Shooter::findLaunchAngle(double velocity, double x, double y)
-{
-
-    auto func = [&](double theta)
-    {
-        return std::abs(heightAtAngle(velocity, x, theta) - y);
-    };
-
-    double min_angle = 0.0;
-    double max_angle = 90.0;
-    double step = 0.01;
-    double min_error = std::numeric_limits<double>::max();
-    double best_angle = 0.0;
-
-    for (double angle = min_angle; angle <= max_angle; angle += step)
-    {
-        double error = func(angle);
-        if (error < min_error)
-        {
-            min_error = error;
-            best_angle = angle;
-        }
-    }
-}
-bool Shooter::runAuto(Limelight limelight) {
+    double pos = topRollerEncoder.GetPosition();
+    return (pos < (distanceSetpoint * (1 + percentageBound))) && (pos > (distanceSetpoint * (1 - percentageBound)));
 }
