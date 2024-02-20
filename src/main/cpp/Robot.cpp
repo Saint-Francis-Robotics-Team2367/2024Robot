@@ -79,7 +79,7 @@ void Robot::TeleopPeriodic()
   bool shootNote = ctr.GetTriangleButton();
 
   // Decide drive modes
-  if (dPad >= 0) // SNAP mode
+  if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 2.0)) // SNAP mode
   {
     // Snap condition
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);

@@ -23,6 +23,7 @@
 #include "SwerveDrive.h"
 #include "Trajectory.h"
 #include "Superstructure.h"
+#include "util/TimeDelayButton.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -56,6 +57,7 @@ public:
   float ctrPercent = 0.5;
   float boostPercent = 0.9;
   double ctrPercentAim = 0.3;
+  TimeDelayButton snapRobotToGoal;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
