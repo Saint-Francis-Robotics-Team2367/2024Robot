@@ -24,9 +24,30 @@ void Superstructure::periodic()
     }
 }
 
-void Superstructure::intakeNote()
+void Superstructure::enable()
 {
-    mIntake.setIntakeState(Intake::IN);
+    enableModules = true;
+}
+
+void Superstructure::disable()
+{
+    enableModules = false;
+}
+
+void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
+{
+    if (intakeIn)
+    {
+        mIntake.setIntakeState(Intake::IN);
+    }
+    else if (intakeClear)
+    {
+        mIntake.setIntakeState(Intake::CLEAR);
+    }
+    else
+    {
+        mIntake.setIntakeState(Intake::STOP);
+    }
 }
 
 void Superstructure::preScoreAmp()

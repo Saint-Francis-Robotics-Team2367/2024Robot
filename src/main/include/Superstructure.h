@@ -14,8 +14,10 @@ public:
 
     void init();
     void periodic();
+    void enable();
+    void disable();
 
-    void intakeNote();
+    void controlIntake(bool intakeIn, bool intakeClear);
     void preScoreAmp();
     void scoreAmp();
     void preScoreSpeaker();

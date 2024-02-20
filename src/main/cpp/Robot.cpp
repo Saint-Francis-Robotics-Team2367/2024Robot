@@ -10,15 +10,13 @@ void Robot::RobotInit()
   mDrive.initModules();
   mGyro.init();
   mPowerModule.init(true);
-  // mIntake.init();
+  mSuperstructure.init();
 }
 void Robot::RobotPeriodic()
 {
   mDrive.setDriveCurrentLimit(mPowerModule.updateDriveCurrentLimit());
   frc::SmartDashboard::PutNumber("Energy Usage", mPowerModule.mPDH.GetTotalEnergy());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
-  frc::SmartDashboard::PutNumber("Mag", mGyro.getMagnetometerCW().getDegrees());
-  frc::SmartDashboard::PutNumber("GyroConnected?", mGyro.gyro.IsConnected());
 }
 
 void Robot::AutonomousInit()
@@ -26,6 +24,7 @@ void Robot::AutonomousInit()
   mGyro.init();
   mDrive.enableModules();
   mDrive.state = DriveState::Auto;
+  mSuperstructure.enable();
 
   // Trajectory mTraj = Trajectory(mDrive, mShooter, mLimelight);
   // mTraj.followPath(1);
@@ -37,6 +36,8 @@ void Robot::TeleopInit()
 {
   mDrive.state = DriveState::Teleop;
   mDrive.enableModules();
+  mSuperstructure.enable();
+
   mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
   xStickLimiter.reset(0.0);
@@ -61,22 +62,21 @@ void Robot::TeleopPeriodic()
   double rightTrigger = ctr.GetR2Axis();
   int dPad = ctr.GetPOV();
   bool rumbleController = false;
-  // Intake::intakeState intakeMode = Intake::buttonsToState(ctr.GetL1Button(), ctr.GetR1Button());
+  
 
   // Driver Information
   frc::SmartDashboard::PutNumber("leftX", leftX);
   frc::SmartDashboard::PutNumber("leftY", leftY);
   frc::SmartDashboard::PutBoolean("TargetFound?", mLimelight.isSpeakerTagDetected());
-  if (!mGyro.gyro.IsConnected())
-  {
-    rumbleController = true;
-  }
 
   // Teleop States
   bool driveTranslating = !(leftX == 0 && leftY == 0);
   bool driveTurning = !(rightX == 0);
   double rot = rightX * moduleMaxRot;
   bool preparingToShoot = rightTrigger > 0.2;
+  bool intakeIn = ctr.GetL1Button();
+  bool intakeClear = ctr.GetR1Button();
+  bool shootNote = ctr.GetTriangleButton();
 
   // Decide drive modes
   if (dPad >= 0) // SNAP mode
@@ -97,10 +97,6 @@ void Robot::TeleopPeriodic()
       // limit robot speed temporarily
       leftX = (leftX / ctrPercent) * ctrPercentAim;
       leftY = (leftY / ctrPercent) * ctrPercentAim;
-    }
-    else
-    {
-      rumbleController = true;
     }
   }
   else // Normal driving mode
@@ -124,11 +120,18 @@ void Robot::TeleopPeriodic()
       ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, rot),
       mGyro.getBoundedAngleCCW(),
       mGyro.gyro.IsConnected());
-  // mIntake.setState(intakeMode, true, 1.0);
-  if (rumbleController)
+
+  // Superstructure function
+  mSuperstructure.controlIntake(intakeIn, intakeClear);
+  if (preparingToShoot) 
   {
-    ctr.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
+
+    mSuperstructure.preScoreSpeaker();
+    
   }
+
+  
+
 
   // Module Telemetry
   mDrive.displayDriveTelemetry();

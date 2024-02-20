@@ -22,8 +22,7 @@
 #include "control/PowerModule.h"
 #include "SwerveDrive.h"
 #include "Trajectory.h"
-
-// #include "Intake.h"
+#include "Superstructure.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -51,8 +50,7 @@ public:
   NavX mGyro = NavX();
   SwerveDrive mDrive = SwerveDrive(mGyro);
   Limelight mLimelight;
-  // Intake mIntake;
-  // frc::Joystick ctr = frc::Joystick(0);
+  Superstructure mSuperstructure;
 
   // Teleop Controls
   float ctrPercent = 0.5;
