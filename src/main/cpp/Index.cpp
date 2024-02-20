@@ -22,6 +22,7 @@ void Index::setVelocity(double velocity)
 void Index::setDistance(double distance)
 {
     inDistanceMode = true;
+    indexEncoder.SetPosition(0.0);
     distanceSetpoint = distance;
     indexController.SetReference(distanceSetpoint, rev::CANSparkLowLevel::ControlType::kPosition);
 }
