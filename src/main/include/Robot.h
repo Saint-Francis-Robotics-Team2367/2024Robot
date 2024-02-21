@@ -7,6 +7,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/PS5Controller.h>
 #include <frc/shuffleboard/Shuffleboard.h>
+#include <frc/smartdashboard/SendableChooser.h>
 
 #include "util/ShuffleUI.h"
 #include <thread>
@@ -64,4 +65,13 @@ public:
   SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
   PowerModule mPowerModule;
+
+  // Auto Selectors
+  frc::SendableChooser<std::string> mChooser;
+  const std::string kAutoDefault = "Default: nothing";
+  const std::string kAutoCustom1 = "Straight";
+  const std::string kAutoCustom2 = "Straight, shoot";
+  const std::string kAutoCustom3 = "2 straights, shoot";
+  const std::string kAutoCustom4 = "Curve";
+  std::string selectedAuto;
 };

@@ -10,15 +10,15 @@ void Shooter::init()
     bottomRollerMotor.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
     bottomRollerMotor.SetSmartCurrentLimit(shooterCurrentLimit);
 
-    topRollerController.SetP(revkP);
-    topRollerController.SetI(revkI);
-    topRollerController.SetD(revkD);
-    topRollerController.SetFF(revkFF);
+    topRollerController.SetP(shooterP);
+    topRollerController.SetI(shooterI);
+    topRollerController.SetD(shooterD);
+    topRollerController.SetFF(shooterFF);
 
-    bottomRollerController.SetP(revkP);
-    bottomRollerController.SetI(revkI);
-    bottomRollerController.SetD(revkD);
-    bottomRollerController.SetFF(revkFF);
+    bottomRollerController.SetP(shooterP);
+    bottomRollerController.SetI(shooterI);
+    bottomRollerController.SetD(shooterD);
+    bottomRollerController.SetFF(shooterFF);
 }
 
 void Shooter::disable()

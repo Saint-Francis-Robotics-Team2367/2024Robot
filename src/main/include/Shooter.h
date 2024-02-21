@@ -10,10 +10,10 @@
 constexpr int bottomRollerID = 14;
 constexpr int topRollerID = 15;
 
-constexpr float revkP = 6e-5;
-constexpr float revkI = 1e-6;
-constexpr float revkD = 0.0;
-constexpr float revkFF = 0.000015;
+constexpr float shooterP = 6e-5;
+constexpr float shooterI = 1e-6;
+constexpr float shooterD = 0.0;
+constexpr float shooterFF = 0.000015;
 
 constexpr float shooterCurrentLimit = 20;
 
