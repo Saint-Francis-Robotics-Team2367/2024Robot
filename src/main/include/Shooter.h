@@ -7,66 +7,44 @@
 #include <rev/SparkRelativeEncoder.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#define bottomMotorID 0 // change later
-#define topMotorID 1
-#define tiltMotorID 2
+constexpr int bottomRollerID = 14;
+constexpr int topRollerID = 15;
 
-#define revkP 6e-5 // rev basic settings
-#define revkI 1e-6
-#define revkD 0.0
-#define revkFF 0.000015
-#define revkMaxOutput 1.0
-#define revkMinOutput -1.0
+constexpr float revkP = 6e-5;
+constexpr float revkI = 1e-6;
+constexpr float revkD = 0.0;
+constexpr float revkFF = 0.000015;
 
-#define anglekP 0.2
-#define anglekI 0.0
-#define anglekD 0.0
+constexpr float shooterCurrentLimit = 20;
 
 class Shooter
 {
 private:
-    rev::CANSparkMax *bottomMotor = new rev::CANSparkMax(bottomMotorID, rev::CANSparkMax::MotorType::kBrushless);
-    rev::CANSparkMax *topMotor = new rev::CANSparkMax(topMotorID, rev::CANSparkMax::MotorType::kBrushless);
-    // Angle of shooter
-    rev::CANSparkMax *tiltMotor = new rev::CANSparkMax(tiltMotorID, rev::CANSparkMax::MotorType::kBrushless);
+    rev::CANSparkMax topRollerMotor = rev::CANSparkMax(topRollerID, rev::CANSparkBase::MotorType::kBrushless);
+    rev::CANSparkMax bottomRollerMotor = rev::CANSparkMax(bottomRollerID, rev::CANSparkBase::MotorType::kBrushless);
 
-    std::thread motorThread;
+    rev::SparkPIDController topRollerController = topRollerMotor.GetPIDController();
+    rev::SparkPIDController bottomRollerController = bottomRollerMotor.GetPIDController();
 
-    // PID controllers
-    rev::SparkPIDController tiltController;
-    rev::SparkPIDController topShooterController;
-    rev::SparkPIDController bottomShooterController;
+    rev::SparkRelativeEncoder topRollerEncoder = topRollerMotor.GetEncoder();
+    rev::SparkRelativeEncoder bottomRollerEncoder = bottomRollerMotor.GetEncoder();
 
-    // Encoders
-    rev::SparkRelativeEncoder tiltEncoder;
-    rev::SparkRelativeEncoder topShooterEncoder;
-    rev::SparkRelativeEncoder bottomShooterEncoder;
-
-    double maxTiltAngle = 90;
-    double maxVelocity = 500;
-    double robotVelocity = 0; // get velocity
-
-    bool stopTiltMotor = true;
-    bool stopShooterMotor = true;
-
-    double tiltSetpoint;
-    double shooterVelocitySetpoint;
+    const float maxVelocitySetpoint = 5700.0;
+    const float lowVelocitySetpoint = 200.0;
+    float distanceSetpoint;
 
 public:
-    double intakeMotorVelocity(double robotVelocity);
-    double heightAtAngle(double velocity, double x, double theta);
-    double findLaunchAngle(double velocity, double x, double y);
+    enum shooterSpeeds
+    {
+        HIGH,
+        LOW,
+        STOP
+    };
 
     void init();
-    void run();
-    void enableMotors();
-    void stopMotors();
-
-    void setAngleSetpoint(float setpoint);
-    void setMotorVelocitySetpoint(float setpoint);
-
-    double getAnglePosition();
-    double getMotorVelocity();
-
-    bool runAuto(Limelight limelight);
+    void disable();
+    void setSpeed(shooterSpeeds speed);
+    void setSpeed(float rotationsPerMinute);
+    void setDistance(float distance);
+    bool isDistanceFinished(float percentageBound);
 };
