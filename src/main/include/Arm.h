@@ -45,6 +45,11 @@ private:
     const float stowSetpoint = 60.0;
 
 public:
+
+    const double highAimHeight = 25.26792; //meters
+    const double middleAimHeight = 24.540972;
+    const double lowAimHeight = 23.814024;
+
     enum armPosition
     {
         HIGH,

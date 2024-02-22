@@ -80,8 +80,9 @@ void Superstructure::preScoreSpeaker()
 {
     // Align shooter & arm to score at speaker
     mShooter.setSpeed(5700);
-    mArm.setPosition(0);
-    mArm.runPeriodic();
+    double distanceToWall = mLimelight.getDistanceToWall();
+    double aimAngle = mArm.findLaunchAngle(5700, distanceToWall, mArm.middleAimHeight);
+    mArm.setPosition(aimAngle);
 }
 
 void Superstructure::scoreSpeaker()

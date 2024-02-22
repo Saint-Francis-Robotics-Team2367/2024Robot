@@ -5,6 +5,7 @@
 #include "Shooter.h"
 #include "Index.h"
 #include "Arm.h"
+#include "sensors/Limelight.h"
 
 class Superstructure
 {
@@ -17,6 +18,7 @@ public:
     Shooter mShooter;
     Index mIndex;
     Arm mArm;
+    Limelight mLimelight;
 
     void init();
     void periodic();
