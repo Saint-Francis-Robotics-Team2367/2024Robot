@@ -83,11 +83,11 @@ void Superstructure::preScoreSpeaker()
     double distanceToWall = mLimelight.getDistanceToWall();
     double aimAngle = mArm.findLaunchAngle(5700, distanceToWall, mArm.middleAimHeight);
     mArm.setPosition(aimAngle);
+    mArm.runPeriodic();
 }
 
 void Superstructure::scoreSpeaker()
 {
     // Move note into shooter via indexer
-    mIndex.setDistance(5);
-    
+    mIndex.setDistance(5); //check later
 }
