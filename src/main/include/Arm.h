@@ -46,9 +46,9 @@ private:
 
 public:
 
-    const double highAimHeight = 25.26792; //meters
-    const double middleAimHeight = 24.540972;
-    const double lowAimHeight = 23.814024;
+    const double highAimHeight = 2.10566; //meters
+    const double middleAimHeight = 2.045081;
+    const double lowAimHeight = 1.984502;
 
     enum armPosition
     {
