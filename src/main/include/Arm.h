@@ -53,7 +53,8 @@ public:
     void init();
     void runPeriodic();
     void disable();
-
+    double heightAtAngle(double velocity, double x, double theta);
+    double findLaunchAngle(double velocity, double x, double y);
     Rotation2d getAxleAngle();
     Rotation2d getShooterAngle();
     void setPosition(float desiredAngle);

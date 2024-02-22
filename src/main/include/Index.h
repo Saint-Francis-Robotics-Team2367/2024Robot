@@ -15,7 +15,7 @@ private:
     bool inDistanceMode = false;
     rev::CANSparkMax indexMotor = rev::CANSparkMax(indexMotorID, rev::CANSparkLowLevel::MotorType::kBrushless);
     rev::SparkPIDController indexController = indexMotor.GetPIDController();
-    rev::SparkRelativeEncoder indexEncoder = indexMotor.GetEncoder();
+    rev::SparkRelativeEncoder indexEncoder = indexMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
     rev::ColorSensorV3 colorSensor = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
 
 public:

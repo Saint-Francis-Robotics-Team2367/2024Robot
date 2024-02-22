@@ -1,10 +1,7 @@
 #pragma once
 
 #include "SwerveDrive.h"
-#include "SwerveModule.h"
 #include "Constants.h"
-#include "Shooter.h"
-#include "Robot.h"
 #include "sensors/Limelight.h"
 #include "geometry/Translation2d.h"
 

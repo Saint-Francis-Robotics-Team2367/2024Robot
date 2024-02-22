@@ -2,6 +2,7 @@
 #include "SwerveDrive.h"
 #include "SwerveModule.h"
 #include "Robot.h"
+#include "Shooter.h"
 
 #include <frc/controller/HolonomicDriveController.h>
 #include <frc/kinematics/ChassisSpeeds.h>
@@ -75,13 +76,13 @@ void Trajectory::followPath(int num)
     // straight, shoot
     case 1:
         follow("Straight");
-        mShooter.runAuto(mLimelight);
+        //mShooter.runAuto(mLimelight);
         break;
 
     // straight, shoot, straight
     case 2:
         follow("Straight");
-        if (mShooter.runAuto(mLimelight))
+        //if (mShooter.runAuto(mLimelight))
         {
             follow("Straight");
         }

@@ -79,9 +79,14 @@ void Superstructure::scoreAmp()
 void Superstructure::preScoreSpeaker()
 {
     // Align shooter & arm to score at speaker
+    mShooter.setSpeed(5700);
+    mArm.setPosition(0);
+    mArm.runPeriodic();
 }
 
 void Superstructure::scoreSpeaker()
 {
     // Move note into shooter via indexer
+    mIndex.setDistance(5);
+    
 }
