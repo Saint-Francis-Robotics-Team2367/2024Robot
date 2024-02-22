@@ -81,10 +81,16 @@ void Trajectory::followPath(int numPath)
         follow("Straight");
         break;
 
-    // straight, shoot
+    // 2 note auto
+    // side, shoot, grab note from half-court, shoot again 
     case 2:
-        follow("Straight");
-        //  CALL SUPERSTRUCTURE SHOOT SPEAKER FOR SHOOTER AUTO
+        follow("To Speaker");
+        // superstructure shooter 
+        follow("Halfcourt");
+        // call intake 
+        follow("Score Speaker");
+        // superstructure shooter 
+
         break;
 
     // straight, shoot, straight
