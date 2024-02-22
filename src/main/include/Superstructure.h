@@ -1,3 +1,5 @@
+#pragma once
+
 #include <thread>
 #include "Intake.h"
 #include "Shooter.h"

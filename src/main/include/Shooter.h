@@ -1,3 +1,5 @@
+#pragma once
+
 #include "sensors/Limelight.h"
 #include "geometry/Rotation2d.h"
 #include "geometry/Translation2d.h"
