@@ -19,7 +19,7 @@ public:
             timer.Start();
             wasPressed = true;
             return value;
-        } else if ((timer.Get() < delayTimeSeconds) && wasPressed) 
+        } else if ((timer.Get().value() < delayTimeSeconds) && wasPressed) 
         {
             // Button was pressed, timer is in time
             return true;
