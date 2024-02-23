@@ -101,7 +101,7 @@ double Arm::findLaunchAngle(double velocity, double x, double y)
         return std::abs(heightAtAngle(velocity, x, theta) - y);
     };
 
-    double min_angle = 0.0;
+    double min_angle = atan(y/x)*(180/PI);
     double max_angle = 90.0;
     double step = 0.01;
     double min_error = std::numeric_limits<double>::max();
