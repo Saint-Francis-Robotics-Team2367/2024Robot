@@ -69,31 +69,42 @@ void Trajectory::follow(std::string const &traj_dir_file_path)
 /**
  * Calls sequences of follow functions for set paths
  */
-void Trajectory::followPath(int num)
+void Trajectory::followPath(int numPath)
 {
-    switch (num)
+    switch (numPath)
     {
-    // straight, shoot
+    // do nothing
+    case 0: 
+        break; 
+
+    // straight
     case 1:
         follow("Straight");
-        //mShooter.runAuto(mLimelight);
+        break;
+
+    // 2 note auto
+    // side, shoot, grab note from half-court, shoot again 
+    case 2:
+        follow("To Speaker");
+        // superstructure shooter 
+        follow("Halfcourt");
+        // call intake 
+        follow("Score Speaker");
+        // superstructure shooter 
+
         break;
 
     // straight, shoot, straight
-    case 2:
-        follow("Straight");
-        //if (mShooter.runAuto(mLimelight))
-        {
-            follow("Straight");
-        }
-        break;
-
     case 3:
+        follow("Straight");
         break;
 
-    // straight
+    // curve
+    case 4:
+        follow("Curve");
+        break;
+
     default:
-        follow("Straight");
         break;
     }
 }

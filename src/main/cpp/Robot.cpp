@@ -11,7 +11,14 @@ void Robot::RobotInit()
   mGyro.init();
   mPowerModule.init(true);
   mSuperstructure.init();
-  mArm.init();
+  // mIntake.init();
+
+  mChooser.SetDefaultOption("0", kAutoDefault);
+  mChooser.AddOption("1", kAutoCustom1);
+  mChooser.AddOption("2", kAutoCustom2);
+  mChooser.AddOption("3", kAutoCustom3);
+  mChooser.AddOption("4", kAutoCustom4);
+  frc::SmartDashboard::PutData("Auto Paths", &mChooser);
 }
 void Robot::RobotPeriodic()
 {
@@ -25,11 +32,13 @@ void Robot::AutonomousInit()
 {
   mGyro.init();
   mDrive.enableModules();
+
   mDrive.state = DriveState::Auto;
   mSuperstructure.enable();
+  selectedAuto = mChooser.GetSelected(); 
 
-  // Trajectory mTraj = Trajectory(mDrive, mShooter, mLimelight);
-  // mTraj.followPath(1);
+  Trajectory mTraj = Trajectory(mDrive);
+  mTraj.followPath(std::stoi(selectedAuto));
 }
 void Robot::AutonomousPeriodic()
 {
