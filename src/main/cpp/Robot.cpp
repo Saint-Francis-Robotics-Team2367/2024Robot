@@ -76,10 +76,6 @@ void Robot::TeleopPeriodic()
   int dPad = ctr.GetPOV();
   bool rumbleController = false;
 
-  mSuperstructure.preScoreSpeaker();
-
-  
-
   // Driver Information
   frc::SmartDashboard::PutNumber("leftX", leftX);
   frc::SmartDashboard::PutNumber("leftY", leftY);
