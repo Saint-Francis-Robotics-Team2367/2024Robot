@@ -8,29 +8,26 @@
 #include <rev/SparkPIDController.h>
 #include <rev/SparkRelativeEncoder.h>
 #include <thread>
+#include "Constants.h"
+#include <thread>
 
-constexpr int leftFrontMotorID = 9;
-constexpr int leftBackMotorID = 11;
-constexpr int rightFrontMotorID = 10;
-constexpr int rightBackMotorID = 12;
-
-constexpr int tiltControllerP = 0.02;
-constexpr int tiltControllerI = 0.0;
-constexpr int tiltControllerD = 0.0;
+constexpr float tiltControllerP = 0.02;
+constexpr float tiltControllerI = 0.0;
+constexpr float tiltControllerD = 0.0;
 
 constexpr int armCurrentLimit = 20;
 
 constexpr float encoderToArmRatio = 12.0 / 54.0;
-constexpr float armMinFromVertical = 84.0;
+constexpr float armMinFromVertical = 73.0;
 constexpr float shooterToArmAngle = 46.0;
 
 class Arm
 {
-private:
-    rev::CANSparkMax leftSideLead = rev::CANSparkMax(leftFrontMotorID, rev::CANSparkBase::MotorType::kBrushless);
-    rev::CANSparkMax leftSideFollow = rev::CANSparkMax(leftBackMotorID, rev::CANSparkBase::MotorType::kBrushless);
-    rev::CANSparkMax rightSideLead = rev::CANSparkMax(rightFrontMotorID, rev::CANSparkBase::MotorType::kBrushless);
-    rev::CANSparkMax rightSideFollow = rev::CANSparkMax(rightBackMotorID, rev::CANSparkBase::MotorType::kBrushless);
+public:
+    rev::CANSparkMax leftSideLead = rev::CANSparkMax(motorIDs::leftFrontMotorID, rev::CANSparkBase::MotorType::kBrushless);
+    rev::CANSparkMax leftSideFollow = rev::CANSparkMax(motorIDs::leftBackMotorID, rev::CANSparkBase::MotorType::kBrushless);
+    rev::CANSparkMax rightSideLead = rev::CANSparkMax(motorIDs::rightFrontMotorID, rev::CANSparkBase::MotorType::kBrushless);
+    rev::CANSparkMax rightSideFollow = rev::CANSparkMax(motorIDs::rightBackMotorID, rev::CANSparkBase::MotorType::kBrushless);
 
     frc::DutyCycleEncoder tiltEncoder = frc::DutyCycleEncoder(0);
     frc::PIDController tiltController{tiltControllerP, tiltControllerI, tiltControllerD};
@@ -41,15 +38,10 @@ private:
     void setAllMotors(double input);
 
     // Preset Positions
-    const float highSetpoint = -20.0;
+    const float highSetpoint = -45.0;
     const float stowSetpoint = 60.0;
 
 public:
-
-    const double highAimHeight = 2.10566; //meters
-    const double middleAimHeight = 2.045081;
-    const double lowAimHeight = 1.984502;
-
     enum armPosition
     {
         HIGH,
@@ -58,8 +50,8 @@ public:
     void init();
     void runPeriodic();
     void disable();
-    double heightAtAngle(double velocity, double x, double theta);
-    double findLaunchAngle(double velocity, double x, double y);
+    void zeroSensors();
+
     Rotation2d getAxleAngle();
     Rotation2d getShooterAngle();
     void setPosition(float desiredAngle);

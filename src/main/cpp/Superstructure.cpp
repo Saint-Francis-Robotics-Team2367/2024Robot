@@ -33,6 +33,7 @@ void Superstructure::periodic()
 void Superstructure::enable()
 {
     enableModules = true;
+    mArm.zeroSensors();
 }
 
 void Superstructure::disable()
@@ -56,38 +57,53 @@ void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
     }
 }
 
-void Superstructure::preScoreAmp()
+void Superstructure::toggleArm() {
+    if (mArm.tiltSetpoint == mArm.highSetpoint) 
+    {
+        mArm.setPosition(Arm::STOW);
+    } else {
+        mArm.setPosition(Arm::HIGH);
+    }
+}
+
+void Superstructure::loadNote()
 {
-    // Run distance PID on shooter & indexer
+    // Run distance PID on shooter
     // Call this function once(not periodically)
-    double distance = 3.0;
-    mIndex.setDistance(distance);
+    double distance = 1.0;
+    mIndex.setVelocity(500.0);
     mShooter.setDistance(distance);
 }
 
 void Superstructure::scoreAmp()
 {
-    // once done with distance PID, lift arm up and unload note via shooter
-    bool preScoringDone = mIndex.isDistanceFinished(0.05) && mShooter.isDistanceFinished(0.05);
-    if (preScoringDone)
-    {
-        mArm.setPosition(Arm::armPosition::HIGH);
-    }
-    
+    mArm.setPosition(Arm::armPosition::HIGH);
 }
 
 void Superstructure::preScoreSpeaker()
 {
-    // Align shooter & arm to score at speaker
-    mShooter.setSpeed(5700);
-    double distanceToWall = mLimelight.getDistanceToWall();
-    double aimAngle = mArm.findLaunchAngle(5700, distanceToWall, mArm.middleAimHeight);
-    mArm.setPosition(aimAngle);
-    mArm.runPeriodic();
+    mShooter.setSpeed(Shooter::HIGH);
 }
 
 void Superstructure::scoreSpeaker()
 {
-    // Move note into shooter via indexer
-    mIndex.setDistance(5); //check later
+    mIndex.setVelocity(500);
+}
+
+void Superstructure::unloadShooter() {
+    mShooter.setSpeed(Shooter::LOW);
+}
+
+void Superstructure::stow() {
+    mArm.setPosition(Arm::STOW);
+    mIndex.setVelocity(0.0);
+}
+
+void Superstructure::updateTelemetry() 
+{
+    frc::SmartDashboard::PutBoolean("SHOOT?", mShooter.getSpeed() > 4000);
+}
+
+void Superstructure::setIndexer(double val) {
+    mIndex.indexMotor.Set(val);
 }

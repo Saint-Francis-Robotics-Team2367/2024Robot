@@ -4,20 +4,20 @@
 #include <rev/CANSparkMax.h>
 #include <rev/SparkRelativeEncoder.h>
 #include <rev/ColorSensorV3.h>
+#include "Constants.h"
 
-constexpr int indexMotorID = 10;
 constexpr int indexCurrentLimit = 10;
 
 class Index
 {
-private:
+public:
     float distanceSetpoint;
     float velocitySetpoint;
 
     bool inDistanceMode = false;
-    rev::CANSparkMax indexMotor = rev::CANSparkMax(indexMotorID, rev::CANSparkLowLevel::MotorType::kBrushless);
+    rev::CANSparkMax indexMotor = rev::CANSparkMax(motorIDs::indexMotorID, rev::CANSparkLowLevel::MotorType::kBrushless);
     rev::SparkPIDController indexController = indexMotor.GetPIDController();
-    rev::SparkRelativeEncoder indexEncoder = indexMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
+    rev::SparkRelativeEncoder indexEncoder = indexMotor.GetEncoder();
     rev::ColorSensorV3 colorSensor = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
 
 public:

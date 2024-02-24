@@ -10,15 +10,8 @@ void Shooter::init()
     bottomRollerMotor.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
     bottomRollerMotor.SetSmartCurrentLimit(shooterCurrentLimit);
 
-    topRollerController.SetP(shooterP);
-    topRollerController.SetI(shooterI);
-    topRollerController.SetD(shooterD);
-    topRollerController.SetFF(shooterFF);
-
-    bottomRollerController.SetP(shooterP);
-    bottomRollerController.SetI(shooterI);
-    bottomRollerController.SetD(shooterD);
-    bottomRollerController.SetFF(shooterFF);
+    topRollerMotor.SetInverted(true);
+    bottomRollerMotor.SetInverted(true);
 }
 
 void Shooter::disable()
@@ -29,6 +22,8 @@ void Shooter::disable()
 
 void Shooter::setSpeed(float rotationsPerMinute)
 {
+    setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0);
+
     if (rotationsPerMinute <= maxVelocitySetpoint)
     {
         topRollerController.SetReference(rotationsPerMinute, rev::CANSparkLowLevel::ControlType::kVelocity);
@@ -54,6 +49,8 @@ void Shooter::setSpeed(shooterSpeeds speed)
 
 void Shooter::setDistance(float distance) 
 {
+    setPID(positionP, positionI, positionD, positionFF, -0.8, 0.8);
+
     topRollerEncoder.SetPosition(0.0);
     bottomRollerEncoder.SetPosition(0.0);
     distanceSetpoint = distance;
@@ -65,4 +62,27 @@ bool Shooter::isDistanceFinished(float percentageBound)
 {
     double pos = topRollerEncoder.GetPosition();
     return (pos < (distanceSetpoint * (1 + percentageBound))) && (pos > (distanceSetpoint * (1 - percentageBound)));
+}
+
+double Shooter::getSpeed() {
+    return topRollerEncoder.GetVelocity();
+}
+
+void Shooter::setPID(double kP, double kI, double kD, double kFF, double min, double max)
+{
+    topRollerController.SetP(kP);
+    topRollerController.SetI(kI);
+    topRollerController.SetD(kD);
+    topRollerController.SetFF(kFF);
+
+    topRollerController.SetOutputRange(min, max);
+
+    bottomRollerController.SetP(kP);
+    bottomRollerController.SetI(kI);
+    bottomRollerController.SetD(kD);
+    bottomRollerController.SetFF(kFF);
+
+    bottomRollerController.SetOutputRange(min, max);
+
+
 }
