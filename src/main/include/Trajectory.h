@@ -19,6 +19,7 @@
 
 #include <chrono>
 #include <frc/Timer.h>
+#include "Shooter.h"
 
 using namespace pathplanner;
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <rev/CANSparkMax.h>
 #include <rev/SparkPIDController.h>
 #include <rev/SparkRelativeEncoder.h>

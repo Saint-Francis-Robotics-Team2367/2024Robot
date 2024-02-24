@@ -45,6 +45,11 @@ private:
     const float stowSetpoint = 60.0;
 
 public:
+
+    const double highAimHeight = 2.10566; //meters
+    const double middleAimHeight = 2.045081;
+    const double lowAimHeight = 1.984502;
+
     enum armPosition
     {
         HIGH,
@@ -53,7 +58,8 @@ public:
     void init();
     void runPeriodic();
     void disable();
-
+    double heightAtAngle(double velocity, double x, double theta);
+    double findLaunchAngle(double velocity, double x, double y);
     Rotation2d getAxleAngle();
     Rotation2d getShooterAngle();
     void setPosition(float desiredAngle);

@@ -2,6 +2,7 @@
 #include "SwerveDrive.h"
 #include "SwerveModule.h"
 #include "Robot.h"
+#include "Shooter.h"
 
 #include <frc/controller/HolonomicDriveController.h>
 #include <frc/kinematics/ChassisSpeeds.h>

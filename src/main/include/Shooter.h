@@ -1,3 +1,5 @@
+#pragma once
+
 #include "sensors/Limelight.h"
 #include "geometry/Rotation2d.h"
 #include "geometry/Translation2d.h"
@@ -17,6 +19,7 @@ constexpr float shooterFF = 0.000015;
 
 constexpr float shooterCurrentLimit = 20;
 
+
 class Shooter
 {
 private:
@@ -26,8 +29,8 @@ private:
     rev::SparkPIDController topRollerController = topRollerMotor.GetPIDController();
     rev::SparkPIDController bottomRollerController = bottomRollerMotor.GetPIDController();
 
-    rev::SparkRelativeEncoder topRollerEncoder = topRollerMotor.GetEncoder();
-    rev::SparkRelativeEncoder bottomRollerEncoder = bottomRollerMotor.GetEncoder();
+    rev::SparkRelativeEncoder topRollerEncoder = topRollerMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
+    rev::SparkRelativeEncoder bottomRollerEncoder = bottomRollerMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
 
     const float maxVelocitySetpoint = 5700.0;
     const float lowVelocitySetpoint = 200.0;
