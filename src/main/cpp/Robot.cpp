@@ -11,11 +11,13 @@ void Robot::RobotInit()
   mGyro.init();
   mPowerModule.init(true);
   mSuperstructure.init();
+  mArm.init();
 }
 void Robot::RobotPeriodic()
 {
   mDrive.setDriveCurrentLimit(mPowerModule.updateDriveCurrentLimit());
   frc::SmartDashboard::PutNumber("Energy Usage", mPowerModule.mPDH.GetTotalEnergy());
+  frc::SmartDashboard::PutNumber("Shooter Angle", mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
 }
 
@@ -36,7 +38,9 @@ void Robot::TeleopInit()
 {
   mDrive.state = DriveState::Teleop;
   mDrive.enableModules();
+  mSuperstructure.init();
   mSuperstructure.enable();
+  
 
   mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
@@ -62,6 +66,9 @@ void Robot::TeleopPeriodic()
   double rightTrigger = ctr.GetR2Axis();
   int dPad = ctr.GetPOV();
   bool rumbleController = false;
+
+  mSuperstructure.preScoreSpeaker();
+
   
 
   // Driver Information

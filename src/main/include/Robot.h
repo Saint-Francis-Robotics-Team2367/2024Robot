@@ -24,6 +24,7 @@
 #include "Trajectory.h"
 #include "Superstructure.h"
 #include "util/TimeDelayButton.h"
+#include "Arm.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -52,6 +53,7 @@ public:
   SwerveDrive mDrive = SwerveDrive(mGyro);
   Limelight mLimelight;
   Superstructure mSuperstructure;
+  Arm mArm;
 
   // Teleop Controls
   float ctrPercent = 0.5;
