@@ -33,12 +33,12 @@ void Arm::setAllMotors(double input)
 
 Rotation2d Arm::getAxleAngle()
 {
-    return Rotation2d(tiltEncoder.Get().value() * M_PI * 2 * encoderToArmRatio);
+    return Rotation2d(tiltEncoder.Get().value() * PI * 2 * encoderToArmRatio);
 }
 
 Rotation2d Arm::getShooterAngle()
 {
-    return Rotation2d((M_PI_2) - (getAxleAngle().getRadians() + (armMinFromVertical * M_PI / 180)) + (shooterToArmAngle * M_PI / 180));
+    return Rotation2d((PI_2) - (getAxleAngle().getRadians() + (armMinFromVertical * PI / 180)) + (shooterToArmAngle * PI / 180));
 }
 
 void Arm::runPeriodic()
