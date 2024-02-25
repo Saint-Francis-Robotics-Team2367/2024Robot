@@ -7,8 +7,7 @@
 #include "LimelightHelpers.h"
 #include <algorithm>
 #include "geometry/Pose3d.h"
-
-#define PI 3.14159265359
+#include "Constants.h"
 
 class Limelight
 {
