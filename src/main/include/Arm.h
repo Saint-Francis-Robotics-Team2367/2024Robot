@@ -32,7 +32,6 @@ public:
     frc::DutyCycleEncoder tiltEncoder = frc::DutyCycleEncoder(0);
     frc::PIDController tiltController{tiltControllerP, tiltControllerI, tiltControllerD};
 
-    bool stopTiltMotor = true;
     double tiltSetpoint;
     float maxTiltSetpoint = 61;
     void setAllMotors(double input);
