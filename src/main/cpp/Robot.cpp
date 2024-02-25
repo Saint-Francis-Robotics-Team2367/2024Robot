@@ -35,7 +35,7 @@ void Robot::AutonomousInit()
 
   mDrive.state = DriveState::Auto;
   mSuperstructure.enable();
-  selectedAuto = mChooser.GetSelected(); 
+  selectedAuto = mChooser.GetSelected();
 
   Trajectory mTraj = Trajectory(mDrive);
   mTraj.followPath(std::stoi(selectedAuto));
@@ -47,9 +47,7 @@ void Robot::TeleopInit()
 {
   mDrive.state = DriveState::Teleop;
   mDrive.enableModules();
-  mSuperstructure.init();
   mSuperstructure.enable();
-  
 
   mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
@@ -72,7 +70,6 @@ void Robot::TeleopPeriodic()
 
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
 
-  double rightTrigger = ctr.GetR2Axis();
   int dPad = ctr.GetPOV();
   bool rumbleController = false;
 
@@ -85,10 +82,14 @@ void Robot::TeleopPeriodic()
   bool driveTranslating = !(leftX == 0 && leftY == 0);
   bool driveTurning = !(rightX == 0);
   double rot = rightX * moduleMaxRot;
-  bool preparingToShoot = rightTrigger > 0.2;
+  bool preScoringSpeaker = ctr.GetR2Axis() > 0.2;
   bool intakeIn = ctr.GetL1Button();
   bool intakeClear = ctr.GetR1Button();
   bool shootNote = ctr.GetTriangleButton();
+  bool loadNote = ctr.GetCrossButtonReleased();
+  if (ctr.GetTriangleButtonReleased()) {
+    scoreAmp = !scoreAmp;
+  }
 
   // Decide drive modes
   if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 2.0)) // SNAP mode
@@ -97,7 +98,7 @@ void Robot::TeleopPeriodic()
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
     mHeadingController.setSetpointPOV(dPad);
   }
-  else if (preparingToShoot && !driveTurning) // ALIGN(scoring) mode
+  else if (preScoringSpeaker && !driveTurning) // ALIGN(scoring) mode
   {
     if (mLimelight.isSpeakerTagDetected())
     {
@@ -135,15 +136,34 @@ void Robot::TeleopPeriodic()
 
   // Superstructure function
   mSuperstructure.controlIntake(intakeIn, intakeClear);
-  if (preparingToShoot) 
+  if (loadNote) // Load note into shooter
   {
-
-    mSuperstructure.preScoreSpeaker();
-    
+    mSuperstructure.loadNote();
   }
-
-  
-
+  else if (scoreAmp) // Lift Arm
+  {
+    mSuperstructure.scoreAmp();
+    if (ctr.GetSquareButton()) // Unload shooter into amp
+    {
+      mSuperstructure.unloadShooter();
+    }
+    else
+    {
+      mSuperstructure.mShooter.setSpeed(0.0);
+    }
+  }
+  else if (preScoringSpeaker) // Spin Shooter
+  {
+    mSuperstructure.preScoreSpeaker();
+    if (ctr.GetCrossButtonReleased()) // Load note into spinning shooter
+    {
+      mSuperstructure.scoreSpeaker();
+    }
+  }
+  else
+  {
+    mSuperstructure.stow();
+  }
 
   // Module Telemetry
   mDrive.displayDriveTelemetry();
@@ -153,6 +173,7 @@ void Robot::TeleopPeriodic()
 void Robot::DisabledInit()
 {
   mDrive.stopModules();
+  mSuperstructure.disable();
 }
 void Robot::DisabledPeriodic() {}
 

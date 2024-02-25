@@ -61,6 +61,7 @@ public:
   float boostPercent = 0.9;
   double ctrPercentAim = 0.3;
   TimeDelayButton snapRobotToGoal;
+  bool scoreAmp = false;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
