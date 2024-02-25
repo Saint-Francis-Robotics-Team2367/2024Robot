@@ -85,6 +85,14 @@ void Superstructure::preScoreSpeaker()
     mShooter.setSpeed(Shooter::HIGH);
 }
 
+void Superstructure::preScoreSpeaker(Limelight limelight) {//find distance to wall using limelight
+    double distanceToWall = limelight.getDistanceToWall();
+    double velocity = mArm.rollerCircumference*1000/60; //converted RPM to meters/second
+    double angle = mArm.findLaunchAngle(velocity, distanceToWall, mArm.speakerHeight);
+    mArm.runPeriodic();
+    mShooter.setSpeed(Shooter::HIGH);
+}
+
 void Superstructure::scoreSpeaker()
 {
     mIndex.setVelocity(500);

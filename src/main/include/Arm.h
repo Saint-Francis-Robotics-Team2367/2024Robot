@@ -41,6 +41,9 @@ public:
     const float highSetpoint = -45.0;
     const float stowSetpoint = 60.0;
 
+    const float speakerHeight = 2.045081;// meters
+    const double rollerCircumference = 0.31918581360576; // meters
+
 public:
     enum armPosition
     {
@@ -57,4 +60,6 @@ public:
     void setPosition(float desiredAngle);
     void setPosition(armPosition desiredPosition);
     void incrementPosition(float increment);
+    double heightAtAngle(double velocity, double x, double y);
+    double findLaunchAngle(double velocity, double x, double y);
 };
