@@ -3,34 +3,50 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0030350708849567
+        "x": 1.371276423108402,
+        "y": 5.515739799998119
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
-        "y": 3.2801757482258767
+        "x": 2.4893104118582965,
+        "y": 5.515739799998119
+      },
+      "isLocked": false,
+      "linkedName": "Front Speaker"
+    },
+    {
+      "anchor": {
+        "x": 4.416982403409252,
+        "y": 5.922463405111996
+      },
+      "prevControl": {
+        "x": 2.831735638581617,
+        "y": 5.851398355111526
+      },
+      "nextControl": {
+        "x": 6.0022291682368865,
+        "y": 5.993528455112466
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.94,
-        "y": 4.32
+        "x": 7.83,
+        "y": 5.8
       },
       "prevControl": {
-        "x": 0.94,
-        "y": 4.279673812954545
+        "x": 6.123592042191586,
+        "y": 5.8
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Halfcourt 2"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1,
+      "waypointRelativePos": 2.0,
       "rotationDegrees": 180.0,
       "rotateFast": true
     }
@@ -49,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Blue Alliance [M]",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

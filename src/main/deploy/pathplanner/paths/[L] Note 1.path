@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 0.7457213849612887,
+        "y": 6.7917913150641125
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.12,
-        "y": 2.0
+        "x": 1.8637553737111827,
+        "y": 6.7917913150641125
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Speaker"
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 2.0
+        "x": 2.4287934270312985,
+        "y": 6.98722530315431
       },
       "prevControl": {
-        "x": 2.5857864376269033,
-        "y": 2.0
-      },
-      "nextControl": {
-        "x": 4.1888322789895085,
-        "y": 2.0
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.735374980009219,
-        "y": 2.9907754306249354
-      },
-      "prevControl": {
-        "x": 5.730327307876838,
-        "y": 1.7875885473993174
+        "x": 1.48084060057009,
+        "y": 6.962580786272684
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Note 1"
     }
   ],
   "rotationTargets": [],
@@ -59,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Tests",
+  "folder": "Blue Alliance [L]",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

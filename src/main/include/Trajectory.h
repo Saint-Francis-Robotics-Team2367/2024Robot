@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SwerveDrive.h"
+#include "Superstructure.h"
 #include "Constants.h"
 #include "sensors/Limelight.h"
 #include "geometry/Translation2d.h"
@@ -27,9 +28,11 @@ class Trajectory
 {
 private:
     SwerveDrive &mDrive;
+    Superstructure &mSuperstructure; 
 
 public:
-    Trajectory(SwerveDrive &mDriveInput) : mDrive(mDriveInput){};
+    Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput) : mDrive(mDriveInput),
+                                                                    mSuperstructure(mSSInput){};
 
     void driveToState(PathPlannerTrajectory::State const &state);
 

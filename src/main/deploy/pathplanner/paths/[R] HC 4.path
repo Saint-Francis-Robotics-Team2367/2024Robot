@@ -3,61 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 0.94,
+        "y": 4.32
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1180339887498967,
-        "y": 2.0
+        "x": 1.94,
+        "y": 3.8200000000000003
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Speaker"
     },
     {
       "anchor": {
-        "x": 3.8864423701069626,
-        "y": 2.0
+        "x": 3.237727424528923,
+        "y": 2.6549567728765084
       },
       "prevControl": {
-        "x": 2.4722288077338685,
-        "y": 2.0
+        "x": 1.8741656494453889,
+        "y": 3.0300558071741714
       },
       "nextControl": {
-        "x": 5.300655932480056,
-        "y": 2.0
+        "x": 4.998830539327745,
+        "y": 2.1704990169239586
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.212429679488989,
-        "y": 3.171185171074046
+        "x": 7.673502925709555,
+        "y": 2.411005747937422
       },
       "prevControl": {
-        "x": 4.689500911338309,
-        "y": 3.171185171074046
-      },
-      "nextControl": {
-        "x": 1.7353584476396682,
-        "y": 3.171185171074046
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.0,
-        "y": 2.0
-      },
-      "prevControl": {
-        "x": 0.47930936742544517,
-        "y": 2.0
+        "x": 5.905548442408721,
+        "y": 2.411005747937422
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Halfcourt 4"
     }
   ],
   "rotationTargets": [],
@@ -75,7 +59,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Tests",
+  "folder": "Blue Alliance [R]",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

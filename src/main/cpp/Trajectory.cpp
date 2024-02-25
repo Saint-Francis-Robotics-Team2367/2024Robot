@@ -1,8 +1,4 @@
 #include "Trajectory.h"
-#include "SwerveDrive.h"
-#include "SwerveModule.h"
-#include "Robot.h"
-#include "Shooter.h"
 
 #include <frc/controller/HolonomicDriveController.h>
 #include <frc/kinematics/ChassisSpeeds.h>
@@ -68,6 +64,8 @@ void Trajectory::follow(std::string const &traj_dir_file_path)
 
 /**
  * Calls sequences of follow functions for set paths
+ * Path naming convention: "[(Right Middle Left) (Path Number)] Action" 
+ * Note: Some paths are reused in diff autos
  */
 void Trajectory::followPath(int numPath)
 {
@@ -77,32 +75,82 @@ void Trajectory::followPath(int numPath)
     case 0: 
         break; 
 
-    // straight
+    // straight past stage line
     case 1:
-        follow("Straight");
+        follow("[R1] Straight");
         break;
 
-    // 2 note auto
-    // side, shoot, grab note from half-court, shoot again 
+    // R - 2 note auto 
+    // half court note 5
     case 2:
-        follow("To Speaker");
-        // superstructure shooter 
-        follow("Halfcourt");
-        // call intake 
-        follow("Score Speaker");
-        // superstructure shooter 
-
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+        follow("[R] HC 5");
+        mSuperstructure.controlIntake(true, false);
+        follow("[R] Score HC 5");
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+        follow("[R] HC 4"); 
+        mSuperstructure.controlIntake(true, false);
         break;
 
-    // straight, shoot, straight
+    // R - 3 note auto
+    // note 3, half court note 5
     case 3:
-        follow("Straight");
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+        follow("[R] Note 3");
+        mSuperstructure.controlIntake(true, false);
+        follow("[R] Score Note 3");
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+        follow("[R] HC 5"); 
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+        follow("[R] Score HC 5"); 
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
         break;
 
-    // curve
+    // M - 2 note auto 
+    // note 2, ends in front of HC 2 
     case 4:
-        follow("Curve");
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+        follow("[M] Note 2");
+        mSuperstructure.controlIntake(true, false);
+        follow("[M] Score Note 2");
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+        follow("[M] HC 2");
+        mSuperstructure.controlIntake(true, false);
         break;
+
+    // L - 2 note auto
+    // note 1, ends in front of HC 1
+    case 5: 
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker();
+        follow("[L] Note 1"); 
+        mSuperstructure.controlIntake(true, false);
+        follow("[L] Score Note 1");
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+        follow ("[L] HC 1"); 
+        mSuperstructure.controlIntake(true, false);
+        break; 
+
+    case 6: 
+        break; 
+
+    case 7: 
+        break; 
+
+    case 8: 
+        break; 
+
+    case 9: 
+        break; 
 
     default:
         break;

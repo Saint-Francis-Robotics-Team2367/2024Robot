@@ -36,7 +36,8 @@ void Robot::AutonomousInit()
   mSuperstructure.enable();
   selectedAuto = mChooser.GetSelected(); 
 
-  Trajectory mTraj = Trajectory(mDrive);
+  Trajectory mTraj = Trajectory(mDrive, mSuperstructure);
+  frc::SmartDashboard::PutNumber("selected auto", std::stoi(selectedAuto));
   mTraj.followPath(std::stoi(selectedAuto));
 }
 void Robot::AutonomousPeriodic()

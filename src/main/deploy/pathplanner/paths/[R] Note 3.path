@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 0.7457213849612887,
+        "y": 6.7917913150641125
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.118033988749895,
-        "y": 2.0
+        "x": 0.7457213849612889,
+        "y": 7.909825303814007
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Speaker"
     },
     {
       "anchor": {
-        "x": 5.320872021373672,
-        "y": 2.0
+        "x": 2.34,
+        "y": 4.12
       },
       "prevControl": {
-        "x": 3.8001813887991087,
-        "y": 2.0
+        "x": 2.7935143044273287,
+        "y": 4.062868645505025
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Blue Alliance [R]",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }
