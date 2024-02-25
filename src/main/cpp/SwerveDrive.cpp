@@ -69,7 +69,7 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
         // frc::SmartDashboard::PutNumber(std::to_string(i) + "angle", moduleStates[i].getRot2d().getDegrees());
     }
 
-    // Order of kinematics output is always FL, FR, BL, BR
+    // Order of kinematics output is always BL, FL, BR, FR
     mFrontLeft.setModuleState(moduleStates[1], true);
     mFrontRight.setModuleState(moduleStates[3], true);
     mBackLeft.setModuleState(moduleStates[0], true);
