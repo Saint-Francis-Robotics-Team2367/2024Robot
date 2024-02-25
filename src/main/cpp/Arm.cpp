@@ -1,5 +1,9 @@
 #include "Arm.h"
 
+/**
+ * Setup motors
+ * Sets current limits, brake mode, resets encoder
+*/
 void Arm::init()
 {
     leftSideLead.RestoreFactoryDefaults();
@@ -19,16 +23,20 @@ void Arm::init()
     rightSideFollow.SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
     rightSideFollow.SetSmartCurrentLimit(armCurrentLimit);
 
-    
-    stopTiltMotor = true;
-    tiltEncoder.Reset();
     tiltEncoder.Reset();
 }
 
+
+/**
+ * reset tilt encoder
+*/
 void Arm::zeroSensors() {
     tiltEncoder.Reset();
 }
 
+/**
+ * Set a value 1.0 from -1.0 to all motors
+*/
 void Arm::setAllMotors(double input)
 {
     leftSideLead.Set(input);
@@ -37,16 +45,27 @@ void Arm::setAllMotors(double input)
     leftSideFollow.Set(input);
 }
 
+/**
+ * Gets the arm axle angle from a vertical
+*/
 Rotation2d Arm::getAxleAngle()
 {
     return Rotation2d(tiltEncoder.Get().value() * PI * 2 * encoderToArmRatio);
 }
 
+
+/**
+ * Get shooter(roller wheels) angle from horizontal
+*/
 Rotation2d Arm::getShooterAngle()
 {
     return Rotation2d((PI_2) - (getAxleAngle().getRadians() + (armMinFromVertical * PI / 180)) + (shooterToArmAngle * PI / 180));
 }
 
+/**
+ * Run the PID algorithm to tiltSetpoint
+ * Function should be placed in a while loop
+*/
 void Arm::runPeriodic()
 {
     frc::SmartDashboard::PutNumber("setpt", tiltSetpoint);
@@ -57,6 +76,9 @@ void Arm::runPeriodic()
     setAllMotors(output);
 }
 
+/**
+ * Stops all motors
+*/
 void Arm::disable()
 {
     leftSideLead.StopMotor();
@@ -65,6 +87,9 @@ void Arm::disable()
     rightSideFollow.StopMotor();
 }
 
+/**
+ * set the position setpoint to the desired angle in degrees
+*/
 void Arm::setPosition(float desiredAngle) // setpoint in degrees
 {
     if (desiredAngle <= maxTiltSetpoint)
@@ -73,6 +98,10 @@ void Arm::setPosition(float desiredAngle) // setpoint in degrees
     }
 }
 
+/**
+ * Set the position setpoint to a enum preset
+ * HIGH for amp, STOW for lowered
+*/
 void Arm::setPosition(armPosition desiredPosition)
 {
     double setpoint;
@@ -88,6 +117,9 @@ void Arm::setPosition(armPosition desiredPosition)
     tiltSetpoint = setpoint;
 }
 
+/**
+ * Increase the tiltSetpoint in degrees by the increment
+*/
 void Arm::incrementPosition(float increment)
 {
     setPosition(tiltSetpoint + increment);
