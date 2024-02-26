@@ -123,14 +123,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     double desAngle = desiredSetpoint.getRot2d().getRadians();
     double desVel = desiredSetpoint.getSpeedFPS();
 
-    double limitVel = ControlUtil::limitAcceleration(currVel, desVel, maxDriveAccelerationRPM, loopTime);
-
-    if (steerID == 11)
-    {
-        frc::SmartDashboard::PutNumber("LimitedVel", limitVel);
-        frc::SmartDashboard::PutNumber("DesiredVel", desVel);
-        frc::SmartDashboard::PutBoolean("AccLimited?", desVel != limitVel);
-    }
+    // double limitVel = ControlUtil::limitAcceleration(currVel, desVel, maxDriveAccelerationRPM, loopTime);
     // desVel = limitVel;
 
     double dist = fabs(currAngle - desAngle);
