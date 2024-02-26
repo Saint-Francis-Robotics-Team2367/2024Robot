@@ -109,8 +109,8 @@ void SwerveModule::setModuleState(SwerveModuleState setpt, bool takeShortestPath
     }
     else
     {
-        driveVelocitySetpoint = setpt.getSpeedFPS();
-        steerAngleSetpoint = setpt.getRot2d().getRadians();
+        setDriveVelocitySetpoint(setpt.getSpeedFPS());
+        setSteerAngleSetpoint(setpt.getRot2d().getRadians());
         prevSetpoint.setRot2d(setpt.getRot2d());
         prevSetpoint.setSpeedFPS(setpt.getSpeedFPS());
     }
@@ -218,8 +218,13 @@ void SwerveModule::run()
     {
         // Steer PID
 
-        currentSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
-        steerMotor->Set(currentSteerOutput);
+        double newSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
+        if (currentSteerOutput != newSteerOutput) // Save some CAN buffer
+        {
+            currentSteerOutput = newSteerOutput;
+            steerMotor->Set(currentSteerOutput);
+        }
+        
 
         // Drive Motor uses the internal REV PID, since optimizations here are rarely needed
         if (driveMode == POSITION)
