@@ -46,15 +46,22 @@ void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
     if (intakeIn)
     {
         mIntake.setIntakeState(Intake::IN);
+        mIndex.setVelocity(6000.0);
+    //     if (!mIndex.isNoteDetected()) {
+    //         mIndex.setVelocity(1000);
+    //     }
     }
     else if (intakeClear)
     {
+        mIndex.setVelocity(-6000.0);
         mIntake.setIntakeState(Intake::CLEAR);
     }
     else
     {
         mIntake.setIntakeState(Intake::STOP);
+        mIndex.setVelocity(0.0);
     }
+    frc::SmartDashboard::PutBoolean("Intake?", intakeIn);
 }
 
 void Superstructure::toggleArm() {
@@ -86,10 +93,9 @@ void Superstructure::preScoreSpeaker()
 }
 
 void Superstructure::preScoreSpeaker(Limelight limelight) {//find distance to wall using limelight
-    double distanceToWall = limelight.getDistanceToWall();
-    double velocity = mArm.rollerCircumference*1000/60; //converted RPM to meters/second
-    double angle = mArm.findLaunchAngle(velocity, distanceToWall, mArm.speakerHeight);
-    mArm.runPeriodic();
+    // double distanceToWall = limelight.getDistanceToWall();
+    // double velocity = mArm.rollerCircumference*1000/60; //converted RPM to meters/second
+    // double angle = mArm.findLaunchAngle(velocity, distanceToWall, mArm.speakerHeight);
     mShooter.setSpeed(Shooter::HIGH);
 }
 
@@ -104,7 +110,7 @@ void Superstructure::unloadShooter() {
 
 void Superstructure::stow() {
     mArm.setPosition(Arm::STOW);
-    mIndex.setVelocity(0.0);
+    mShooter.setSpeed(Shooter::STOP);
 }
 
 void Superstructure::updateTelemetry() 
