@@ -4,7 +4,8 @@ SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int cancoderID) :
                                                                                  driveMotor(new rev::CANSparkMax(driveMotorID, rev::CANSparkMax::MotorType::kBrushless)),
                                                                                  steerEnc(CAN_Coder(cancoderID)),
                                                                                  driveEnc(driveMotor->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
-                                                                                 m_pidController(driveMotor->GetPIDController())
+                                                                                 m_pidController(driveMotor->GetPIDController()),
+                                                                                 steerCTR(frc::PIDController(steerP, steerI, steerD))
 {
     steerID = steerMotorID;
     driveID = driveMotorID;
