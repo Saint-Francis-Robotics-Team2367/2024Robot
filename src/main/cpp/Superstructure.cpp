@@ -43,17 +43,18 @@ void Superstructure::disable()
 
 void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
 {
+    float indexVelocity = 3000.0;
     if (intakeIn)
     {
         mIntake.setIntakeState(Intake::IN);
-        mIndex.setVelocity(6000.0);
+        mIndex.setVelocity(indexVelocity);
     //     if (!mIndex.isNoteDetected()) {
     //         mIndex.setVelocity(1000);
     //     }
     }
     else if (intakeClear)
     {
-        mIndex.setVelocity(-6000.0);
+        mIndex.setVelocity(indexVelocity);
         mIntake.setIntakeState(Intake::CLEAR);
     }
     else
