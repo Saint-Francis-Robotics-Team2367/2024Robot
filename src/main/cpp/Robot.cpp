@@ -22,10 +22,12 @@ void Robot::RobotInit()
 }
 void Robot::RobotPeriodic()
 {
-  mDrive.setDriveCurrentLimit(mPowerModule.updateDriveCurrentLimit());
+  // mDrive.setDriveCurrentLimit(mPowerModule.updateDriveCurrentLimit());
   frc::SmartDashboard::PutNumber("Energy Usage", mPowerModule.mPDH.GetTotalEnergy());
-  frc::SmartDashboard::PutNumber("Shooter Angle", mArm.getShooterAngle().getDegrees());
+  frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
+  frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
+
 }
 
 void Robot::AutonomousInit()
