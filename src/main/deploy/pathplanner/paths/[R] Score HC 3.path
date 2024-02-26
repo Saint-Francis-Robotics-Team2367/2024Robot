@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0738200735660732,
-        "y": 2.0
+        "x": 7.79,
+        "y": 0.8
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1918540623159686,
-        "y": 2.0
+        "x": 8.78062485279418,
+        "y": 0.2816734610050272
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Halfcourt 5"
     },
     {
       "anchor": {
-        "x": 6.405527686055372,
-        "y": 2.0
+        "x": 0.94,
+        "y": 4.32
       },
       "prevControl": {
-        "x": 4.884837053480808,
-        "y": 2.0
+        "x": 2.1686898512685917,
+        "y": 3.6196685293370594
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Speaker"
     }
   ],
   "rotationTargets": [],
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Blue Alliance [R]",
+  "folder": "[R]",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

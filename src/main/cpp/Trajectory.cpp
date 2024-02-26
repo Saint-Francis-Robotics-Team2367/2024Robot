@@ -31,9 +31,15 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
 /**
  * Follows pathplanner trajectory
  */
-void Trajectory::follow(std::string const &traj_dir_file_path)
+void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance)
 {
     auto path = PathPlannerPath::fromPathFile(traj_dir_file_path);
+
+    // switches path to red alliance (mirrors it)
+    if (flipAlliance) {
+        path = path->flipPath(); 
+    }
+
     PathPlannerTrajectory traj = PathPlannerTrajectory(path, frc::ChassisSpeeds(), frc::Rotation2d(0_rad));
 
     auto const initialState = traj.getInitialState();
@@ -64,10 +70,9 @@ void Trajectory::follow(std::string const &traj_dir_file_path)
 
 /**
  * Calls sequences of follow functions for set paths
- * Path naming convention: "[(Right Middle Left) (Path Number)] Action" 
- * Note: Some paths are reused in diff autos
+ * Path naming convention: "[Right Middle Left] Action" 
  */
-void Trajectory::followPath(int numPath)
+void Trajectory::followPath(int numPath, bool flipAlliance)
 {
     switch (numPath)
     {
@@ -77,76 +82,82 @@ void Trajectory::followPath(int numPath)
 
     // straight past stage line
     case 1:
-        follow("[R1] Straight");
+        follow("[R1] Straight", flipAlliance);
         break;
 
-    // R - 2 note auto 
+    // [BLUE] 3R - 2 note auto 
     // half court note 5
     case 2:
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
-        follow("[R] HC 5");
+        follow("[R] HC 5", flipAlliance);
         mSuperstructure.controlIntake(true, false);
-        follow("[R] Score HC 5");
+        follow("[R] Score HC 5", flipAlliance);
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
-        follow("[R] HC 4"); 
+        follow("[R] HC 4", flipAlliance); 
         mSuperstructure.controlIntake(true, false);
         break;
 
-    // R - 3 note auto
+    // [BLUE] R - 3 note auto
     // note 3, half court note 5
     case 3:
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
-        follow("[R] Note 3");
+        follow("[R] Note 3", flipAlliance);
         mSuperstructure.controlIntake(true, false);
-        follow("[R] Score Note 3");
+        follow("[R] Score Note 3", flipAlliance);
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
-        follow("[R] HC 5"); 
+        follow("[R] HC 5", flipAlliance); 
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
-        follow("[R] Score HC 5"); 
+        follow("[R] Score HC 5", flipAlliance); 
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
         break;
 
-    // M - 2 note auto 
+    // [BLUE] M - 2 note auto 
     // note 2, ends in front of HC 2 
     case 4:
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
-        follow("[M] Note 2");
+        follow("[M] Note 2", flipAlliance);
         mSuperstructure.controlIntake(true, false);
-        follow("[M] Score Note 2");
+        follow("[M] Score Note 2", flipAlliance);
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
-        follow("[M] HC 2");
+        follow("[M] HC 2", flipAlliance);
         mSuperstructure.controlIntake(true, false);
         break;
 
-    // L - 2 note auto
+    // [BLUE] L - 2 note auto
     // note 1, ends in front of HC 1
     case 5: 
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker();
-        follow("[L] Note 1"); 
+        follow("[L] Note 1", flipAlliance); 
         mSuperstructure.controlIntake(true, false);
-        follow("[L] Score Note 1");
+        follow("[L] Score Note 1", flipAlliance);
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
-        follow ("[L] HC 1"); 
+        follow ("[L] HC 1", flipAlliance); 
         mSuperstructure.controlIntake(true, false);
         break; 
 
     case 6: 
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker();
         break; 
 
     case 7: 
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker();
         break; 
 
     case 8: 
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker();
         break; 
 
     case 9: 

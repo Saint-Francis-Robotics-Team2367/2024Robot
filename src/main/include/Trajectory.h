@@ -36,9 +36,9 @@ public:
 
     void driveToState(PathPlannerTrajectory::State const &state);
 
-    void follow(std::string const &traj_dir_file_path);
+    void follow(std::string const &traj_dir_file_path, bool flipAlliance);
 
-    void followPath(int numPath);
+    void followPath(int numPath, bool flipAlliance);
 
     void testHolonomic(frc::Pose2d const &target_pose,
                        units::velocity::meters_per_second_t const &velocity,
