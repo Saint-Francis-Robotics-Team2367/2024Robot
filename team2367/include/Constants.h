@@ -26,17 +26,22 @@
 #define kEpsilon 1e-12
 #define loopTime 0.02
 
+constexpr float velocityP = 6e-5;
+constexpr float velocityI = 1e-6;
+constexpr float velocityD = 0.0;
+constexpr float velocityFF = 0.000015;
+
 namespace motorIDs 
 {
 // Arm
-constexpr int leftFrontMotorID = 9;
+constexpr int leftFrontMotorID = 19;
 constexpr int leftBackMotorID = 11;
 constexpr int rightFrontMotorID = 10;
 constexpr int rightBackMotorID = 12;
 
 // Intake & Index
 constexpr int indexMotorID = 16;
-constexpr unsigned int intakeMotorID = 19;
+constexpr int intakeMotorID = 17;
 
 // Shooter
 constexpr int bottomRollerID = 14;

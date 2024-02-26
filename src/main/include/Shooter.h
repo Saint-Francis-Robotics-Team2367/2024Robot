@@ -10,12 +10,6 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "Constants.h"
 
-
-constexpr float velocityP = 6e-5;
-constexpr float velocityI = 1e-6;
-constexpr float velocityD = 0.0;
-constexpr float velocityFF = 0.000015;
-
 constexpr float positionP = 0.06;
 constexpr float positionI = 0.0;
 constexpr float positionD = 0.0;
@@ -38,6 +32,7 @@ public:
     const float maxVelocitySetpoint = 1000.0;
     const float lowVelocitySetpoint = 500.0;
     float distanceSetpoint;
+    double velocitySetpoint = 0.0;
 
 public:
     enum shooterSpeeds
