@@ -22,7 +22,7 @@
 
 // Steer PID values(custom, untuned)
 constexpr float steerP = 0.50; // prev 0.76
-constexpr float steerI = 0.11;
+constexpr float steerI = 0.0;// 0.11;
 constexpr float steerD = 0.0;
 constexpr float steerIZone = 0.05;
 
@@ -47,7 +47,7 @@ public:
     rev::SparkRelativeEncoder driveEnc;
 
     // PID Controller for Steer Motor
-    frc::PIDController steerCTR{steerP, steerI, steerD};
+    frc::PIDController steerCTR;
 
     // REV Default Velocity PID values(Drive Motor)
     float kP = revkP, kI = revkI, kFF = revkFF, kMaxOutput = revkMaxOutput, kMinOutput = revkMinOutput;
