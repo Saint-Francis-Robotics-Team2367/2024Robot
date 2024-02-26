@@ -22,12 +22,14 @@ void Shooter::disable()
 
 void Shooter::setSpeed(float rotationsPerMinute)
 {
-    setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0);
+    if (rotationsPerMinute != velocityP) {
+        setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0);
 
-    if (rotationsPerMinute <= maxVelocitySetpoint)
-    {
-        topRollerController.SetReference(rotationsPerMinute, rev::CANSparkLowLevel::ControlType::kVelocity);
-        bottomRollerController.SetReference(rotationsPerMinute, rev::CANSparkLowLevel::ControlType::kVelocity);
+        if (rotationsPerMinute <= maxVelocitySetpoint)
+        {
+            topRollerController.SetReference(rotationsPerMinute, rev::CANSparkLowLevel::ControlType::kVelocity);
+            bottomRollerController.SetReference(rotationsPerMinute, rev::CANSparkLowLevel::ControlType::kVelocity);
+        }
     }
 }
 
