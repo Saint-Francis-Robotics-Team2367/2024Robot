@@ -54,7 +54,6 @@ public:
   SwerveDrive mDrive = SwerveDrive(mGyro);
   Limelight mLimelight;
   Superstructure mSuperstructure;
-  Arm mArm;
 
   // Teleop Controls
   float ctrPercent = 0.5;
