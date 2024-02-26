@@ -21,10 +21,10 @@
 #include "control/PowerModule.h"
 
 // Steer PID values(custom, untuned)
-constexpr float steerP = 0.50; // prev 0.76
+constexpr float steerP = 0.40; // 0.50; // prev 0.76
 constexpr float steerI = 0.0;// 0.11;
 constexpr float steerD = 0.0;
-constexpr float steerIZone = 0.05;
+constexpr float steerIZone = 0.0; //0.05;
 
 // Drive Velocity PID Values(Defaults from REV)
 constexpr float revkP = 6e-5;
