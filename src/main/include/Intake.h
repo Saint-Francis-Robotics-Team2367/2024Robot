@@ -7,13 +7,13 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "Constants.h"
 
-constexpr unsigned int clearingCurrentLimit = 60;
-constexpr unsigned int intakeCurrentLimit = 10;
+constexpr int clearingCurrentLimit = 60;
+constexpr int intakeCurrentLimit = 60;
 
 class Intake
 {
-private:
-    int intakeSpeed = 5700;
+public:
+    int intakeSpeed = 4000;
 
     // Clear Thresholds
     const int clearCurrentThreshold = 40;
@@ -37,6 +37,8 @@ public:
     void disable();
     void setIntakeState(intakeState state);
     void setIntakeSpeed(double speed);
+    void setPID(double kP, double kI, double kD, double kFF, double min, double max);
+
 
 
 };

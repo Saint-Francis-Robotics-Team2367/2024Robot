@@ -12,7 +12,7 @@ class Index
 {
 public:
     float distanceSetpoint;
-    float velocitySetpoint;
+    float velocitySetpoint = 0.0;
 
     bool inDistanceMode = false;
     rev::CANSparkMax indexMotor = rev::CANSparkMax(motorIDs::indexMotorID, rev::CANSparkLowLevel::MotorType::kBrushless);
@@ -27,4 +27,6 @@ public:
     void setDistance(double distance);
     bool isDistanceFinished(float percentageBound);
     int getSensorProximity();
+    bool isNoteDetected();
+    void setPID(double kP, double kI, double kD, double kFF, double min, double max);
 };
