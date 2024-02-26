@@ -79,7 +79,7 @@ void Superstructure::loadNote()
     // Run distance PID on shooter
     // Call this function once(not periodically)
     double distance = 1.0;
-    mIndex.setVelocity(500.0);
+    mIndex.setDistance(distance * 10);
     mShooter.setDistance(distance);
 }
 
@@ -102,7 +102,7 @@ void Superstructure::preScoreSpeaker(Limelight limelight) {//find distance to wa
 
 void Superstructure::scoreSpeaker()
 {
-    mIndex.setVelocity(500);
+    mIndex.setDistance(10.0);
 }
 
 void Superstructure::unloadShooter() {

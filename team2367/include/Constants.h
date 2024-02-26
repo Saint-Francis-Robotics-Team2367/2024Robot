@@ -31,6 +31,11 @@ constexpr float velocityI = 1e-6;
 constexpr float velocityD = 0.0;
 constexpr float velocityFF = 0.000015;
 
+constexpr float positionP = 0.06;
+constexpr float positionI = 0.0;
+constexpr float positionD = 0.0;
+constexpr float positionFF = 0.0;
+
 namespace motorIDs 
 {
 // Arm

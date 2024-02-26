@@ -23,11 +23,10 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
   // mDrive.setDriveCurrentLimit(mPowerModule.updateDriveCurrentLimit());
-  frc::SmartDashboard::PutNumber("Energy Usage", mPowerModule.mPDH.GetTotalEnergy());
+  // frc::SmartDashboard::PutNumber("Energy Usage", mPowerModule.mPDH.GetTotalEnergy());
   frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
   frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
-
 }
 
 void Robot::AutonomousInit()
@@ -89,7 +88,8 @@ void Robot::TeleopPeriodic()
   bool intakeClear = ctr.GetR1Button();
   bool shootNote = ctr.GetTriangleButton();
   bool loadNote = ctr.GetCrossButtonReleased();
-  if (ctr.GetTriangleButtonReleased()) {
+  if (ctr.GetTriangleButtonReleased())
+  {
     scoreAmp = !scoreAmp;
   }
 
@@ -137,7 +137,7 @@ void Robot::TeleopPeriodic()
       mGyro.gyro.IsConnected());
 
   // Superstructure function
-  mSuperstructure.controlIntake(intakeIn, intakeClear);
+
   if (loadNote) // Load note into shooter
   {
     mSuperstructure.loadNote();
@@ -165,6 +165,7 @@ void Robot::TeleopPeriodic()
   else
   {
     mSuperstructure.stow();
+    mSuperstructure.controlIntake(intakeIn, intakeClear);
   }
 
   // Module Telemetry

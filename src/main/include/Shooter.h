@@ -10,10 +10,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "Constants.h"
 
-constexpr float positionP = 0.06;
-constexpr float positionI = 0.0;
-constexpr float positionD = 0.0;
-constexpr float positionFF = 0.0;
+
 
 constexpr float shooterCurrentLimit = 20;
 

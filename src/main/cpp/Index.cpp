@@ -17,6 +17,7 @@ void Index::disable()
 void Index::setVelocity(double velocity)
 {
     inDistanceMode = false;
+    setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0);
     if (velocity != velocitySetpoint) 
     {
         velocitySetpoint = velocity;
@@ -40,14 +41,20 @@ void Index::setDistance(double distance)
 {
     inDistanceMode = true;
     indexEncoder.SetPosition(0.0);
+    setPID(positionP, positionI, positionD, positionFF, -1.0, 1.0);
     distanceSetpoint = distance;
     indexController.SetReference(distanceSetpoint, rev::CANSparkLowLevel::ControlType::kPosition);
 }
 
 bool Index::isDistanceFinished(float percentageBound)
 {
-    double pos = indexEncoder.GetPosition();
-    return (pos < (distanceSetpoint * (1 + percentageBound))) && (pos > (distanceSetpoint * (1 - percentageBound)));
+    if (inDistanceMode) {
+        double pos = indexEncoder.GetPosition();
+        return (pos < (distanceSetpoint * (1 + percentageBound))) && (pos > (distanceSetpoint * (1 - percentageBound)));
+    } else {
+        return false;
+    }
+    
 }
 
 int Index::getSensorProximity() {
