@@ -12,11 +12,6 @@
 class Limelight
 {
 
-    // TODO:
-    // 1. USE PID to get in front of tag by set distance
-    // 2. make fucntion for target area
-    // 3. getFiducialID() use for speaker and amp
-
 private:
     // update field and robot measurements here / talk to CAD team
     std::vector<int> speakerCenterIDs = {4, 7};
