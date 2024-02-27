@@ -86,7 +86,8 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
         break;
 
     // R - 2 note auto 
-    // half court note 5
+    // HC 5, holding HC 4 
+    // (when other teams want all inner notes)
     case 2:
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
@@ -95,12 +96,14 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
         follow("[R] Score HC 5", flipAlliance);
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
+
         follow("[R] HC 4", flipAlliance); 
         mSuperstructure.controlIntake(true, false);
         break;
 
     // R - 3 note auto
-    // note 3, half court note 5
+    // note 3, HC 5, holding HC 4
+    // (when other teams want inner notes 1 and 2)
     case 3:
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
@@ -115,11 +118,35 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
         follow("[R] Score HC 5", flipAlliance); 
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
+
+        follow("[R] HC 4", flipAlliance); 
+        mSuperstructure.controlIntake(true, false);
         break;
 
+    // R - 3 note auto 
+    // note 3, note 2, holding HC 5
+    case 4: 
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+        follow("[R] Note 3", flipAlliance);
+        mSuperstructure.controlIntake(true, false);
+        follow("[R] Score Note 3", flipAlliance);
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+
+        follow("[R] Note 2", flipAlliance); 
+        mSuperstructure.controlIntake(true, false);
+        follow("[R] Score Note 2", flipAlliance); 
+        mSuperstructure.preScoreSpeaker(); 
+        mSuperstructure.scoreSpeaker(); 
+
+        follow("[R] HC 5", flipAlliance); 
+        mSuperstructure.controlIntake(true, false);
+        break; 
+
     // M - 2 note auto 
-    // note 2, ends in front of HC 2 
-    case 4:
+    // note 2, holding HC 2 
+    case 5:
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
         follow("[M] Note 2", flipAlliance);
@@ -127,13 +154,14 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
         follow("[M] Score Note 2", flipAlliance);
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
+
         follow("[M] HC 2", flipAlliance);
         mSuperstructure.controlIntake(true, false);
         break;
 
     // M - 3 note auto 
-    // note 2, note 3
-    case 5: 
+    // note 2, note 3, holding HC 2
+    case 6: 
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
         follow("[M] Note 2", flipAlliance);
@@ -147,11 +175,14 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
         follow("[M] Score Note 3", flipAlliance);
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
+
+        follow("[M] HC 2", flipAlliance); 
+        mSuperstructure.controlIntake(true, false);
         break; 
 
     // M - 4 note auto 
     // note 2, note 3, note 1, holding HC 1
-    case 6: 
+    case 7: 
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker(); 
         follow("[M] Note 2", flipAlliance);
@@ -177,8 +208,8 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
         break; 
 
     // L - 2 note auto
-    // note 1, ends holding HC 1
-    case 7: 
+    // note 1, holding HC 1
+    case 8: 
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker();
         follow("[L] Note 1", flipAlliance); 
@@ -192,7 +223,7 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
 
     // L - 3 note auto 
     // note 1, note 2, holding HC 1
-    case 8: 
+    case 9: 
         mSuperstructure.preScoreSpeaker(); 
         mSuperstructure.scoreSpeaker();
         follow("[L] Note 1", flipAlliance); 
