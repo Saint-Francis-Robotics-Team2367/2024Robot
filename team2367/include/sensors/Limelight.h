@@ -23,8 +23,8 @@ private:
     std::vector<int> speakerSideIDs = {3, 8};
     std::vector<int> ampIDs = {5, 6};
     std::vector<int> sourceIDs = {1, 2, 9, 10};
-    double limelightAngleDegrees = 36;
-    double limelightHeightInches = 5;
+    double limelightAngleDegrees = 30;
+    double limelightHeightInches = 14.5;
     double tagHeightInches = 52;
 
 public:
@@ -48,9 +48,9 @@ public:
             double angleToTagDegrees = limelightAngleDegrees + ty;
             double angleToTagRadians = angleToTagDegrees * (PI / 180.0);
             double distanceToWall = (tagHeightInches - limelightHeightInches) / tan(angleToTagRadians);
-            distanceToWall = distanceToWall + 0.4191; //added the distance between limelight and shooter
+            distanceToWall = (distanceToWall/39.3700787402) + 0.4191; //added the distance between limelight and shooter
             frc::SmartDashboard::PutNumber("distanceToWall", distanceToWall);
-            return distanceToWall;
+            return distanceToWall; //meters
         }
         else {
             return 0;
