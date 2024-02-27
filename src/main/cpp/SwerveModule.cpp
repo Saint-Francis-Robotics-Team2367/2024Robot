@@ -1,4 +1,5 @@
 #include "SwerveModule.h"
+#include <string>
 
 SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int cancoderID) : steerMotor(new rev::CANSparkMax(steerMotorID, rev::CANSparkMax::MotorType::kBrushless)),
                                                                                  driveMotor(new rev::CANSparkMax(driveMotorID, rev::CANSparkMax::MotorType::kBrushless)),
@@ -36,7 +37,7 @@ void SwerveModule::initMotors()
     driveEnc.SetPositionConversionFactor(1.0);
 
     // Setpoints to initial encoder positions/speeds
-    steerAngleSetpoint = steerEnc.getPosition().getRadians();
+    steerAngleSetpoint = 0.0;// steerEnc.getAbsolutePosition().getRadians();
     driveVelocitySetpoint = 0.0;
 
     // Set PID values for REV Drive PID
@@ -131,7 +132,6 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
     double setpointAngle;
     double setpointVel;
-
     if (flip)
     {
         setpointAngle = Rotation2d::radiansBound(desAngle + PI);
@@ -140,6 +140,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
         // setpointVel = -(desVel * (-angleDist / PI_2) + desVel);
         setpointVel = -ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
+        
     }
     else
     {
@@ -210,7 +211,8 @@ void SwerveModule::run()
     else
     {
         // Steer PID
-
+        frc::SmartDashboard::PutNumber("SteerReading" + std::to_string(steerID), steerEnc.getAbsolutePosition().getDegrees());
+        frc::SmartDashboard::PutNumber("Steerset" + std::to_string(steerID), steerAngleSetpoint * (180 / M_PI));
         double newSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
         if (currentSteerOutput != newSteerOutput) // Save some CAN buffer
         {
@@ -218,6 +220,7 @@ void SwerveModule::run()
             steerMotor->Set(currentSteerOutput);
         }
         
+        frc::SmartDashboard::PutNumber("Driveset" + std::to_string(steerID), driveVelocitySetpoint);
 
         // Drive Motor uses the internal REV PID, since optimizations here are rarely needed
         if (driveMode == POSITION)
