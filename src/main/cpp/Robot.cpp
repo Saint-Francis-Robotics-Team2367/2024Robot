@@ -9,7 +9,7 @@ void Robot::RobotInit()
 {
   mDrive.initModules();
   mGyro.init();
-  mPowerModule.init(true);
+  // mPowerModule.init(true);
   mSuperstructure.init();
   // mIntake.init();
 
