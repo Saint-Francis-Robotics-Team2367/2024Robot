@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3645736109386917,
-        "y": 5.515739799998119
+        "x": 1.9325181798576485,
+        "y": 6.373665909370531
       },
       "isLocked": false,
       "linkedName": "Note 2"
     },
     {
       "anchor": {
-        "x": 1.3064286823018092,
-        "y": 5.566394674456016
+        "x": 0.7457213849612887,
+        "y": 6.7917913150641125
       },
       "prevControl": {
-        "x": 1.2193677612741989,
-        "y": 5.566394674456016
+        "x": 0.7536788916100345,
+        "y": 6.805687259524037
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Front Speaker"
+      "linkedName": "Left Speaker"
     }
   ],
   "rotationTargets": [],
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "[M]",
+  "folder": "[L]",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }
