@@ -6,7 +6,9 @@ SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int cancoderID) :
                                                                                  steerEnc(CAN_Coder(cancoderID)),
                                                                                  driveEnc(driveMotor->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
                                                                                  m_pidController(driveMotor->GetPIDController()),
-                                                                                 steerCTR(frc::PIDController(steerP, steerI, steerD))
+                                                                                 steerCTR(frc::PIDController(steerP, steerI, steerD)),
+                                                                                 steerEncRelative(steerMotor->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
+                                                                                 steerRelController(steerMotor->GetPIDController())
 {
     steerID = steerMotorID;
     driveID = driveMotorID;
@@ -24,6 +26,9 @@ void SwerveModule::initMotors()
     driveMotor->SetInverted(true);
 
     driveEnc.SetPosition(0);
+    // Conversion: rotations * (wheelRot / motorRot) * (2pi rad / 1 wheelRot)
+    steerEncRelative.SetPositionConversionFactor(steerConversionFactor * 2 * PI);
+    steerEncRelative.SetPosition(steerEnc.getAbsolutePosition().getRadians());
 
     // Makes motor stiff(coast mode lets it run freely)
     steerMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
@@ -46,6 +51,12 @@ void SwerveModule::initMotors()
     m_pidController.SetFF(kFF);
     m_pidController.SetIAccum(0.0);
     m_pidController.SetOutputRange(kMinOutput, kMaxOutput);
+    
+    steerRelController.SetP(RsteerP);
+    steerRelController.SetI(RsteerI);
+    steerRelController.SetD(RsteerD);
+    steerRelController.SetIZone(RsteerIz);
+
     steerCTR.EnableContinuousInput(0, 2 * PI);
     steerCTR.SetIZone(steerIZone);
 
@@ -132,9 +143,10 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
     double setpointAngle;
     double setpointVel;
+    double preShortestPath;
     if (flip)
     {
-        setpointAngle = Rotation2d::radiansBound(desAngle + PI);
+        preShortestPath = Rotation2d::radiansBound(desAngle + PI);
 
         double angleDist = std::min(fabs(setpointAngle - currAngle), (PI * 2) - fabs(setpointAngle - currAngle));
 
@@ -144,20 +156,30 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     }
     else
     {
-        setpointAngle = desAngle;
+        preShortestPath = desAngle;
 
         double angleDist = std::min(fabs(setpointAngle - currAngle), (PI * 2) - fabs(setpointAngle - currAngle));
 
         // setpointVel = desVel * (-angleDist / PI_2) + desVel;
         setpointVel = ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
     }
+
+    if (fabs(currAngle - preShortestPath) > PI) {
+        if (currAngle < preShortestPath) {
+            setpointAngle = preShortestPath - (2 * PI);
+        } else {
+            setpointAngle = preShortestPath + (2 * PI);
+        }
+    }
+
     return SwerveModuleState(setpointVel, Rotation2d(setpointAngle));
 }
 
 SwerveModuleState SwerveModule::getModuleState()
 {
     double vel = getDriveEncoderVel();
-    double angle = steerEnc.getAbsolutePosition().getRadians();
+    double angle = Rotation2d::radiansBound(steerEnc.getAbsolutePosition().getRadians());
+    // double angle = steerEncRelative.GetPosition();
 
     return SwerveModuleState(vel, angle);
 }
@@ -191,6 +213,10 @@ bool SwerveModule::isFinished(float percentageBound)
     }
 }
 
+Rotation2d SwerveModule::getRelativeSteer() {
+    return Rotation2d(Rotation2d::radiansBound(steerEncRelative.GetPosition()));
+}
+
 /**
  * This function is meant to run in a while loop
  * when moduleInhibit is true, motors are stopped
@@ -201,6 +227,8 @@ bool SwerveModule::isFinished(float percentageBound)
  */
 void SwerveModule::run()
 {
+    frc::SmartDashboard::PutNumber("SteerReading" + std::to_string(steerID), steerEnc.getAbsolutePosition().getDegrees());
+    frc::SmartDashboard::PutNumber("SteerRelativeReading" + std::to_string(steerID), getRelativeSteer().getDegrees());
     if (moduleInhibit) // Thread is in standby mode
     {
 
@@ -211,14 +239,16 @@ void SwerveModule::run()
     else
     {
         // Steer PID
-        frc::SmartDashboard::PutNumber("SteerReading" + std::to_string(steerID), steerEnc.getAbsolutePosition().getDegrees());
-        frc::SmartDashboard::PutNumber("Steerset" + std::to_string(steerID), steerAngleSetpoint * (180 / M_PI));
-        double newSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
-        if (currentSteerOutput != newSteerOutput) // Save some CAN buffer
-        {
-            currentSteerOutput = newSteerOutput;
-            steerMotor->Set(currentSteerOutput);
-        }
+
+
+        frc::SmartDashboard::PutNumber("Steerset" + std::to_string(steerID), steerAngleSetpoint * (180 / PI));
+        // double newSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
+        // if (currentSteerOutput != newSteerOutput) // Save some CAN buffer
+        // {
+        //     currentSteerOutput = newSteerOutput;
+        //     steerMotor->Set(currentSteerOutput);
+        // }
+        steerRelController.SetReference(steerAngleSetpoint, rev::CANSparkBase::ControlType::kPosition);
         
         frc::SmartDashboard::PutNumber("Driveset" + std::to_string(steerID), driveVelocitySetpoint);
 

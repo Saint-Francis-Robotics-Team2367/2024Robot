@@ -33,6 +33,13 @@ constexpr float revkFF = 0.000015;
 constexpr float revkMaxOutput = 1.0;
 constexpr float revkMinOutput = -1.0;
 
+constexpr float RsteerP = 0.1;
+constexpr float RsteerI = 1e-4;
+constexpr float RsteerD = 1.0;
+constexpr float RsteerIz = 0.1;
+
+constexpr float steerConversionFactor = 7.0 / 150.0;
+
 class SwerveModule
 {
     // private: <- removed for testing
@@ -45,6 +52,7 @@ public:
 
     CAN_Coder steerEnc;
     rev::SparkRelativeEncoder driveEnc;
+    rev::SparkRelativeEncoder steerEncRelative;
 
     // PID Controller for Steer Motor
     frc::PIDController steerCTR;
@@ -54,6 +62,7 @@ public:
 
     // PID Controller for Drive Motor
     rev::SparkPIDController m_pidController;
+    rev::SparkPIDController steerRelController;
 
     // Timer for acceleration limiting
     frc::Timer aTimer = frc::Timer();
@@ -96,6 +105,7 @@ public:
 
     void setDrivePositionSetpoint(float setpt);
     void setDriveVelocitySetpoint(float setpt);
+    Rotation2d getRelativeSteer();
     void setDriveCurrentLimit(int limit);
 
     // TODO: Test this
