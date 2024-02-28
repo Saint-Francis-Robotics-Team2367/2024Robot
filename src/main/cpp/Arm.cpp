@@ -74,6 +74,7 @@ void Arm::runPeriodic()
     frc::SmartDashboard::PutNumber("PIDout", output);
     output = std::clamp(output, -0.15, 0.25);
     setAllMotors(output);
+    
 }
 
 /**
