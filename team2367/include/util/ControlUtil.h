@@ -60,6 +60,18 @@ public:
         }
     }
 
+    static bool epsilonEquals(double a, double b)
+    {
+        if (fabs(a - b) < kEpsilon)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     static double limitAcceleration(double currentVelocity, double desiredVelocity, float maxAcc, float dt)
     {
         float accRange = maxAcc * dt;
