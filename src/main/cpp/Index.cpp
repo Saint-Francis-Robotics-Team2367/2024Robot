@@ -6,7 +6,8 @@ void Index::init()
     indexMotor.ClearFaults();
     indexMotor.SetSmartCurrentLimit(indexCurrentLimit);
     indexMotor.SetInverted(true);
-    setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0);
+    setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0, 0);
+    setPID(0.2, positionI, positionD, positionFF, -0.8, 0.8, 1);
 }
 
 void Index::disable()
@@ -17,33 +18,32 @@ void Index::disable()
 void Index::setVelocity(double velocity)
 {
     inDistanceMode = false;
-    setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0);
+    
     if (velocity != velocitySetpoint) 
     {
         velocitySetpoint = velocity;
-        indexController.SetReference(velocitySetpoint, rev::CANSparkLowLevel::ControlType::kVelocity);
+        indexController.SetReference(velocitySetpoint, rev::CANSparkLowLevel::ControlType::kVelocity, POSITION);
     }
     // indexMotor.Set(velocity);
     
 }
 
-void Index::setPID(double kP, double kI, double kD, double kFF, double min, double max)
+void Index::setPID(double kP, double kI, double kD, double kFF, double min, double max, int slot)
 {
-    indexController.SetP(kP);
-    indexController.SetI(kI);
-    indexController.SetD(kD);
-    indexController.SetFF(kFF);
+    indexController.SetP(kP, slot);
+    indexController.SetI(kI, slot);
+    indexController.SetD(kD, slot);
+    indexController.SetFF(kFF, slot);
 
-    indexController.SetOutputRange(min, max);
+    indexController.SetOutputRange(min, max, slot);
 }
 
 void Index::setDistance(double distance)
 {
     inDistanceMode = true;
     indexEncoder.SetPosition(0.0);
-    setPID(positionP, positionI, positionD, positionFF, -1.0, 1.0);
     distanceSetpoint = distance;
-    indexController.SetReference(distanceSetpoint, rev::CANSparkLowLevel::ControlType::kPosition);
+    indexController.SetReference(distanceSetpoint, rev::CANSparkLowLevel::ControlType::kPosition, POSITION);
 }
 
 bool Index::isDistanceFinished(float percentageBound)
