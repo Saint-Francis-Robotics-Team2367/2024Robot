@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SwerveDrive.h"
+#include "Superstructure.h"
 #include "Constants.h"
 #include "sensors/Limelight.h"
 #include "geometry/Translation2d.h"
@@ -27,15 +28,17 @@ class Trajectory
 {
 private:
     SwerveDrive &mDrive;
+    Superstructure &mSuperstructure; 
 
 public:
-    Trajectory(SwerveDrive &mDriveInput) : mDrive(mDriveInput){};
+    Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput) : mDrive(mDriveInput),
+                                                                    mSuperstructure(mSSInput){};
 
     void driveToState(PathPlannerTrajectory::State const &state);
 
-    void follow(std::string const &traj_dir_file_path);
+    void follow(std::string const &traj_dir_file_path, bool flipAlliance);
 
-    void followPath(int numPath);
+    void followPath(int numPath, bool flipAlliance);
 
     void testHolonomic(frc::Pose2d const &target_pose,
                        units::velocity::meters_per_second_t const &velocity,

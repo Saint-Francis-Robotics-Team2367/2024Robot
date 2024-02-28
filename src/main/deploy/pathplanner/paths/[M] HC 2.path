@@ -3,64 +3,54 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 1.3064286823018092,
+        "y": 5.566394674456016
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1180339887498967,
-        "y": 2.0
+        "x": 2.4244626710517037,
+        "y": 5.566394674456016
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Front Speaker"
     },
     {
       "anchor": {
-        "x": 3.8864423701069626,
-        "y": 2.0
+        "x": 4.416982403409252,
+        "y": 5.922463405111996
       },
       "prevControl": {
-        "x": 2.4722288077338685,
-        "y": 2.0
+        "x": 2.831735638581617,
+        "y": 5.851398355111526
       },
       "nextControl": {
-        "x": 5.300655932480056,
-        "y": 2.0
+        "x": 6.0022291682368865,
+        "y": 5.993528455112466
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.212429679488989,
-        "y": 3.171185171074046
+        "x": 7.83,
+        "y": 5.8
       },
       "prevControl": {
-        "x": 4.689500911338309,
-        "y": 3.171185171074046
-      },
-      "nextControl": {
-        "x": 1.7353584476396682,
-        "y": 3.171185171074046
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.0,
-        "y": 2.0
-      },
-      "prevControl": {
-        "x": 0.47930936742544517,
-        "y": 2.0
+        "x": 6.123592042191586,
+        "y": 5.8
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Halfcourt 2"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 180.0,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -75,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Tests",
+  "folder": "[M]",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

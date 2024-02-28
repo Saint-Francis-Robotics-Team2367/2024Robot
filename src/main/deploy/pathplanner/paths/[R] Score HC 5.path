@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 7.79,
+        "y": 0.8
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.12,
-        "y": 2.0
+        "x": 8.78062485279418,
+        "y": 0.2816734610050272
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Halfcourt 5"
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 2.0
+        "x": 0.94,
+        "y": 4.32
       },
       "prevControl": {
-        "x": 2.5857864376269033,
-        "y": 2.0
-      },
-      "nextControl": {
-        "x": 4.1888322789895085,
-        "y": 2.0
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.735374980009219,
-        "y": 2.9907754306249354
-      },
-      "prevControl": {
-        "x": 5.730327307876838,
-        "y": 1.7875885473993174
+        "x": 2.1686898512685917,
+        "y": 3.6196685293370594
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Speaker"
     }
   ],
   "rotationTargets": [],
@@ -59,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Tests",
+  "folder": "[R]",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }
