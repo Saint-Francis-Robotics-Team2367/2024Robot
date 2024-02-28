@@ -22,6 +22,7 @@ void Shooter::disable()
 
 void Shooter::setSpeed(float rotationsPerMinute)
 {
+    inDistanceMode = false;
     if (rotationsPerMinute != velocityP) {
         setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0);
 
@@ -44,7 +45,8 @@ void Shooter::setSpeed(shooterSpeeds speed)
         setSpeed(lowVelocitySetpoint);
         break;
     case STOP:
-        setSpeed(0.0);
+        topRollerMotor.StopMotor();
+        bottomRollerMotor.StopMotor();
         break;
     }
 }
@@ -52,7 +54,7 @@ void Shooter::setSpeed(shooterSpeeds speed)
 void Shooter::setDistance(float distance) 
 {
     setPID(positionP, positionI, positionD, positionFF, -0.8, 0.8);
-
+    inDistanceMode = true;
     topRollerEncoder.SetPosition(0.0);
     bottomRollerEncoder.SetPosition(0.0);
     distanceSetpoint = distance;
