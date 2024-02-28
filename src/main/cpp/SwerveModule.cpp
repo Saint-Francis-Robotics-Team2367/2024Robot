@@ -147,7 +147,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     if (flip)
     {
         preShortestPath = Rotation2d::radiansBound(desAngle + PI);
-
+        setpointAngle = currAngle + ControlUtil::inputModulus(preShortestPath - currAngle, 0, 2 * PI);
         double angleDist = std::min(fabs(setpointAngle - currAngle), (PI * 2) - fabs(setpointAngle - currAngle));
 
         // setpointVel = -(desVel * (-angleDist / PI_2) + desVel);
@@ -157,20 +157,22 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     else
     {
         preShortestPath = desAngle;
-
+        setpointAngle = currAngle + ControlUtil::inputModulus(preShortestPath - currAngle, 0, 2 * PI);
         double angleDist = std::min(fabs(setpointAngle - currAngle), (PI * 2) - fabs(setpointAngle - currAngle));
 
         // setpointVel = desVel * (-angleDist / PI_2) + desVel;
         setpointVel = ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
     }
 
-    if (fabs(currAngle - preShortestPath) > PI) {
-        if (currAngle < preShortestPath) {
-            setpointAngle = preShortestPath - (2 * PI);
-        } else {
-            setpointAngle = preShortestPath + (2 * PI);
-        }
-    }
+    
+
+    // if (fabs(currAngle - preShortestPath) > PI) {
+    //     if (currAngle < preShortestPath) {
+    //         setpointAngle = preShortestPath - (2 * PI);
+    //     } else {
+    //         setpointAngle = preShortestPath + (2 * PI);
+    //     }
+    // }
 
     return SwerveModuleState(setpointVel, Rotation2d(setpointAngle));
 }
@@ -178,8 +180,10 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 SwerveModuleState SwerveModule::getModuleState()
 {
     double vel = getDriveEncoderVel();
-    double angle = Rotation2d::radiansBound(steerEnc.getAbsolutePosition().getRadians());
+    // double angle = Rotation2d::radiansBound(steerEnc.getAbsolutePosition().getRadians());
     // double angle = steerEncRelative.GetPosition();
+    double angle = Rotation2d::radiansBound(steerEncRelative.GetPosition());
+
 
     return SwerveModuleState(vel, angle);
 }

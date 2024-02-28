@@ -80,7 +80,8 @@ public:
     static float limitPositiveAcceleration(float previousVelocity, float desiredVelocity, float maxAcc, float dt)
     {
         float range = maxAcc * dt;
-        if (std::signbit(desiredVelocity) == std::signbit(previousVelocity) && std::abs(desiredVelocity) > std::abs(previousVelocity)) {
+        if (std::signbit(desiredVelocity) == std::signbit(previousVelocity) && std::abs(desiredVelocity) > std::abs(previousVelocity))
+        {
             float maxAllowedVelocity = std::abs(previousVelocity) + range;
             float minAllowedVelocity = std::abs(previousVelocity) - range;
             return std::clamp(desiredVelocity, minAllowedVelocity, maxAllowedVelocity);
@@ -131,24 +132,37 @@ public:
         }
     }
 
-
     /**
      *  * Increases allowed max velocity to boostPercent when boost boolean is true
      * Otherwise sets allowed maxVelocity to its normal percentage limit
-    */
-    static double boostScaler(double axis, bool boost, float boostPercent, float normalPercent) 
+     */
+    static double boostScaler(double axis, bool boost, float boostPercent, float normalPercent)
     {
-        if (boost) {
+        if (boost)
+        {
             return axis * boostPercent;
-        } 
+        }
         return axis * normalPercent;
     }
 
-    static double scaleSwerveVelocity(double desiredVelocity, double angleError, bool quartic) 
+    static double scaleSwerveVelocity(double desiredVelocity, double angleError, bool quartic)
     {
         int n = quartic ? 4 : 2; // n is quadratic or quartic
         return (pow(2 / PI, n) * desiredVelocity) * pow(angleError - PI_2, n);
+    }
 
+    static double inputModulus(double input, double minimumInput, double maximumInput)
+    {
+        double modulus = maximumInput - minimumInput;
 
+        // Wrap input if it's above the maximum input
+        int numMax = (int)((input - minimumInput) / modulus);
+        input -= numMax * modulus;
+
+        // Wrap input if it's below the minimum input
+        int numMin = (int)((input - maximumInput) / modulus);
+        input -= numMin * modulus;
+
+        return input;
     }
 };
