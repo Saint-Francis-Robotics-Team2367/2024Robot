@@ -18,7 +18,7 @@ constexpr float tiltControllerD = 0.0;
 constexpr int armCurrentLimit = 20;
 
 constexpr float encoderToArmRatio = 12.0 / 54.0;
-constexpr float armMinFromVertical = 73.0;
+constexpr float armMinFromVertical = 67.2;
 constexpr float shooterToArmAngle = 46.0;
 
 class Arm
@@ -33,6 +33,7 @@ public:
     frc::PIDController tiltController{tiltControllerP, tiltControllerI, tiltControllerD};
 
     double tiltSetpoint;
+    double lastTiltSetpoint;
     float maxTiltSetpoint = 61;
     void setAllMotors(double input);
 
