@@ -20,6 +20,11 @@ void Intake::setIntakeSpeed(double speed)
 
 void Intake::setIntakeState(intakeState state)
 {
+    if (state == currentState) {
+        return;
+    } else {
+        currentState = state;
+    }
     switch (state)
     {
     case IN:
