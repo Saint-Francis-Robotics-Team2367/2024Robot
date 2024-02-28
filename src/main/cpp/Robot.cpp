@@ -4,6 +4,7 @@
 
 #include "Robot.h"
 #include <frc/smartdashboard/SmartDashboard.h>
+#include<frc/DriverStation.h>
 
 void Robot::RobotInit()
 {
@@ -57,6 +58,7 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
+  auto startTime = frc::Timer::GetFPGATimestamp();
   // Controller inputs
   bool boost = ctr.GetL2Axis() > 0;
 
@@ -69,7 +71,7 @@ void Robot::TeleopPeriodic()
   leftX = xStickLimiter.calculate(leftX);
   leftY = yStickLimiter.calculate(leftY);
 
-  double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
+  double rightX = -ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
 
   int dPad = ctr.GetPOV();
   bool rumbleController = false;
@@ -138,7 +140,7 @@ void Robot::TeleopPeriodic()
 
   // Superstructure function
 
-  if (loadNote) // Load note into shooter
+  if (loadNote && !scoreAmp) // Load note into shooter
   {
     mSuperstructure.loadNote();
   }
@@ -170,7 +172,15 @@ void Robot::TeleopPeriodic()
 
   // Module Telemetry
   mDrive.displayDriveTelemetry();
+  mSuperstructure.updateTelemetry();
   // PowerModule::updateCurrentLimits();
+  static units::time::second_t max_loop{0};
+  auto curr_loop = frc::Timer::GetFPGATimestamp() - startTime;
+  if( curr_loop > max_loop)
+    max_loop = curr_loop;
+  frc::SmartDashboard::PutNumber("CurrLoop", curr_loop.value());
+  frc::SmartDashboard::PutNumber("maxLoop", max_loop.value());   
+
 }
 
 void Robot::DisabledInit()
