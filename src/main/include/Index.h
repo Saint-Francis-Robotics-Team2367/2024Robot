@@ -14,8 +14,10 @@ public:
     float distanceSetpoint;
     float velocitySetpoint = 0.0;
 
-    enum controlType {
-        VELOCITY, POSITION
+    enum controlType
+    {
+        VELOCITY,
+        POSITION
     };
 
     bool inDistanceMode = false;
