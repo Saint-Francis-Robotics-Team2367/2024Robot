@@ -28,7 +28,7 @@ public:
     void loadNote();
     void scoreAmp();
     void preScoreSpeaker();
-    void preScoreSpeaker(Limelight limelight);
+    // void preScoreSpeaker(Limelight limelight);
     void scoreSpeaker();
     void unloadShooter();
     void stow();
