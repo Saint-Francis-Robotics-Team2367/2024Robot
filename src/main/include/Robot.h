@@ -66,7 +66,7 @@ public:
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
   SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
-  PowerModule mPowerModule;
+  // PowerModule mPowerModule;
 
   // Auto Selectors
   frc::SendableChooser<std::string> mChooser;

@@ -21,7 +21,7 @@
 #include "control/PowerModule.h"
 
 // Steer PID values(custom, untuned)
-constexpr float steerP = 0.40; // 0.50; // prev 0.76
+constexpr float steerP = 0.30; //0.40; // 0.50; // prev 0.76
 constexpr float steerI = 0.0;// 0.11;
 constexpr float steerD = 0.0;
 constexpr float steerIZone = 0.0; //0.05;

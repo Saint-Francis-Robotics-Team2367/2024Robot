@@ -27,6 +27,7 @@ void Superstructure::periodic()
             // PID code here
             mArm.runPeriodic();
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
 }
 
@@ -54,13 +55,13 @@ void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
     }
     else if (intakeClear)
     {
-        mIndex.setVelocity(indexVelocity);
+        mIndex.setVelocity(-indexVelocity);
         mIntake.setIntakeState(Intake::CLEAR);
     }
     else
     {
         mIntake.setIntakeState(Intake::STOP);
-        mIndex.setVelocity(0.0);
+        mIndex.disable();
     }
     frc::SmartDashboard::PutBoolean("Intake?", intakeIn);
 }
@@ -79,7 +80,7 @@ void Superstructure::loadNote()
     // Run distance PID on shooter
     // Call this function once(not periodically)
     double distance = 1.0;
-    mIndex.setDistance(distance * 10);
+    mIndex.setDistance(distance);
     mShooter.setDistance(distance);
 }
 
@@ -91,14 +92,16 @@ void Superstructure::scoreAmp()
 void Superstructure::preScoreSpeaker()
 {
     mShooter.setSpeed(Shooter::HIGH);
+    mArm.setPosition(50.0);
 }
 
-void Superstructure::preScoreSpeaker(Limelight limelight) {//find distance to wall using limelight
-    // double distanceToWall = limelight.getDistanceToWall();
-    // double velocity = mArm.rollerCircumference*1000/60; //converted RPM to meters/second
-    // double angle = mArm.findLaunchAngle(velocity, distanceToWall, mArm.speakerHeight);
-    mShooter.setSpeed(Shooter::HIGH);
-}
+// void Superstructure::preScoreSpeaker(Limelight limelight) {//find distance to wall using limelight
+//     // double distanceToWall = limelight.getDistanceToWall();
+//     // double velocity = mArm.rollerCircumference*1000/60; //converted RPM to meters/second
+//     // double angle = mArm.findLaunchAngle(velocity, distanceToWall, mArm.speakerHeight);
+//     mShooter.setSpeed(Shooter::HIGH);
+    
+// }
 
 void Superstructure::scoreSpeaker()
 {
@@ -111,7 +114,10 @@ void Superstructure::unloadShooter() {
 
 void Superstructure::stow() {
     mArm.setPosition(Arm::STOW);
-    mShooter.setSpeed(Shooter::STOP);
+    if (!mShooter.inDistanceMode) {
+        mShooter.setSpeed(Shooter::STOP);
+    }
+    
 }
 
 void Superstructure::updateTelemetry() 

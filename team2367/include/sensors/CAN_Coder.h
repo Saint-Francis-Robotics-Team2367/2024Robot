@@ -22,7 +22,7 @@ public:
 
     Rotation2d getAbsolutePosition()
     {
-        return Rotation2d(encoder.GetAbsolutePosition().GetValueAsDouble() * 2 * PI);
+        return Rotation2d(Rotation2d::radiansBound(encoder.GetAbsolutePosition().GetValueAsDouble() * 2 * PI));
     }
 
     // double getVelocity()

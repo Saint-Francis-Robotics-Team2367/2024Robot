@@ -1,4 +1,5 @@
 #include "SwerveModule.h"
+#include <string>
 
 SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int cancoderID) : steerMotor(new rev::CANSparkMax(steerMotorID, rev::CANSparkMax::MotorType::kBrushless)),
                                                                                  driveMotor(new rev::CANSparkMax(driveMotorID, rev::CANSparkMax::MotorType::kBrushless)),
@@ -14,8 +15,6 @@ SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int cancoderID) :
 void SwerveModule::initMotors()
 {
     // Resetting Motor settings, Encoders, putting it in brake mode
-    steerMotor->RestoreFactoryDefaults();
-    driveMotor->RestoreFactoryDefaults();
     steerMotor->ClearFaults();
     driveMotor->ClearFaults();
 
@@ -36,17 +35,17 @@ void SwerveModule::initMotors()
     driveEnc.SetPositionConversionFactor(1.0);
 
     // Setpoints to initial encoder positions/speeds
-    steerAngleSetpoint = steerEnc.getPosition().getRadians();
+    steerAngleSetpoint = steerEnc.getAbsolutePosition().getRadians();
     driveVelocitySetpoint = 0.0;
 
     // Set PID values for REV Drive PID
-    m_pidController.SetP(kP);
-    m_pidController.SetI(kI);
-    m_pidController.SetFF(kFF);
-    m_pidController.SetIAccum(0.0);
-    m_pidController.SetOutputRange(kMinOutput, kMaxOutput);
+    m_pidController.SetP(kP, 1);
+    m_pidController.SetI(kI, 1);
+    m_pidController.SetFF(kFF, 1);
+    // m_pidController.SetIAccum(0.0, 1);
+    m_pidController.SetOutputRange(kMinOutput, kMaxOutput, 1);
     steerCTR.EnableContinuousInput(0, 2 * PI);
-    steerCTR.SetIZone(steerIZone);
+    steerCTR.SetTolerance(5 * PI / 180);
 
     // driveMotor->SetClosedLoopRampRate(0.5);
 
@@ -131,7 +130,6 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
     double setpointAngle;
     double setpointVel;
-
     if (flip)
     {
         setpointAngle = Rotation2d::radiansBound(desAngle + PI);
@@ -140,6 +138,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
         // setpointVel = -(desVel * (-angleDist / PI_2) + desVel);
         setpointVel = -ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
+        
     }
     else
     {
@@ -200,33 +199,40 @@ bool SwerveModule::isFinished(float percentageBound)
  */
 void SwerveModule::run()
 {
+    // Steer PID
+    frc::SmartDashboard::PutNumber("SteerEncoder" + std::to_string(steerID), steerEnc.getAbsolutePosition().getDegrees());
+    frc::SmartDashboard::PutNumber("SteerSetpoint" + std::to_string(steerID), steerAngleSetpoint * (180 / M_PI));
+    frc::SmartDashboard::PutNumber("SteerOutput" + std::to_string(steerID), steerMotor->GetAppliedOutput());
     if (moduleInhibit) // Thread is in standby mode
     {
-
+        currentSteerOutput = 0.0;
         steerMotor->StopMotor();
         driveMotor->StopMotor();
     }
 
     else
     {
-        // Steer PID
 
         double newSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
-        if (currentSteerOutput != newSteerOutput) // Save some CAN buffer
+        if (!ControlUtil::epsilonEquals(newSteerOutput, currentSteerOutput)) // Save some CAN buffer
         {
             currentSteerOutput = newSteerOutput;
             steerMotor->Set(currentSteerOutput);
+            frc::SmartDashboard::PutBoolean("Save", false);
+        } else {
+            frc::SmartDashboard::PutBoolean("Save", true);
         }
         
+        // frc::SmartDashboard::PutNumber("Driveset" + std::to_string(steerID), driveVelocitySetpoint);
 
         // Drive Motor uses the internal REV PID, since optimizations here are rarely needed
         if (driveMode == POSITION)
         {
-            m_pidController.SetReference(drivePositionSetpoint, rev::CANSparkMax::ControlType::kPosition);
+            m_pidController.SetReference(drivePositionSetpoint, rev::CANSparkMax::ControlType::kPosition, 1);
         }
         else
         {
-            m_pidController.SetReference(driveVelocitySetpoint, rev::CANSparkMax::ControlType::kVelocity);
+            m_pidController.SetReference(driveVelocitySetpoint, rev::CANSparkMax::ControlType::kVelocity, 1);
         }
     }
 }
