@@ -14,6 +14,10 @@ public:
     float distanceSetpoint;
     float velocitySetpoint = 0.0;
 
+    enum controlType {
+        VELOCITY, POSITION
+    };
+
     bool inDistanceMode = false;
     rev::CANSparkMax indexMotor = rev::CANSparkMax(motorIDs::indexMotorID, rev::CANSparkLowLevel::MotorType::kBrushless);
     rev::SparkPIDController indexController = indexMotor.GetPIDController();
@@ -28,5 +32,5 @@ public:
     bool isDistanceFinished(float percentageBound);
     int getSensorProximity();
     bool isNoteDetected();
-    void setPID(double kP, double kI, double kD, double kFF, double min, double max);
+    void setPID(double kP, double kI, double kD, double kFF, double min, double max, int slot);
 };
