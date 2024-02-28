@@ -18,6 +18,7 @@ public:
     // Clear Thresholds
     const int clearCurrentThreshold = 40;
     const int clearVelocityThreshold = 100;
+    
 
     rev::CANSparkMax intakeMotor = rev::CANSparkMax(motorIDs::intakeMotorID, rev::CANSparkMax::MotorType::kBrushless);
     rev::SparkPIDController intakeController = intakeMotor.GetPIDController();
@@ -32,6 +33,7 @@ public:
         CLEAR,
         STOP
     };
+    intakeState currentState = intakeState::STOP;
 
     void init();
     void disable();
