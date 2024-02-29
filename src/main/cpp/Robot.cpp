@@ -5,6 +5,7 @@
 #include "Robot.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include<frc/DriverStation.h>
+#include <string>
 
 void Robot::RobotInit()
 {
@@ -12,7 +13,6 @@ void Robot::RobotInit()
   mGyro.init();
   // mPowerModule.init(true);
   mSuperstructure.init();
-  // mIntake.init();
 
   mChooser.SetDefaultOption("0", kAutoDefault);
   mChooser.AddOption("1", kAutoCustom1);
@@ -38,9 +38,10 @@ void Robot::AutonomousInit()
   mDrive.state = DriveState::Auto;
   mSuperstructure.enable();
   selectedAuto = mChooser.GetSelected();
+  frc::SmartDashboard::PutString("auto", selectedAuto);
 
   Trajectory mTraj = Trajectory(mDrive);
-  mTraj.followPath(std::stoi(selectedAuto));
+  // mTraj.followPath(std::stoi(selectedAuto));
 }
 void Robot::AutonomousPeriodic()
 {
@@ -71,7 +72,7 @@ void Robot::TeleopPeriodic()
   leftX = xStickLimiter.calculate(leftX);
   leftY = yStickLimiter.calculate(leftY);
 
-  double rightX = -ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
+  double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
 
   int dPad = ctr.GetPOV();
   bool rumbleController = false;
@@ -86,21 +87,21 @@ void Robot::TeleopPeriodic()
   bool driveTurning = !(rightX == 0);
   double rot = rightX * moduleMaxRot;
   bool preScoringSpeaker = ctr.GetR2Axis() > 0.2;
-  bool intakeIn = ctr.GetL1Button();
-  bool intakeClear = ctr.GetR1Button();
+  bool intakeIn = ctr.GetR1Button();
+  bool intakeClear = ctr.GetL1Button();
   bool shootNote = ctr.GetTriangleButton();
-  bool loadNote = ctr.GetCrossButtonReleased();
+  bool loadNote = ctr.GetCrossButton();
   if (ctr.GetTriangleButtonReleased())
   {
     scoreAmp = !scoreAmp;
   }
 
   // Decide drive modes
-  if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 2.0)) // SNAP mode
+  if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 5.0, driveTurning)) // SNAP mode
   {
     // Snap condition
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
-    mHeadingController.setSetpointPOV(dPad);
+    mHeadingController.setFieldSetpoint(dPad);
   }
   else if (preScoringSpeaker && !driveTurning) // ALIGN(scoring) mode
   {
@@ -127,22 +128,29 @@ void Robot::TeleopPeriodic()
             : mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
 
   // Gyro Resets
-  if (ctr.GetCrossButtonReleased())
+  if (ctr.GetCircleButtonReleased())
   {
     mGyro.init();
   }
 
   // Drive function
   mDrive.Drive(
-      ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, rot),
+      ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, -rot),
       mGyro.getBoundedAngleCCW(),
       mGyro.gyro.IsConnected());
 
   // Superstructure function
+  
 
   if (loadNote && !scoreAmp) // Load note into shooter
   {
-    mSuperstructure.loadNote();
+    if (ctr.GetCrossButtonPressed()) {
+      mSuperstructure.loadNote();
+    }
+    
+    // mSuperstructure.mIndex.setVelocity(3000);
+    
+    
   }
   else if (scoreAmp) // Lift Arm
   {
@@ -159,7 +167,7 @@ void Robot::TeleopPeriodic()
   else if (preScoringSpeaker) // Spin Shooter
   {
     mSuperstructure.preScoreSpeaker();
-    if (ctr.GetCrossButtonReleased()) // Load note into spinning shooter
+    if (ctr.GetSquareButton()) // Load note into spinning shooter
     {
       mSuperstructure.scoreSpeaker();
     }
