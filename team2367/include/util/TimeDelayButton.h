@@ -10,7 +10,7 @@ private:
     bool wasPressed = false;
 
 public:
-    bool update(bool value, float delayTimeSeconds) 
+    bool update(bool value, float delayTimeSeconds, bool breakTimer) 
     {
         if (value) 
         {
@@ -19,7 +19,7 @@ public:
             timer.Start();
             wasPressed = true;
             return value;
-        } else if ((timer.Get().value() < delayTimeSeconds) && wasPressed) 
+        } else if (!breakTimer && (timer.Get().value() < delayTimeSeconds) && wasPressed) 
         {
             // Button was pressed, timer is in time
             return true;
