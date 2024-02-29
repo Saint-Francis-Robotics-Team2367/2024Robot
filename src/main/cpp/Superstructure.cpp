@@ -80,8 +80,9 @@ void Superstructure::loadNote()
     // Run distance PID on shooter
     // Call this function once(not periodically)
     double distance = 1.0;
-    mIndex.setDistance(distance);
+    // mIndex.setDistance(distance);
     mShooter.setDistance(distance);
+    mIndex.setDistance(distance * 10);
 }
 
 void Superstructure::scoreAmp()
@@ -92,7 +93,7 @@ void Superstructure::scoreAmp()
 void Superstructure::preScoreSpeaker()
 {
     mShooter.setSpeed(Shooter::HIGH);
-    mArm.setPosition(50.0);
+    mArm.setPosition(68.0);
 }
 
 // void Superstructure::preScoreSpeaker(Limelight limelight) {//find distance to wall using limelight
@@ -105,7 +106,7 @@ void Superstructure::preScoreSpeaker()
 
 void Superstructure::scoreSpeaker()
 {
-    mIndex.setDistance(10.0);
+    mIndex.setVelocity(3000);
 }
 
 void Superstructure::unloadShooter() {
