@@ -93,7 +93,7 @@ void Superstructure::scoreAmp()
 void Superstructure::preScoreSpeaker()
 {
     mShooter.setSpeed(Shooter::HIGH);
-    mArm.setPosition(68.0);
+    mArm.setPosition(60.0);
 }
 
 // void Superstructure::preScoreSpeaker(Limelight limelight) {//find distance to wall using limelight
