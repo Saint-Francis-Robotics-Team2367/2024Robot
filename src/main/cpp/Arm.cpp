@@ -24,6 +24,8 @@ void Arm::init()
     rightSideFollow.SetSmartCurrentLimit(armCurrentLimit);
 
     tiltEncoder.Reset();
+    tiltSetpoint = getShooterAngle().getDegrees();
+    stowSetpoint = tiltSetpoint;
 }
 
 
