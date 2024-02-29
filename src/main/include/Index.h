@@ -6,7 +6,7 @@
 #include <rev/ColorSensorV3.h>
 #include "Constants.h"
 
-constexpr int indexCurrentLimit = 10;
+constexpr int indexCurrentLimit = 20;
 
 class Index
 {
