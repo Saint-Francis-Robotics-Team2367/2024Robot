@@ -34,12 +34,12 @@ public:
 
     double tiltSetpoint;
     double lastTiltSetpoint;
-    float maxTiltSetpoint = 61;
+    float maxTiltSetpoint = 75;
     void setAllMotors(double input);
 
     // Preset Positions
     const float highSetpoint = -45.0;
-    const float stowSetpoint = 60.0;
+    const float stowSetpoint = 73.0;
 
     const float speakerHeight = 2.045081;// meters
     const double rollerCircumference = 0.31918581360576; // meters
