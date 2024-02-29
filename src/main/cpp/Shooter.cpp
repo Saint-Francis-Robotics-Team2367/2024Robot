@@ -25,8 +25,9 @@ void Shooter::disable()
 
 void Shooter::setSpeed(float rotationsPerMinute)
 {
-    inDistanceMode = false;
+    
     if (rotationsPerMinute != velocitySetpoint) {
+        inDistanceMode = false;
         velocitySetpoint = rotationsPerMinute;
         if (rotationsPerMinute <= maxVelocitySetpoint)
         {
@@ -49,12 +50,14 @@ void Shooter::setSpeed(shooterSpeeds speed)
     case STOP:
         topRollerMotor.StopMotor();
         bottomRollerMotor.StopMotor();
+        velocitySetpoint = 0.0;
         break;
     }
 }
 
 void Shooter::setDistance(float distance) 
 {
+    velocitySetpoint = 0.0;
     inDistanceMode = true;
     topRollerEncoder.SetPosition(0.0);
     bottomRollerEncoder.SetPosition(0.0);
