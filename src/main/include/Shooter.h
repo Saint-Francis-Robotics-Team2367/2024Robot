@@ -26,13 +26,17 @@ public:
     rev::SparkRelativeEncoder topRollerEncoder = topRollerMotor.GetEncoder();
     rev::SparkRelativeEncoder bottomRollerEncoder = bottomRollerMotor.GetEncoder();
 
-    const float maxVelocitySetpoint = 6000.0;
+    const float maxVelocitySetpoint = 4000.0;
     const float lowVelocitySetpoint = 500.0;
     float distanceSetpoint;
     double velocitySetpoint = 0.0;
     bool inDistanceMode = false;
 
 public:
+    enum shooterModes 
+    {
+        POSITION, VELOCITY
+    };
     enum shooterSpeeds
     {
         HIGH,
@@ -40,7 +44,7 @@ public:
         STOP
     };
 
-    void setPID(double kP, double kI, double kD, double kFF, double min, double max);
+    void setPID(double kP, double kI, double kD, double kFF, double min, double max, int slot);
     void init();
     void disable();
     void setSpeed(shooterSpeeds speed);

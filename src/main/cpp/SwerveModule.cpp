@@ -45,7 +45,7 @@ void SwerveModule::initMotors()
     // m_pidController.SetIAccum(0.0, 1);
     m_pidController.SetOutputRange(kMinOutput, kMaxOutput, 1);
     steerCTR.EnableContinuousInput(0, 2 * PI);
-    steerCTR.SetTolerance(5 * PI / 180);
+    steerCTR.Reset();
 
     // driveMotor->SetClosedLoopRampRate(0.5);
 
@@ -218,9 +218,6 @@ void SwerveModule::run()
         {
             currentSteerOutput = newSteerOutput;
             steerMotor->Set(currentSteerOutput);
-            frc::SmartDashboard::PutBoolean("Save", false);
-        } else {
-            frc::SmartDashboard::PutBoolean("Save", true);
         }
         
         // frc::SmartDashboard::PutNumber("Driveset" + std::to_string(steerID), driveVelocitySetpoint);

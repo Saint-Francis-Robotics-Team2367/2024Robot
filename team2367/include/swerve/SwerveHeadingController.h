@@ -51,7 +51,7 @@ public:
                 mSetpoint = 45;
             } else if (POV == 180) 
             {
-                mSetpoint = 180;
+                mSetpoint = 0;
             } else if (POV == 270) 
             {
                 mSetpoint = 215;
