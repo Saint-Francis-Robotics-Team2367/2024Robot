@@ -6,13 +6,14 @@ void Index::init()
     indexMotor.ClearFaults();
     indexMotor.SetSmartCurrentLimit(indexCurrentLimit);
     indexMotor.SetInverted(true);
-    setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0, 0);
-    setPID(0.2, positionI, positionD, positionFF, -0.8, 0.8, 1);
+    setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0, VELOCITY);
+    setPID(0.2, positionI, positionD, positionFF, -0.8, 0.8, POSITION);
 }
 
 void Index::disable()
 {
     indexMotor.StopMotor();
+    velocitySetpoint = 0.0;
 }
 
 void Index::setVelocity(double velocity)
@@ -22,7 +23,7 @@ void Index::setVelocity(double velocity)
     if (velocity != velocitySetpoint)
     {
         velocitySetpoint = velocity;
-        indexController.SetReference(velocitySetpoint, rev::CANSparkLowLevel::ControlType::kVelocity, POSITION);
+        indexController.SetReference(velocitySetpoint, rev::CANSparkLowLevel::ControlType::kVelocity, VELOCITY);
     }
 }
 
