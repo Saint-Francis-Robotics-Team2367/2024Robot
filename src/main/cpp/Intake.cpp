@@ -4,13 +4,14 @@ void Intake::init()
 {
     intakeMotor.RestoreFactoryDefaults();
     intakeMotor.SetSmartCurrentLimit(intakeCurrentLimit);
-    intakeMotor.SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
+    intakeMotor.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
     setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0);
 }
 
 void Intake::disable()
 {
     intakeMotor.StopMotor();
+    currentState = intakeState::STOP;
 }
 
 void Intake::setIntakeSpeed(double speed)
