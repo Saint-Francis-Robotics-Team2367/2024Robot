@@ -48,6 +48,7 @@ void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
     if (intakeIn)
     {
         mIntake.setIntakeState(Intake::IN);
+        mShooter.setDistance(mShooter.topRollerEncoder.GetPosition());
         mIndex.setVelocity(indexVelocity);
     //     if (!mIndex.isNoteDetected()) {
     //         mIndex.setVelocity(1000);
