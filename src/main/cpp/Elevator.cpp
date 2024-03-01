@@ -5,11 +5,14 @@ void Elevator::init()
     motorLeft.RestoreFactoryDefaults();
     motorRight.RestoreFactoryDefaults();
 
-    motorLeft.SetSmartCurrentLimit(30);
-    motorRight.SetSmartCurrentLimit(30);
+    motorLeft.SetSmartCurrentLimit(60);
+    motorRight.SetSmartCurrentLimit(60);
 
     motorLeft.SetInverted(true);
     motorRight.SetInverted(true);
+
+    motorLeft.SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
+    motorRight.SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
 
     leftEnc.SetPosition(highSetpoint);
     rightEnc.SetPosition(highSetpoint);
@@ -26,11 +29,11 @@ void Elevator::setState(elevatorState state)
         {
             case STOW:
                 leftController.SetReference(lowestSetpoint, rev::CANSparkBase::ControlType::kPosition);
-                //rightController.SetReference(lowestSetpoint, rev::CANSparkBase::ControlType::kPosition);
+                rightController.SetReference(lowestSetpoint, rev::CANSparkBase::ControlType::kPosition);
                 break;
             case HIGH:
                 leftController.SetReference(highSetpoint, rev::CANSparkBase::ControlType::kPosition);
-                //rightController.SetReference(highSetpoint, rev::CANSparkBase::ControlType::kPosition);
+                rightController.SetReference(highSetpoint, rev::CANSparkBase::ControlType::kPosition);
                 break;
         }
 
