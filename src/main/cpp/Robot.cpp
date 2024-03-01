@@ -41,8 +41,8 @@ void Robot::AutonomousInit()
   selectedAuto = mChooser.GetSelected();
   frc::SmartDashboard::PutString("auto", selectedAuto);
 
-  Trajectory mTraj = Trajectory(mDrive);
-  mTraj.followPath(std::stoi(selectedAuto));
+  Trajectory mTraj = Trajectory(mDrive, mSuperstructure);
+  mTraj.followPath(1, false);
 }
 void Robot::AutonomousPeriodic()
 {
@@ -92,7 +92,7 @@ void Robot::TeleopPeriodic()
   bool intakeClear = ctr.GetL1Button();
   bool shootNote = ctr.GetTriangleButton();
   bool loadNote = ctr.GetCrossButton();
-  // if (ctrOperator.GetSquareButtonPressed()) {
+  // if (ctr.GetCreateButtonPressed()) {
   //   liftElev = !liftElev;
   // }
   if (ctr.GetTriangleButtonReleased())
@@ -197,7 +197,10 @@ void Robot::TeleopPeriodic()
   if( curr_loop > max_loop)
     max_loop = curr_loop;
   frc::SmartDashboard::PutNumber("CurrLoop", curr_loop.value());
-  frc::SmartDashboard::PutNumber("maxLoop", max_loop.value());   
+  frc::SmartDashboard::PutNumber("maxLoop", max_loop.value()); 
+
+  mElevator.motorLeft.Set(ctrOperator.GetLeftY());
+  mElevator.motorRight.Set(ctrOperator.GetRightY());  
 
 }
 
