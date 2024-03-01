@@ -17,7 +17,7 @@ public:
 
     Rotation2d getPosition()
     {
-        return Rotation2d(encoder.GetPosition().GetValueAsDouble() * 2 * PI);
+        return Rotation2d(Rotation2d::radiansBound(encoder.GetPosition().GetValueAsDouble() * 2 * PI));
     }
 
     Rotation2d getAbsolutePosition()
