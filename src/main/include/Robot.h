@@ -11,6 +11,7 @@
 
 #include "util/ShuffleUI.h"
 #include <thread>
+#include "Elevator.h"
 
 #include "util/ControlUtil.h"
 #include "sensors/NavX.h"
@@ -50,10 +51,12 @@ public:
 
   // Modules/Devices
   frc::PS5Controller ctr = frc::PS5Controller(0);
+  // frc::PS5Controller ctrOperator = frc::PS5Controller(1);
   NavX mGyro = NavX();
   SwerveDrive mDrive = SwerveDrive(mGyro);
   Limelight mLimelight;
   Superstructure mSuperstructure;
+  Elevator mElevator;
 
   // Teleop Controls
   float ctrPercent = 0.5;
@@ -61,6 +64,7 @@ public:
   double ctrPercentAim = 0.3;
   TimeDelayButton snapRobotToGoal;
   bool scoreAmp = false;
+  bool liftElev = false;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);

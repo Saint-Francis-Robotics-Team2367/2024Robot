@@ -9,6 +9,7 @@
 
 void Robot::RobotInit()
 {
+  mElevator.init();
   mDrive.initModules();
   mGyro.init();
   // mPowerModule.init(true);
@@ -41,7 +42,7 @@ void Robot::AutonomousInit()
   frc::SmartDashboard::PutString("auto", selectedAuto);
 
   Trajectory mTraj = Trajectory(mDrive);
-  // mTraj.followPath(std::stoi(selectedAuto));
+  mTraj.followPath(std::stoi(selectedAuto));
 }
 void Robot::AutonomousPeriodic()
 {
@@ -91,6 +92,9 @@ void Robot::TeleopPeriodic()
   bool intakeClear = ctr.GetL1Button();
   bool shootNote = ctr.GetTriangleButton();
   bool loadNote = ctr.GetCrossButton();
+  // if (ctrOperator.GetSquareButtonPressed()) {
+  //   liftElev = !liftElev;
+  // }
   if (ctr.GetTriangleButtonReleased())
   {
     scoreAmp = !scoreAmp;
@@ -138,6 +142,12 @@ void Robot::TeleopPeriodic()
       ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, -rot),
       mGyro.getBoundedAngleCCW(),
       mGyro.gyro.IsConnected());
+  
+  // if (liftElev) {
+  //   mElevator.setState(Elevator::HIGH);
+  // } else {
+  //   mElevator.setState(Elevator::STOW);
+  // }
 
   // Superstructure function
   
