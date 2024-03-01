@@ -132,7 +132,7 @@ void Robot::TeleopPeriodic()
             : mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
 
   // Gyro Resets
-  if (ctr.GetCircleButtonReleased())
+  if (ctrOperator.GetCircleButtonReleased())
   {
     mGyro.init();
   }
@@ -184,8 +184,9 @@ void Robot::TeleopPeriodic()
   }
   else
   {
-    mSuperstructure.stow();
     mSuperstructure.controlIntake(intakeIn, intakeClear);
+    mSuperstructure.stow();
+    
   }
 
   // Module Telemetry
