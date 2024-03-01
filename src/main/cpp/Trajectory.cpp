@@ -82,6 +82,16 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
 
     // straight past stage line
     case 1:
+        mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
+        // Wait until shooter reaches 4000 RPM or 5 seconds pass
+        auto startTimeShooter = frc::Timer::GetFPGATimestamp().value();
+        while (mSuperstructure.mShooter.getSpeed() < 4000 || startTimeShooter - frc::Timer::GetFPGATimestamp().value() > 5.0) {};
+        // Run indexer
+        mSuperstructure.mIndex.setVelocity(2000.0);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // Stop Shooter
+        mSuperstructure.mIndex.setVelocity(0.0);
+        mSuperstructure.mShooter.setSpeed(Shooter::STOP);
         follow("[R1] Straight", flipAlliance);
         break;
 
