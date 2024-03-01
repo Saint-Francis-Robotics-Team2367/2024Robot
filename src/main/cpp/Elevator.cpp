@@ -24,7 +24,7 @@ void Elevator::initMotors() {
 }
 
 void Elevator::elevatorUpDown(bool toggle){
-    if(toggle){
+    if (toggle){
         if (leftEnc.GetPosition() <= lowestEncoderThreshold && rightEnc.GetPosition() <= lowestEncoderThreshold) {
             leftElevatorMotor->Set(1);
             rightElevatorMotor->Set(1);
@@ -35,7 +35,7 @@ void Elevator::elevatorUpDown(bool toggle){
         }
         
     }
-    if (toggle){
+    else {
         if(leftEnc.GetPosition() >= highestEncoderThreshold && rightEnc.GetPosition() >= highestEncoderThreshold){
             leftElevatorMotor->Set(-1);
             rightElevatorMotor->Set(-1);
