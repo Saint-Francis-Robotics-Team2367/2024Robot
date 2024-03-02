@@ -4,7 +4,7 @@
 #include <chrono>
 #include <thread>
 
-void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented)
+void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented, bool cleanAccum = false)
 {
     double desiredVx = desiredSpeeds.vxMetersPerSecond;
     double desiredVy = desiredSpeeds.vyMetersPerSecond;
@@ -19,6 +19,13 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     }
     desiredVx = desiredSpeeds.vxMetersPerSecond;
     desiredVy = desiredSpeeds.vyMetersPerSecond;
+
+    if (cleanAccum && fabs(desiredVx) < (moduleMaxFPS * 0.1) && fabs(desiredVy) < (moduleMaxFPS * 0.1)) {
+        zeroAccumulation();
+        frc::SmartDashboard::PutNumber("CleanedAccum", true);
+    } else {
+        frc::SmartDashboard::PutNumber("CleanedAccum", false);
+    }
 
     if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon)
     {
@@ -208,4 +215,11 @@ void SwerveDrive::updateOdometry()
  */
 void SwerveDrive::displayDriveTelemetry()
 {
+}
+
+void SwerveDrive::zeroAccumulation() {
+    mFrontLeft.m_pidController.SetIAccum(0.0);
+    mFrontRight.m_pidController.SetIAccum(0.0);
+    mBackRight.m_pidController.SetIAccum(0.0);
+    mBackLeft.m_pidController.SetIAccum(0.0);
 }
