@@ -93,6 +93,9 @@ void Robot::TeleopPeriodic()
   {
     scoreAmp = !scoreAmp;
   }
+  if (ctrOperator.GetL1ButtonPressed()) {
+    cleanDriveAccum = !cleanDriveAccum;
+  }
 
   // Decide drive modes
   if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 5.0, driveTurning)) // SNAP mode
@@ -135,7 +138,8 @@ void Robot::TeleopPeriodic()
   mDrive.Drive(
       ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, -rot),
       mGyro.getBoundedAngleCCW(),
-      mGyro.gyro.IsConnected());
+      mGyro.gyro.IsConnected(),
+      cleanDriveAccum);
 
   // Superstructure function
 
