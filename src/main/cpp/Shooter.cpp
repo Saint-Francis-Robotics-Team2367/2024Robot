@@ -13,7 +13,7 @@ void Shooter::init()
     topRollerMotor.SetInverted(true);
     bottomRollerMotor.SetInverted(true);
     
-    setPID(positionP, positionI, positionD, positionFF, -0.8, 0.8, POSITION);
+    setPID(1.0, positionI, 0.01, positionFF, -0.6, 0.6, POSITION);
     setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0, VELOCITY);
 }
 

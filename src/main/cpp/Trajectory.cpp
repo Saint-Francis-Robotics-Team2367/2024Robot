@@ -25,7 +25,7 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
     double vy_feet = correction.vy.value() * 3.281;
     double rotCompass = Rotation2d::compassToPolar(state.targetHolonomicRotation.Radians().value());
 
-    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, correction.omega.value()}, Rotation2d{rotCompass}, false);
+    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, 0.0}, Rotation2d{rotCompass}, false);
 }
 
 /**
@@ -74,6 +74,8 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
  */
 void Trajectory::followPath(int numPath, bool flipAlliance)
 {
+    // std::this_thread::sleep_for(std::chrono::seconds(7));
+
     mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
     // Wait until shooter reaches 4000 RPM or 5 seconds pass
     double startTimeShooter = frc::Timer::GetFPGATimestamp().value();
@@ -84,7 +86,26 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
     // Stop Shooter
     mSuperstructure.mIndex.setVelocity(0.0);
     mSuperstructure.mShooter.setSpeed(Shooter::STOP);
-    // follow("[R1] Straight", flipAlliance);
+
+    // follow("", flipAlliance); 
+
+    // mSuperstructure.controlIntake(true, false); 
+    // follow("[M] Note 2", flipAlliance);
+    // std::this_thread::sleep_for(std::chrono::seconds(1));
+    // mSuperstructure.controlIntake(false, false);
+    // follow("[M] Score Note 2", flipAlliance);
+
+    // mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
+    // // Wait until shooter reaches 4000 RPM or 5 seconds pass
+    // startTimeShooter = frc::Timer::GetFPGATimestamp().value();
+    // while (mSuperstructure.mShooter.getSpeed() < 4000 || startTimeShooter - frc::Timer::GetFPGATimestamp().value() > 5.0) {};
+    // // Run indexer
+    // mSuperstructure.mIndex.setVelocity(2000.0);
+    // std::this_thread::sleep_for(std::chrono::seconds(2));
+    // // Stop Shooter
+    // mSuperstructure.mIndex.setVelocity(0.0);
+    // mSuperstructure.mShooter.setSpeed(Shooter::STOP);
+
     // break;
     // switch (numPath)
     // {

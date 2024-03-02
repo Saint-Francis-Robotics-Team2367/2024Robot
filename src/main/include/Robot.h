@@ -65,7 +65,7 @@ public:
   TimeDelayButton snapRobotToGoal;
   bool scoreAmp = false;
   bool liftElev = false;
-  bool cleanDriveAccum = false;
+  bool cleanDriveAccum = true;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);

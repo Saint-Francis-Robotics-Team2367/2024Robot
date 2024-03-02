@@ -39,8 +39,8 @@ void Robot::AutonomousInit()
   frc::SmartDashboard::PutString("auto", selectedAuto);
 
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure);
-  mTraj.followPath(1, false);
-  // mTraj.follow("[M] HC 2", false);
+  mTraj.followPath(1, true);
+  // mTraj.follow("[R] Park", true);
 }
 void Robot::AutonomousPeriodic()
 {
@@ -82,7 +82,7 @@ void Robot::TeleopPeriodic()
   // Teleop States
   bool driveTranslating = !(leftX == 0 && leftY == 0);
   bool driveTurning = !(rightX == 0);
-  double rot = rightX * moduleMaxRot;
+  double rot = rightX * moduleMaxRot * 2;
   bool preScoringSpeaker = ctr.GetR2Axis() > 0.2;
   bool intakeIn = ctr.GetR1Button();
   bool intakeClear = ctr.GetL1Button();
@@ -93,9 +93,9 @@ void Robot::TeleopPeriodic()
   {
     scoreAmp = !scoreAmp;
   }
-  if (ctrOperator.GetL1ButtonPressed()) {
-    cleanDriveAccum = !cleanDriveAccum;
-  }
+  // if (ctrOperator.GetL1ButtonPressed()) {
+  //   cleanDriveAccum = !cleanDriveAccum;
+  // }
 
   // Decide drive modes
   if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 5.0, driveTurning)) // SNAP mode
@@ -181,6 +181,14 @@ void Robot::TeleopPeriodic()
   }
   else
   {
+    if (ctr.GetR1ButtonReleased()) // lock shooter after intake
+    {
+      mSuperstructure.mShooter.setDistance(0.0);
+    }
+    if (ctr.GetR1ButtonPressed()) // unlock shooter before intake
+    {
+      mSuperstructure.mShooter.setSpeed(Shooter::STOP);
+    }
     mSuperstructure.controlIntake(intakeIn, intakeClear);
     mSuperstructure.stow();
   }
