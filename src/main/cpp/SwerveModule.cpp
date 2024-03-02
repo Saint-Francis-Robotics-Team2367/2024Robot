@@ -42,6 +42,7 @@ void SwerveModule::initMotors()
     m_pidController.SetP(kP, 1);
     m_pidController.SetI(kI, 1);
     m_pidController.SetFF(kFF, 1);
+    m_pidController.SetIMaxAccum(0.1);
     // m_pidController.SetIAccum(0.0, 1);
     m_pidController.SetOutputRange(kMinOutput, kMaxOutput, 1);
     steerCTR.EnableContinuousInput(0, 2 * PI);
@@ -200,9 +201,9 @@ bool SwerveModule::isFinished(float percentageBound)
 void SwerveModule::run()
 {
     // Steer PID
-    frc::SmartDashboard::PutNumber("SteerEncoder" + std::to_string(steerID), steerEnc.getAbsolutePosition().getDegrees());
-    frc::SmartDashboard::PutNumber("SteerSetpoint" + std::to_string(steerID), steerAngleSetpoint * (180 / M_PI));
-    frc::SmartDashboard::PutNumber("SteerOutput" + std::to_string(steerID), steerMotor->GetAppliedOutput());
+    // frc::SmartDashboard::PutNumber("SteerEncoder" + std::to_string(steerID), steerEnc.getAbsolutePosition().getDegrees());
+    // frc::SmartDashboard::PutNumber("SteerSetpoint" + std::to_string(steerID), steerAngleSetpoint * (180 / M_PI));
+    // frc::SmartDashboard::PutNumber("SteerOutput" + std::to_string(steerID), steerMotor->GetAppliedOutput());
     if (moduleInhibit) // Thread is in standby mode
     {
         currentSteerOutput = 0.0;
@@ -212,6 +213,9 @@ void SwerveModule::run()
 
     else
     {
+        if (steerID == 7) {
+            frc::SmartDashboard::PutNumber("IACCUM", m_pidController.GetIAccum());
+        }
 
         double newSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
         if (!ControlUtil::epsilonEquals(newSteerOutput, currentSteerOutput)) // Save some CAN buffer
@@ -223,6 +227,7 @@ void SwerveModule::run()
         // frc::SmartDashboard::PutNumber("Driveset" + std::to_string(steerID), driveVelocitySetpoint);
 
         // Drive Motor uses the internal REV PID, since optimizations here are rarely needed
+        
         if (driveMode == POSITION)
         {
             m_pidController.SetReference(drivePositionSetpoint, rev::CANSparkMax::ControlType::kPosition, 1);
