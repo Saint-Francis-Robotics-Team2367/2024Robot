@@ -48,7 +48,7 @@ void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
     if (intakeIn)
     {
         mIntake.setIntakeState(Intake::IN);
-        mShooter.setDistance(mShooter.topRollerEncoder.GetPosition());
+        // mShooter.setDistance(mShooter.topRollerEncoder.GetPosition());
         mIndex.setVelocity(indexVelocity);
     //     if (!mIndex.isNoteDetected()) {
     //         mIndex.setVelocity(1000);
@@ -81,6 +81,13 @@ void Superstructure::loadNote()
     // Run distance PID on shooter
     // Call this function once(not periodically)
     double distance = 1.0;
+    // mIndex.setDistance(distance);
+    mShooter.setDistance(distance);
+    mIndex.setDistance(distance * 10);
+}
+
+void Superstructure::pushNoteBack() {
+    double distance = -1.0;
     // mIndex.setDistance(distance);
     mShooter.setDistance(distance);
     mIndex.setDistance(distance * 10);
