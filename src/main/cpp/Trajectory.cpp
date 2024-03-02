@@ -84,7 +84,7 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
     // Stop Shooter
     mSuperstructure.mIndex.setVelocity(0.0);
     mSuperstructure.mShooter.setSpeed(Shooter::STOP);
-    follow("[R1] Straight", flipAlliance);
+    // follow("[R1] Straight", flipAlliance);
     // break;
     // switch (numPath)
     // {

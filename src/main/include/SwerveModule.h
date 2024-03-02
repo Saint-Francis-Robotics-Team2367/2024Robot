@@ -50,7 +50,7 @@ public:
     frc::PIDController steerCTR;
 
     // REV Default Velocity PID values(Drive Motor)
-    float kP = revkP, kI = revkI, kFF = revkFF, kMaxOutput = revkMaxOutput, kMinOutput = revkMinOutput;
+    float kP = revkP, kI = 0.0, kFF = revkFF, kMaxOutput = revkMaxOutput, kMinOutput = revkMinOutput;
 
     // PID Controller for Drive Motor
     rev::SparkPIDController m_pidController;

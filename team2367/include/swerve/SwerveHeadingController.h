@@ -55,6 +55,8 @@ public:
             } else if (POV == 270) 
             {
                 mSetpoint = 215;
+            } else if (POV == 90) {
+                mSetpoint = 90;
             }
         }
 

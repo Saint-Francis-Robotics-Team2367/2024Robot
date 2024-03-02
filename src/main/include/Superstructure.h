@@ -26,6 +26,7 @@ public:
     void controlIntake(bool intakeIn, bool intakeClear);
     void toggleArm();
     void loadNote();
+    void pushNoteBack();
     void scoreAmp();
     void preScoreSpeaker();
     // void preScoreSpeaker(Limelight limelight);
