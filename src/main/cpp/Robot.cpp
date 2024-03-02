@@ -86,9 +86,9 @@ void Robot::TeleopPeriodic()
   bool preScoringSpeaker = ctr.GetR2Axis() > 0.2;
   bool intakeIn = ctr.GetR1Button();
   bool intakeClear = ctr.GetL1Button();
-  bool shootNote = ctr.GetTriangleButton();
   bool loadNote = ctr.GetCrossButton();
   bool reverseNote = ctr.GetCircleButton();
+  bool overrideShooter = ctrOperator.GetSquareButton();
   if (ctr.GetTriangleButtonReleased())
   {
     scoreAmp = !scoreAmp;
@@ -104,20 +104,20 @@ void Robot::TeleopPeriodic()
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
     mHeadingController.setFieldSetpoint(dPad);
   }
-  else if (preScoringSpeaker && !driveTurning) // ALIGN(scoring) mode
-  {
-    if (mLimelight.isSpeakerTagDetected())
-    {
-      Pose3d target = mLimelight.getTargetPoseRobotSpace();
-      double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / PI;
-      double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
-      mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-      mHeadingController.setSetpoint(zeroSetpoint);
-      // limit robot speed temporarily
-      leftX = (leftX / ctrPercent) * ctrPercentAim;
-      leftY = (leftY / ctrPercent) * ctrPercentAim;
-    }
-  }
+  // else if (preScoringSpeaker && !driveTurning) // ALIGN(scoring) mode
+  // {
+  //   if (mLimelight.isSpeakerTagDetected())
+  //   {
+  //     Pose3d target = mLimelight.getTargetPoseRobotSpace();
+  //     double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / PI;
+  //     double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
+  //     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+  //     mHeadingController.setSetpoint(zeroSetpoint);
+  //     // limit robot speed temporarily
+  //     leftX = (leftX / ctrPercent) * ctrPercentAim;
+  //     leftY = (leftY / ctrPercent) * ctrPercentAim;
+  //   }
+  // }
   else // Normal driving mode
   {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
@@ -174,7 +174,7 @@ void Robot::TeleopPeriodic()
   else if (preScoringSpeaker) // Spin Shooter
   {
     mSuperstructure.preScoreSpeaker();
-    if (ctr.GetSquareButton()) // Load note into spinning shooter
+    if ((ctr.GetSquareButton() && mSuperstructure.mShooter.getSpeed() < 4000) || overrideShooter) // Load note into spinning shooter
     {
       mSuperstructure.scoreSpeaker();
     }
