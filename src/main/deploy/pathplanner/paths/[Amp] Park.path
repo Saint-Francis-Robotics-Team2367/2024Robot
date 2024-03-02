@@ -3,36 +3,36 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.79,
-        "y": 0.8
+        "x": 0.6916816009557947,
+        "y": 6.798976824805502
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.78062485279418,
-        "y": 0.2816734610050272
+        "x": 1.7259199286917095,
+        "y": 7.151423108401772
       },
       "isLocked": false,
-      "linkedName": "Halfcourt 5"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.7014206389523893,
-        "y": 4.372352985446712
+        "x": 2.813604196652838,
+        "y": 7.032001124187434
       },
       "prevControl": {
-        "x": 1.9301104902209807,
-        "y": 3.672021514783771
+        "x": 1.9243231356833086,
+        "y": 6.8784925069850145
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right Speaker"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.9,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
@@ -44,6 +44,9 @@
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 58.262037458573346,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }
