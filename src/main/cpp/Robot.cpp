@@ -12,7 +12,6 @@ void Robot::RobotInit()
   mElevator.init();
   mDrive.initModules();
   mGyro.init();
-  // mPowerModule.init(true);
   mSuperstructure.init();
 
   mChooser.SetDefaultOption("0", kAutoDefault);
@@ -24,8 +23,6 @@ void Robot::RobotInit()
 }
 void Robot::RobotPeriodic()
 {
-  // mDrive.setDriveCurrentLimit(mPowerModule.updateDriveCurrentLimit());
-  // frc::SmartDashboard::PutNumber("Energy Usage", mPowerModule.mPDH.GetTotalEnergy());
   frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
   frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
@@ -43,7 +40,7 @@ void Robot::AutonomousInit()
 
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure);
   mTraj.followPath(1, false);
-  // mTraj.follow("[M] HC 2", false); 
+  // mTraj.follow("[M] HC 2", false);
 }
 void Robot::AutonomousPeriodic()
 {
@@ -80,8 +77,6 @@ void Robot::TeleopPeriodic()
   bool rumbleController = false;
 
   // Driver Information
-  frc::SmartDashboard::PutNumber("leftX", leftX);
-  frc::SmartDashboard::PutNumber("leftY", leftY);
   frc::SmartDashboard::PutBoolean("TargetFound?", mLimelight.isSpeakerTagDetected());
 
   // Teleop States
@@ -94,9 +89,6 @@ void Robot::TeleopPeriodic()
   bool shootNote = ctr.GetTriangleButton();
   bool loadNote = ctr.GetCrossButton();
   bool reverseNote = ctr.GetCircleButton();
-  // if (ctr.GetCreateButtonPressed()) {
-  //   liftElev = !liftElev;
-  // }
   if (ctr.GetTriangleButtonReleased())
   {
     scoreAmp = !scoreAmp;
@@ -145,12 +137,6 @@ void Robot::TeleopPeriodic()
       mGyro.getBoundedAngleCCW(),
       mGyro.gyro.IsConnected());
 
-  // if (liftElev) {
-  //   mElevator.setState(Elevator::HIGH);
-  // } else {
-  //   mElevator.setState(Elevator::STOW);
-  // }
-
   // Superstructure function
 
   if (loadNote && !scoreAmp) // Load note into shooter
@@ -198,7 +184,6 @@ void Robot::TeleopPeriodic()
   // Module Telemetry
   mDrive.displayDriveTelemetry();
   mSuperstructure.updateTelemetry();
-  // PowerModule::updateCurrentLimits();
   static units::time::second_t max_loop{0};
   auto curr_loop = frc::Timer::GetFPGATimestamp() - startTime;
   if (curr_loop > max_loop)
