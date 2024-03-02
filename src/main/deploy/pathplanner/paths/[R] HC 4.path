@@ -3,61 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 1.2604651737081254,
+        "y": 4.614819400935098
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1180339887498967,
-        "y": 2.0
+        "x": 2.260465173708125,
+        "y": 4.114819400935098
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Speaker"
     },
     {
       "anchor": {
-        "x": 3.8864423701069626,
-        "y": 2.0
+        "x": 3.237727424528923,
+        "y": 2.6549567728765084
       },
       "prevControl": {
-        "x": 2.4722288077338685,
-        "y": 2.0
+        "x": 1.9696726808164438,
+        "y": 3.2810854872382427
       },
       "nextControl": {
-        "x": 5.300655932480056,
-        "y": 2.0
+        "x": 4.648700246474567,
+        "y": 1.9582592498518332
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.212429679488989,
-        "y": 3.171185171074046
+        "x": 5.794996895549347,
+        "y": 1.916868338366307
       },
       "prevControl": {
-        "x": 4.689500911338309,
-        "y": 3.171185171074046
+        "x": 4.291710005973765,
+        "y": 1.913847975976245
       },
       "nextControl": {
-        "x": 1.7353584476396682,
-        "y": 3.171185171074046
+        "x": 7.154602230500757,
+        "y": 1.9196000197555954
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 7.673502925709555,
+        "y": 2.411005747937422
       },
       "prevControl": {
-        "x": 0.47930936742544517,
-        "y": 2.0
+        "x": 7.198012210839236,
+        "y": 2.3022135673900985
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Halfcourt 4"
     }
   ],
   "rotationTargets": [],
@@ -75,7 +75,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Tests",
+  "folder": "[R]",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

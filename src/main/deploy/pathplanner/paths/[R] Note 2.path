@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 1.2604651737081254,
+        "y": 4.614819400935098
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.12,
-        "y": 2.0
+        "x": 2.0432971147423777,
+        "y": 5.229007986904863
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Speaker"
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 2.0
+        "x": 2.239891720524182,
+        "y": 5.539552935587352
       },
       "prevControl": {
-        "x": 2.5857864376269033,
-        "y": 2.0
-      },
-      "nextControl": {
-        "x": 4.1888322789895085,
-        "y": 2.0
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.735374980009219,
-        "y": 2.9907754306249354
-      },
-      "prevControl": {
-        "x": 5.730327307876838,
-        "y": 1.7875885473993174
+        "x": 1.411657800167453,
+        "y": 5.049691201234253
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Note 2"
     }
   ],
   "rotationTargets": [],
@@ -59,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Tests",
+  "folder": "[R]",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }
