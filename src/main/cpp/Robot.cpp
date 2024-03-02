@@ -4,7 +4,7 @@
 
 #include "Robot.h"
 #include <frc/smartdashboard/SmartDashboard.h>
-#include<frc/DriverStation.h>
+#include <frc/DriverStation.h>
 #include <string>
 
 void Robot::RobotInit()
@@ -43,6 +43,7 @@ void Robot::AutonomousInit()
 
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure);
   mTraj.followPath(1, false);
+  // mTraj.follow("[M] HC 2", false); 
 }
 void Robot::AutonomousPeriodic()
 {
@@ -75,7 +76,7 @@ void Robot::TeleopPeriodic()
 
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
 
-  int dPad = ctr.GetPOV();
+  int dPad = ctrOperator.GetPOV();
   bool rumbleController = false;
 
   // Driver Information
@@ -92,6 +93,7 @@ void Robot::TeleopPeriodic()
   bool intakeClear = ctr.GetL1Button();
   bool shootNote = ctr.GetTriangleButton();
   bool loadNote = ctr.GetCrossButton();
+  bool reverseNote = ctr.GetCircleButton();
   // if (ctr.GetCreateButtonPressed()) {
   //   liftElev = !liftElev;
   // }
@@ -132,7 +134,7 @@ void Robot::TeleopPeriodic()
             : mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
 
   // Gyro Resets
-  if (ctrOperator.GetCircleButtonReleased())
+  if (ctrOperator.GetCrossButtonReleased())
   {
     mGyro.init();
   }
@@ -142,7 +144,7 @@ void Robot::TeleopPeriodic()
       ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, -rot),
       mGyro.getBoundedAngleCCW(),
       mGyro.gyro.IsConnected());
-  
+
   // if (liftElev) {
   //   mElevator.setState(Elevator::HIGH);
   // } else {
@@ -150,17 +152,22 @@ void Robot::TeleopPeriodic()
   // }
 
   // Superstructure function
-  
 
   if (loadNote && !scoreAmp) // Load note into shooter
   {
-    if (ctr.GetCrossButtonPressed()) {
+    if (ctr.GetCrossButtonPressed())
+    {
       mSuperstructure.loadNote();
     }
-    
+
     // mSuperstructure.mIndex.setVelocity(3000);
-    
-    
+  }
+  else if (reverseNote && !scoreAmp)
+  {
+    if (ctr.GetCircleButtonPressed())
+    {
+      mSuperstructure.pushNoteBack();
+    }
   }
   else if (scoreAmp) // Lift Arm
   {
@@ -186,7 +193,6 @@ void Robot::TeleopPeriodic()
   {
     mSuperstructure.controlIntake(intakeIn, intakeClear);
     mSuperstructure.stow();
-    
   }
 
   // Module Telemetry
@@ -195,14 +201,21 @@ void Robot::TeleopPeriodic()
   // PowerModule::updateCurrentLimits();
   static units::time::second_t max_loop{0};
   auto curr_loop = frc::Timer::GetFPGATimestamp() - startTime;
-  if( curr_loop > max_loop)
+  if (curr_loop > max_loop)
     max_loop = curr_loop;
   frc::SmartDashboard::PutNumber("CurrLoop", curr_loop.value());
-  frc::SmartDashboard::PutNumber("maxLoop", max_loop.value()); 
-
-  mElevator.motorLeft.Set(ctrOperator.GetLeftY());
-  mElevator.motorRight.Set(ctrOperator.GetRightY());  
-
+  frc::SmartDashboard::PutNumber("maxLoop", max_loop.value());
+  double elevatorSetpoint = ctrOperator.GetLeftY();
+  if (ctrOperator.GetTriangleButton())
+  {
+    mElevator.motorLeft.Set(elevatorSetpoint);
+    mElevator.motorRight.Set(elevatorSetpoint);
+  }
+  else
+  {
+    mElevator.motorLeft.StopMotor();
+    mElevator.motorRight.StopMotor();
+  }
 }
 
 void Robot::DisabledInit()
