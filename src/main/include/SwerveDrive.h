@@ -97,7 +97,7 @@ public:
     DriveState state = DriveState::Teleop;
     // TODO overload - pass Point2d + rotation, it figures it out
     // void Drive(Translation2d translation, Rotation2d rotation);
-    void Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented);
+    void Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented, bool cleanAccum = false);
     void initModules();
     void enableModules();
     bool stopModules();
@@ -108,5 +108,6 @@ public:
     void updateOdometry();
     void displayDriveTelemetry();
     void setDriveCurrentLimit(int limit);
+    void zeroAccumulation();
 
 };
