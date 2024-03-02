@@ -51,7 +51,7 @@ public:
 
     // REV Default Velocity PID values(Drive Motor)
     float kP = revkP, kI = revkI, kFF = revkFF, kMaxOutput = revkMaxOutput, kMinOutput = revkMinOutput;
-    float maxAccumulation = 0.1;
+    float maxAccumulation = 0.4;
 
     // PID Controller for Drive Motor
     rev::SparkPIDController m_pidController;
