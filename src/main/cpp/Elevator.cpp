@@ -8,8 +8,8 @@ void Elevator::init()
     motorLeft.SetSmartCurrentLimit(60);
     motorRight.SetSmartCurrentLimit(60);
 
-    motorLeft.SetInverted(true);
-    motorRight.SetInverted(true);
+    motorLeft.SetInverted(false);
+    motorRight.SetInverted(false);
 
     motorLeft.SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
     motorRight.SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
