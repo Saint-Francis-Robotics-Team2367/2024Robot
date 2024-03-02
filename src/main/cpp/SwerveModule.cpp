@@ -39,20 +39,14 @@ void SwerveModule::initMotors()
     driveVelocitySetpoint = 0.0;
 
     // Set PID values for REV Drive PID
-    m_pidController.SetP(kP, 1);
-    m_pidController.SetI(kI, 1);
-    m_pidController.SetFF(kFF, 1);
-    m_pidController.SetIMaxAccum(0.1);
-    // m_pidController.SetIAccum(0.0, 1);
-    m_pidController.SetOutputRange(kMinOutput, kMaxOutput, 1);
+    m_pidController.SetP(kP);
+    m_pidController.SetI(kI);
+    m_pidController.SetFF(kFF);
+    m_pidController.SetIMaxAccum(maxAccumulation);
+    frc::SmartDashboard::PutNumber("MaxAccu", maxAccumulation);
+    m_pidController.SetOutputRange(kMinOutput, kMaxOutput);
     steerCTR.EnableContinuousInput(0, 2 * PI);
     steerCTR.Reset();
-
-    // driveMotor->SetClosedLoopRampRate(0.5);
-
-    // Clears Motor Controller's Log of errors
-    // steerMotor->ClearFaults();
-    // driveMotor->ClearFaults();
 }
 
 float SwerveModule::getSteerAngleSetpoint()
@@ -213,8 +207,13 @@ void SwerveModule::run()
 
     else
     {
+        double inputMaxAccu = frc::SmartDashboard::GetNumber("MaxAccu", maxAccumulation);
+        if (maxAccumulation != inputMaxAccu) {
+            m_pidController.SetIMaxAccum(inputMaxAccu);
+            maxAccumulation = inputMaxAccu;
+        }
         if (steerID == 7) {
-            frc::SmartDashboard::PutNumber("IACCUM", m_pidController.GetIAccum());
+            frc::SmartDashboard::PutNumber("IntegralAccum", m_pidController.GetIAccum());
         }
 
         double newSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
@@ -230,11 +229,11 @@ void SwerveModule::run()
         
         if (driveMode == POSITION)
         {
-            m_pidController.SetReference(drivePositionSetpoint, rev::CANSparkMax::ControlType::kPosition, 1);
+            m_pidController.SetReference(drivePositionSetpoint, rev::CANSparkMax::ControlType::kPosition);
         }
         else
         {
-            m_pidController.SetReference(driveVelocitySetpoint, rev::CANSparkMax::ControlType::kVelocity, 1);
+            m_pidController.SetReference(driveVelocitySetpoint, rev::CANSparkMax::ControlType::kVelocity);
         }
     }
 }
