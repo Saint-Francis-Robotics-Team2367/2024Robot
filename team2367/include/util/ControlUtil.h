@@ -163,4 +163,14 @@ public:
 
 
     }
+    
+    /**
+     * returns true if timeLimit exceeded
+    */
+    static bool waitOn(std::function< bool(void) >& func, int timeLimit) 
+    {
+        double startTime = frc::Timer::GetFPGATimestamp().value();
+        while (func() || frc::Timer::GetFPGATimestamp().value() - startTime > timeLimit);
+        return frc::Timer::GetFPGATimestamp().value() -  startTime > timeLimit;
+    }
 };
