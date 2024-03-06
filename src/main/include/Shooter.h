@@ -12,7 +12,7 @@
 
 
 
-constexpr float shooterCurrentLimit = 20;
+constexpr float shooterCurrentLimit = 40;
 
 class Shooter
 {
