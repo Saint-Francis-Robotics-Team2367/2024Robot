@@ -24,8 +24,10 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
     double vx_feet = correction.vx.value() * 3.281;
     double vy_feet = correction.vy.value() * 3.281;
     double rotCompass = Rotation2d::compassToPolar(state.targetHolonomicRotation.Radians().value());
+    frc::SmartDashboard::PutNumber("VY", vy_feet);
+    frc::SmartDashboard::PutNumber("VX", vx_feet);
 
-    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, 0.0}, Rotation2d{rotCompass}, false);
+    mDrive.Drive(ChassisSpeeds{vx_feet, vy_feet, 0.0}, mGyro.getBoundedAngleCCW(), true, true);
 }
 
 /**
@@ -76,18 +78,23 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
 {
     // std::this_thread::sleep_for(std::chrono::seconds(7));
 
-    mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
-    // Wait until shooter reaches 4000 RPM or 5 seconds pass
-    double startTimeShooter = frc::Timer::GetFPGATimestamp().value();
-    while (mSuperstructure.mShooter.getSpeed() < 4000 || startTimeShooter - frc::Timer::GetFPGATimestamp().value() > 5.0) {};
-    // Run indexer
-    mSuperstructure.mIndex.setVelocity(2000.0);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-    // Stop Shooter
-    mSuperstructure.mIndex.setVelocity(0.0);
-    mSuperstructure.mShooter.setSpeed(Shooter::STOP);
+    // mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
+    // // Wait until shooter reaches 4000 RPM or 3 seconds pass
+    // double startTimeShooter = frc::Timer::GetFPGATimestamp().value();
+    // while (mSuperstructure.mShooter.getSpeed() < 4200 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter > 3.0) {};
+    // if (startTimeShooter - frc::Timer::GetFPGATimestamp().value() < 3.0) 
+    // {
+    //     // Run indexer
+    //     mSuperstructure.mIndex.setVelocity(2000.0);
+    //     std::this_thread::sleep_for(std::chrono::seconds(1));
+    //     // Stop Shooter
+    // }
+    // mSuperstructure.mIndex.setVelocity(0.0);
+    // mSuperstructure.mShooter.setSpeed(Shooter::STOP);
+    // mSuperstructure.controlIntake(true, false);
 
-    // follow("", flipAlliance); 
+    follow("[M] Note 1", flipAlliance);
+    // mSuperstructure.controlIntake(false, false);
 
     // mSuperstructure.controlIntake(true, false); 
     // follow("[M] Note 2", flipAlliance);
