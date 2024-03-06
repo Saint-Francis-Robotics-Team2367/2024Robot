@@ -44,12 +44,20 @@ void Superstructure::disable()
 
 void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
 {
-    float indexVelocity = 2000.0;
+    
+    float indexVelocity = 1200.0;
     if (intakeIn)
     {
-        mIntake.setIntakeState(Intake::IN);
-        // mShooter.setDistance(mShooter.topRollerEncoder.GetPosition());
-        mIndex.setVelocity(indexVelocity);
+        
+        if (!mIndex.isNoteDetected()) 
+        {
+            mIntake.setIntakeState(Intake::IN);
+            mIndex.setVelocity(indexVelocity);
+        } else {
+            mIndex.disable();
+            mIntake.setIntakeState(Intake::STOP);
+        }
+        
     //     if (!mIndex.isNoteDetected()) {
     //         mIndex.setVelocity(1000);
     //     }
