@@ -38,8 +38,8 @@ void Robot::AutonomousInit()
   selectedAuto = mChooser.GetSelected();
   frc::SmartDashboard::PutString("auto", selectedAuto);
 
-  Trajectory mTraj = Trajectory(mDrive, mSuperstructure);
-  mTraj.followPath(1, true);
+  Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro);
+  mTraj.followPath(1, false);
   // mTraj.follow("[R] Park", true);
 }
 void Robot::AutonomousPeriodic()
@@ -65,8 +65,8 @@ void Robot::TeleopPeriodic()
   double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1);
   double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1);
 
-  leftX = ControlUtil::boostScaler(leftX, boost, boostPercent, ctrPercent);
-  leftY = ControlUtil::boostScaler(leftY, boost, boostPercent, ctrPercent);
+  // leftX = ControlUtil::boostScaler(leftX, boost, boostPercent, ctrPercent);
+  // leftY = ControlUtil::boostScaler(leftY, boost, boostPercent, ctrPercent);
 
   leftX = xStickLimiter.calculate(leftX);
   leftY = yStickLimiter.calculate(leftY);
@@ -78,6 +78,8 @@ void Robot::TeleopPeriodic()
 
   // Driver Information
   frc::SmartDashboard::PutBoolean("TargetFound?", mLimelight.isSpeakerTagDetected());
+  frc::SmartDashboard::PutBoolean("Note?", mSuperstructure.mIndex.isNoteDetected());
+  frc::SmartDashboard::PutNumber("Prox?", mSuperstructure.mIndex.getSensorProximity());
 
   // Teleop States
   bool driveTranslating = !(leftX == 0 && leftY == 0);
@@ -174,7 +176,7 @@ void Robot::TeleopPeriodic()
   else if (preScoringSpeaker) // Spin Shooter
   {
     mSuperstructure.preScoreSpeaker();
-    if ((ctr.GetSquareButton() && mSuperstructure.mShooter.getSpeed() < 4000) || overrideShooter) // Load note into spinning shooter
+    if ((ctr.GetSquareButton() && mSuperstructure.mShooter.getSpeed() > 4000) || overrideShooter) // Load note into spinning shooter
     {
       mSuperstructure.scoreSpeaker();
     }
