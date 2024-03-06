@@ -62,4 +62,5 @@ public:
     void incrementPosition(float increment);
     double heightAtAngle(double velocity, double x, double y);
     double findLaunchAngle(double velocity, double x, double y);
+    double findBetterLaunchAngle(double xTag, double yTag, double zTag, double velocity, double shooterHeight);
 };

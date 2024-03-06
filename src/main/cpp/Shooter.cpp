@@ -55,6 +55,8 @@ void Shooter::setSpeed(shooterSpeeds speed)
     }
 }
 
+
+
 void Shooter::setDistance(float distance) 
 {
     velocitySetpoint = 0.0;

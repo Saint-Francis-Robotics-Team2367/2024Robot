@@ -1,4 +1,5 @@
 #include "Arm.h"
+#include <cmath>
 
 /**
  * Setup motors
@@ -160,4 +161,16 @@ double Arm::findLaunchAngle(double velocity, double x, double y)
         }
     }
     return best_angle;
+}
+
+//all measurements given in inches
+double Arm::findBetterLaunchAngle(double xTag, double yTag, double zTag, double velocity, double shooterHeight){
+    //low angle
+    double lowHeight = 78;
+    double distToTag = sqrt(pow(xTag, 2)+ pow(yTag, 2));
+    double distanceLow = sqrt(pow(distToTag, 2) + pow(lowHeight, 2));
+    double sinAngleLow = ((lowHeight-shooterHeight)/distanceLow) + ((4.9*distanceLow)/pow(velocity, 2));
+    double angleLow = asin(sinAngleLow);
+
+    //high angle
 }
