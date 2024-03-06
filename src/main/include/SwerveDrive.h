@@ -61,7 +61,6 @@ private:
     std::array<Translation2d, 4> wheelPs = {Translation2d(trackWidth, wheelBase), Translation2d(trackWidth, -wheelBase), Translation2d(-trackWidth, wheelBase), Translation2d(-trackWidth, -wheelBase)};
 
     SwerveDriveKinematics m_kinematics = SwerveDriveKinematics(wheelPs);
-
     NavX &mGyro; 
 
     // wpi lib class ver of kinemactics used to initialize odometry
@@ -91,6 +90,7 @@ private:
     void runModules(); // Private - do not call outside of init
 
 public:
+
     SwerveDrive(NavX &mGyroInput) : mGyro(mGyroInput) {
     }
 
