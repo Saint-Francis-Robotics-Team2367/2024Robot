@@ -74,7 +74,7 @@ void Arm::runPeriodic()
     frc::SmartDashboard::PutNumber("ShooterRun", getShooterAngle().getDegrees());
     double output = -tiltController.Calculate(getShooterAngle().getDegrees(), tiltSetpoint);
     frc::SmartDashboard::PutNumber("PIDout", output);
-    output = std::clamp(output, -0.15, 0.25);
+    output = std::clamp(output, -0.35, 0.45);
     setAllMotors(output);
     
 }
