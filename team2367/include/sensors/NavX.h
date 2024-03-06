@@ -8,7 +8,7 @@ class NavX
 {
 public:
     AHRS gyro = AHRS(frc::SerialPort::kMXP);
-
+    
     void init()
     {
         gyro.Reset();

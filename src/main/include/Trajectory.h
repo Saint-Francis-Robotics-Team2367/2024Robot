@@ -21,6 +21,7 @@
 #include <chrono>
 #include <frc/Timer.h>
 #include "Shooter.h"
+#include "sensors/NavX.h"
 
 using namespace pathplanner;
 
@@ -29,10 +30,12 @@ class Trajectory
 private:
     SwerveDrive &mDrive;
     Superstructure &mSuperstructure; 
+    NavX &mGyro;
+
 
 public:
-    Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput) : mDrive(mDriveInput),
-                                                                    mSuperstructure(mSSInput){};
+    Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput, NavX &mGyroInput) : mDrive(mDriveInput),
+                                                                    mSuperstructure(mSSInput), mGyro(mGyroInput){};
 
     void driveToState(PathPlannerTrajectory::State const &state);
 
