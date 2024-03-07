@@ -164,8 +164,10 @@ double Arm::findLaunchAngle(double velocity, double x, double y)
 }
 
 //all measurements given in inches
-double Arm::findBetterLaunchAngle(double xTag, double yTag, double zTag, double velocity, double shooterHeight){
+double Arm::findBetterLaunchAngle(double xTag, double yTag, double zTag){
     //low angle
+    int shooterHeight = 18;
+    double velocity = 455.59;
     double lowHeight = 78;
     double distToTag2d = sqrt(pow(xTag, 2)+ pow(yTag, 2));
     double distanceLow = sqrt(pow(distToTag2d, 2) + pow(lowHeight, 2));
@@ -186,9 +188,9 @@ double Arm::findBetterLaunchAngle(double xTag, double yTag, double zTag, double 
     double distanceRobotToTopSquared = pow(tagToTopDist, 2)+ pow(distToTag3d, 2) - 2*tagToTopDist*distToTag3d*cos(angleTopTagRobot);
     double distanceRobotToTop = sqrt(distanceRobotToTopSquared);
     double cosHighAngle = (pow(tagToTopDist, 2)- pow(distToTag3d, 2) - distanceRobotToTopSquared)/(-2*distanceRobotToTop*distToTag3d);
-    double angleHigh = acos(cosHighAngle);
+    double angleHigh = acos(cosHighAngle) + robotTagAngle;
 
-    return ((angleHigh+angleLow)/2) + (PI / 6);
+    return ((angleHigh+angleLow)/2);
     
 
 

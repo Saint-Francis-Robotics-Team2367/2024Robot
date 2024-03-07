@@ -30,7 +30,7 @@ void Robot::RobotPeriodic()
   Pose3d target = mLimelight.getTargetPoseRobotSpace();
   frc::SmartDashboard::PutNumber("LimelightX", target.x * 39.37);
   frc::SmartDashboard::PutNumber("LimelightY", target.y * 39.37);
-  frc::SmartDashboard::PutNumber("TestShooterAngle", mSuperstructure.mArm.findBetterLaunchAngle(target.x * 39.37, target.y * 39.37, 51.875, 455.59, 18) * 180 / PI);
+  frc::SmartDashboard::PutNumber("TestShooterAngle", mSuperstructure.mArm.findBetterLaunchAngle(target.x * 39.37, target.y * 39.37, 51.875) * 180 / PI);
 }
 
 void Robot::AutonomousInit()
