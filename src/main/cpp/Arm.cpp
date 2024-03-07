@@ -1,4 +1,5 @@
 #include "Arm.h"
+#include <cmath>
 
 /**
  * Setup motors
@@ -160,4 +161,38 @@ double Arm::findLaunchAngle(double velocity, double x, double y)
         }
     }
     return best_angle;
+}
+
+//all measurements given in inches
+double Arm::findBetterLaunchAngle(double xTag, double yTag, double zTag, double velocity, double shooterHeight){
+    //low angle
+    double lowHeight = 78;
+    double distToTag2d = sqrt(pow(xTag, 2)+ pow(yTag, 2));
+    double distanceLow = sqrt(pow(distToTag2d, 2) + pow(lowHeight, 2));
+    double sinAngleLow = ((lowHeight-shooterHeight)/distanceLow) + ((4.9*distanceLow)/pow(velocity, 2));
+    double angleLow = asin(sinAngleLow);
+
+    //high angle
+    double heightOfTag = 51.875;
+    double distToTag3d = sqrt(pow(distToTag2d, 2)+ pow(heightOfTag-shooterHeight, 2));
+    double robotTagAngle = asin(heightOfTag/distToTag3d);
+    int tagToTopX = 16;
+    double tagToTopY = 26.55;
+    double tagToTopDist = sqrt(pow(tagToTopX, 2)+ pow(tagToTopY, 2));
+    double angleTagToTop = asin(tagToTopX/tagToTopDist);
+    double angleTagToRobot = 90- robotTagAngle; 
+    double angleTopTagRobot = 180-angleTagToRobot-angleTagToTop;
+
+    double distanceRobotToTopSquared = pow(tagToTopDist, 2)+ pow(distToTag3d, 2) - 2*tagToTopDist*distToTag3d*cos(angleTopTagRobot);
+    double distanceRobotToTop = sqrt(distanceRobotToTopSquared);
+    double cosHighAngle = (pow(tagToTopDist, 2)- pow(distToTag3d, 2) - distanceRobotToTopSquared)/(-2*distanceRobotToTop*distToTag3d);
+    double angleHigh = acos(cosHighAngle);
+
+    return ((angleHigh+angleLow)/2) + (PI / 6);
+    
+
+
+
+
+
 }
