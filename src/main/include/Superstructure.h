@@ -28,7 +28,7 @@ public:
     void loadNote();
     void pushNoteBack();
     void scoreAmp();
-    void preScoreSpeaker();
+    void preScoreSpeaker(Pose3d target);
     // void preScoreSpeaker(Limelight limelight);
     void scoreSpeaker();
     void unloadShooter();

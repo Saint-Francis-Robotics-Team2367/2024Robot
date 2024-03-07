@@ -26,8 +26,8 @@ void Robot::RobotPeriodic()
   frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
   frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
+  
   Pose3d target = mLimelight.getTargetPoseRobotSpace();
-
   frc::SmartDashboard::PutNumber("LimelightX", target.x * 39.37);
   frc::SmartDashboard::PutNumber("LimelightY", target.y * 39.37);
   frc::SmartDashboard::PutNumber("TestShooterAngle", mSuperstructure.mArm.findBetterLaunchAngle(target.x * 39.37, target.y * 39.37, 51.875, 455.59, 18) * 180 / PI);
@@ -182,7 +182,8 @@ void Robot::TeleopPeriodic()
   }
   else if (preScoringSpeaker) // Spin Shooter
   {
-    mSuperstructure.preScoreSpeaker();
+    Pose3d target = mLimelight.getTargetPoseRobotSpace();
+    mSuperstructure.preScoreSpeaker(target);
     if ((ctr.GetSquareButton() && mSuperstructure.mShooter.getSpeed() > 4000) || overrideShooter) // Load note into spinning shooter
     {
       mSuperstructure.scoreSpeaker();
