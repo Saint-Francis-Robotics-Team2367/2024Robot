@@ -19,15 +19,20 @@ static frc::HolonomicDriveController controller{
  */
 void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
 {
+    // Calculate new chassis speeds given robot position and next desired state in trajectory
     frc::ChassisSpeeds const correction = controller.Calculate(mDrive.getOdometryPose(), frc::Pose2d{state.position, state.heading}, state.velocity, state.targetHolonomicRotation);
 
+    // Calculate x, y speeds from MPS
     double vx_feet = correction.vx.value() * 3.281;
     double vy_feet = correction.vy.value() * 3.281;
-    double rotCompass = Rotation2d::compassToPolar(state.targetHolonomicRotation.Radians().value());
+    double rotCompass = correction.omega.value();
+    // Clamp rot speed to 2.0 since that is the max rot we allow
+    double rot = std::clamp(correction.omega.value(), -2.0, 2.0);
+
     frc::SmartDashboard::PutNumber("VY", vy_feet);
     frc::SmartDashboard::PutNumber("VX", vx_feet);
 
-    mDrive.Drive(ChassisSpeeds{vx_feet, vy_feet, 0.0}, mGyro.getBoundedAngleCCW(), true, true);
+    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
 }
 
 /**
@@ -46,6 +51,7 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
 
     auto const initialState = traj.getInitialState();
     auto const initialPose = initialState.position;
+    auto const initialRot = traj.getInitialTargetHolonomicPose().Rotation(); 
     mDrive.resetOdometry(initialPose, initialState.heading);
 
     frc::Timer trajTimer;
@@ -93,7 +99,7 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
     // mSuperstructure.mShooter.setSpeed(Shooter::STOP);
     // mSuperstructure.controlIntake(true, false);
 
-    follow("[M] Note 1", flipAlliance);
+    follow("Drive and Score Note 2", flipAlliance);
     // mSuperstructure.controlIntake(false, false);
 
     // mSuperstructure.controlIntake(true, false); 

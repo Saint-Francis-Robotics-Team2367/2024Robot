@@ -39,8 +39,8 @@ void Robot::AutonomousInit()
   frc::SmartDashboard::PutString("auto", selectedAuto);
 
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro);
-  mTraj.followPath(1, false);
-  // mTraj.follow("[R] Park", true);
+  // mTraj.followPath(1, false);
+  mTraj.follow("[Amp] Park", false);
 }
 void Robot::AutonomousPeriodic()
 {
@@ -103,6 +103,7 @@ void Robot::TeleopPeriodic()
   if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 5.0, driveTurning)) // SNAP mode
   {
     // Snap condition
+    frc::SmartDashboard::PutBoolean("SNAP", true);
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
     mHeadingController.setFieldSetpoint(dPad);
   }
@@ -122,6 +123,7 @@ void Robot::TeleopPeriodic()
   // }
   else // Normal driving mode
   {
+    frc::SmartDashboard::PutBoolean("SNAP", false);
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   }
 

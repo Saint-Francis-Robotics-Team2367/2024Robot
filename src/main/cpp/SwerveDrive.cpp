@@ -176,7 +176,7 @@ void SwerveDrive::setDriveCurrentLimit(int limit)
  * Resets odometry position
  * (used in auto config)
  */
-void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot)
+void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d angle)
 {
     m_odometry.ResetPosition(
         mGyro.getRotation2d(),
@@ -184,7 +184,7 @@ void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot)
          mFrontLeft.getModulePosition(),
          mFrontRight.getModulePosition(),
          mBackRight.getModulePosition()},
-        frc::Pose2d{trans, rot});
+        frc::Pose2d{trans, angle});
 }
 
 /**
