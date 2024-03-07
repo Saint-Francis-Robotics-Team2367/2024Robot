@@ -190,7 +190,7 @@ double Arm::findBetterLaunchAngle(double xTag, double yTag, double zTag){
     double cosHighAngle = (pow(tagToTopDist, 2)- pow(distToTag3d, 2) - distanceRobotToTopSquared)/(-2*distanceRobotToTop*distToTag3d);
     double angleHigh = acos(cosHighAngle) + robotTagAngle;
 
-    return ((angleHigh+angleLow)/2);
+    return ((2*angleHigh+angleLow)/3);
     
 
 
