@@ -111,7 +111,7 @@ void Superstructure::preScoreSpeaker(Pose3d target)
     mShooter.setSpeed(Shooter::HIGH);
     // frc::SmartDashboard::PutNumber("LimelightX", target.x * 39.37);
     // frc::SmartDashboard::PutNumber("LimelightY", target.y * 39.37);
-    double armAngle = mArm.findBetterLaunchAngle(target.x * 39.37, target.y * 39.37, 51.875, 455.59, 18) * 180 / PI;
+    double armAngle = mArm.findBetterLaunchAngle(target.x * 39.37, target.y * 39.37, 51.875) * 180 / PI;
     // frc::SmartDashboard::PutNumber("TestShooterAngle", armAngle);
     if (armAngle > 0) {
         mArm.setPosition(armAngle);

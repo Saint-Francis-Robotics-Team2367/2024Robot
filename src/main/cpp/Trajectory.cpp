@@ -40,6 +40,7 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state, double 
  */
 void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance)
 {
+    mDrive.enableModules();
     auto path = PathPlannerPath::fromPathFile(traj_dir_file_path);
 
     // switches path to red alliance (mirrors it)
