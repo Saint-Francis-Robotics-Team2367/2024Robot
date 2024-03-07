@@ -4,6 +4,7 @@ void Intake::init()
 {
     intakeMotor.RestoreFactoryDefaults();
     intakeMotor.SetSmartCurrentLimit(intakeCurrentLimit);
+    intakeMotor.SetInverted(true);
     intakeMotor.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
     setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0);
 }

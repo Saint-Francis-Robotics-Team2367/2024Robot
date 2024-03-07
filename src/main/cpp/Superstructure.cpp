@@ -48,14 +48,13 @@ void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
     float indexVelocity = 1200.0;
     if (intakeIn)
     {
-        
+        mIntake.setIntakeState(Intake::IN);
         if (!mIndex.isNoteDetected()) 
         {
-            mIntake.setIntakeState(Intake::IN);
+            
             mIndex.setVelocity(indexVelocity);
         } else {
             mIndex.disable();
-            mIntake.setIntakeState(Intake::STOP);
         }
         
     //     if (!mIndex.isNoteDetected()) {
@@ -122,7 +121,7 @@ void Superstructure::preScoreSpeaker()
 
 void Superstructure::scoreSpeaker()
 {
-    mIndex.setVelocity(3400);
+    mIndex.setVelocity(5700);
 }
 
 void Superstructure::unloadShooter() {
