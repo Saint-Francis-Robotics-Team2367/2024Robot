@@ -84,22 +84,33 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
 {
     // std::this_thread::sleep_for(std::chrono::seconds(7));
 
-    // mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
-    // // Wait until shooter reaches 4000 RPM or 3 seconds pass
-    // double startTimeShooter = frc::Timer::GetFPGATimestamp().value();
-    // while (mSuperstructure.mShooter.getSpeed() < 4200 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter > 3.0) {};
-    // if (startTimeShooter - frc::Timer::GetFPGATimestamp().value() < 3.0) 
-    // {
-    //     // Run indexer
-    //     mSuperstructure.mIndex.setVelocity(2000.0);
-    //     std::this_thread::sleep_for(std::chrono::seconds(1));
-    //     // Stop Shooter
-    // }
-    // mSuperstructure.mIndex.setVelocity(0.0);
-    // mSuperstructure.mShooter.setSpeed(Shooter::STOP);
-    // mSuperstructure.controlIntake(true, false);
+    mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
+    // Wait until shooter reaches 4000 RPM or 3 seconds pass
+    double startTimeShooter = frc::Timer::GetFPGATimestamp().value();
+    while (mSuperstructure.mShooter.getSpeed() < 4000 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter > 3.0) {};
+    // Run indexer
+    mSuperstructure.mIndex.setVelocity(2000.0);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    // Stop Shooter
 
-    follow("Drive and Score Note 2", flipAlliance);
+    mSuperstructure.mIndex.setVelocity(0.0);
+    // mSuperstructure.mShooter.setSpeed(Shooter::STOP);
+    mSuperstructure.controlIntake(true, false);
+
+    follow("Drive Note 2", flipAlliance);
+    follow("Score Note 2", flipAlliance);
+    mSuperstructure.controlIntake(false, false);
+    startTimeShooter = frc::Timer::GetFPGATimestamp().value();
+    while (mSuperstructure.mShooter.getSpeed() < 4000 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter > 3.0) {};
+    // Run indexer
+    mSuperstructure.mIndex.setVelocity(2000.0);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    // Stop Shooter
+    mSuperstructure.mIndex.setVelocity(0.0);
+    mSuperstructure.mShooter.setSpeed(Shooter::STOP);
+    
+
+
     // mSuperstructure.controlIntake(false, false);
 
     // mSuperstructure.controlIntake(true, false); 
