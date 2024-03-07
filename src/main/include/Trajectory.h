@@ -37,7 +37,7 @@ public:
     Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput, NavX &mGyroInput) : mDrive(mDriveInput),
                                                                     mSuperstructure(mSSInput), mGyro(mGyroInput){};
 
-    void driveToState(PathPlannerTrajectory::State const &state);
+    void driveToState(PathPlannerTrajectory::State const &state, double initialRot);
 
     void follow(std::string const &traj_dir_file_path, bool flipAlliance);
 

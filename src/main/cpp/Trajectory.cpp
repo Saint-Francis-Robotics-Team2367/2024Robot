@@ -17,7 +17,7 @@ static frc::HolonomicDriveController controller{
  * Drives robot to the next state on trajectory
  * Odometry must be in meters
  */
-void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
+void Trajectory::driveToState(PathPlannerTrajectory::State const &state, double initialRot)
 {
     // Calculate new chassis speeds given robot position and next desired state in trajectory
     frc::ChassisSpeeds const correction = controller.Calculate(mDrive.getOdometryPose(), frc::Pose2d{state.position, state.heading}, state.velocity, state.targetHolonomicRotation);
@@ -25,14 +25,14 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
     // Calculate x, y speeds from MPS
     double vx_feet = correction.vx.value() * 3.281;
     double vy_feet = correction.vy.value() * 3.281;
-    double rotCompass = correction.omega.value();
+
     // Clamp rot speed to 2.0 since that is the max rot we allow
     double rot = std::clamp(correction.omega.value(), -2.0, 2.0);
 
     frc::SmartDashboard::PutNumber("VY", vy_feet);
     frc::SmartDashboard::PutNumber("VX", vx_feet);
 
-    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
+    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getRotation2d(initialRot).Degrees().value(), true, true);
 }
 
 /**
@@ -51,8 +51,8 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
 
     auto const initialState = traj.getInitialState();
     auto const initialPose = initialState.position;
-    auto const initialRot = traj.getInitialTargetHolonomicPose().Rotation(); 
-    mDrive.resetOdometry(initialPose, initialState.heading);
+    auto const initialRot = traj.getInitialTargetHolonomicPose().Rotation().Degrees().value(); 
+    mDrive.resetOdometry(initialPose, initialState.heading, initialRot);
 
     frc::Timer trajTimer;
     trajTimer.Start();
@@ -62,8 +62,8 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
         auto currentTime = trajTimer.Get();
         auto sample = traj.sample(currentTime);
 
-        driveToState(sample);
-        mDrive.updateOdometry();
+        driveToState(sample, initialRot);
+        mDrive.updateOdometry(initialRot);
 
         frc::SmartDashboard::PutNumber("curr pose x meters", mDrive.getOdometryPose().Translation().X().value());
         frc::SmartDashboard::PutNumber("curr pose y meters", mDrive.getOdometryPose().Translation().Y().value());
