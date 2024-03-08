@@ -44,8 +44,10 @@ void Robot::AutonomousInit()
   frc::SmartDashboard::PutString("auto", selectedAuto);
 
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro);
-  mTraj.followPath(1, false);
-  // mTraj.follow("[Amp] Park", false);
+  // mTraj.followPath(1, false);
+  
+  mTraj.follow("Rotations", false, false); 
+  
 }
 void Robot::AutonomousPeriodic()
 {

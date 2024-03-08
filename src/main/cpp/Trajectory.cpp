@@ -8,16 +8,16 @@ static frc::HolonomicDriveController controller{
     frc::PIDController{revkP, 0, 0},
     frc::PIDController{revkP, 0, 0},
     frc::ProfiledPIDController<units::radian>{
-        steerP, 0, 0,
+        0.2, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
-            units::radians_per_second_t(189.2),
-            units::radians_per_second_squared_t(2665.993 * (25.8 / 7.6))}}};
+            units::radians_per_second_t(5.0),
+            units::radians_per_second_squared_t(100)}}};
 
 /**
  * Drives robot to the next state on trajectory
  * Odometry must be in meters
  */
-void Trajectory::driveToState(PathPlannerTrajectory::State const &state, double initialRot)
+void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
 {
     // Calculate new chassis speeds given robot position and next desired state in trajectory
     frc::ChassisSpeeds const correction = controller.Calculate(mDrive.getOdometryPose(), frc::Pose2d{state.position, state.heading}, state.velocity, state.targetHolonomicRotation);
@@ -32,13 +32,13 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state, double 
     frc::SmartDashboard::PutNumber("VY", vy_feet);
     frc::SmartDashboard::PutNumber("VX", vx_feet);
 
-    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getRotation2d(initialRot).Degrees().value(), true, true);
+    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
 }
 
 /**
  * Follows pathplanner trajectory
  */
-void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance)
+void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake)
 {
     mDrive.enableModules();
     auto path = PathPlannerPath::fromPathFile(traj_dir_file_path);
@@ -48,23 +48,28 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
         path = path->flipPath(); 
     }
 
-    PathPlannerTrajectory traj = PathPlannerTrajectory(path, frc::ChassisSpeeds(), frc::Rotation2d(0_rad));
+    PathPlannerTrajectory traj = PathPlannerTrajectory(path, frc::ChassisSpeeds(), 0_rad);
 
     auto const initialState = traj.getInitialState();
     auto const initialPose = initialState.position;
-    auto const initialRot = traj.getInitialTargetHolonomicPose().Rotation().Degrees().value(); 
-    mDrive.resetOdometry(initialPose, initialState.heading, initialRot);
+
+    mDrive.resetOdometry(initialPose, initialState.heading);
+    
 
     frc::Timer trajTimer;
     trajTimer.Start();
 
     while ((mDrive.state == DriveState::Auto) && (trajTimer.Get() <= traj.getTotalTime()))
     {
+        if (intake) {
+            mSuperstructure.controlIntake(true, false);
+        }
+
         auto currentTime = trajTimer.Get();
         auto sample = traj.sample(currentTime);
 
-        driveToState(sample, initialRot);
-        mDrive.updateOdometry(initialRot);
+        driveToState(sample);
+        mDrive.updateOdometry();
 
         frc::SmartDashboard::PutNumber("curr pose x meters", mDrive.getOdometryPose().Translation().X().value());
         frc::SmartDashboard::PutNumber("curr pose y meters", mDrive.getOdometryPose().Translation().Y().value());
@@ -84,7 +89,9 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
 void Trajectory::followPath(int numPath, bool flipAlliance)
 {
     // std::this_thread::sleep_for(std::chrono::seconds(7));
-
+    mGyro.gyro.SetAngleAdjustment(60.0);
+    follow("[A] Park", flipAlliance, false);
+    /*
     mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
     // Wait until shooter reaches 4000 RPM or 3 seconds pass
     double startTimeShooter = frc::Timer::GetFPGATimestamp().value();
@@ -96,10 +103,10 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
 
     mSuperstructure.mIndex.setVelocity(0.0);
     // mSuperstructure.mShooter.setSpeed(Shooter::STOP);
-    mSuperstructure.controlIntake(true, false);
 
-    follow("Drive Note 2", flipAlliance);
-    follow("Score Note 2", flipAlliance);
+    follow("Drive Note 2", flipAlliance, true);
+    follow("Score Note 2", flipAlliance, true);
+
     mSuperstructure.controlIntake(false, false);
     startTimeShooter = frc::Timer::GetFPGATimestamp().value();
     while (mSuperstructure.mShooter.getSpeed() < 4000 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter > 3.0) {};
@@ -109,7 +116,7 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
     // Stop Shooter
     mSuperstructure.mIndex.setVelocity(0.0);
     mSuperstructure.mShooter.setSpeed(Shooter::STOP);
-    
+    */
 
 
     // mSuperstructure.controlIntake(false, false);

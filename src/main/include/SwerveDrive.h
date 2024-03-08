@@ -73,7 +73,7 @@ private:
 
     frc::SwerveDriveOdometry<4> m_odometry{
         frckinematics,
-        mGyro.getRotation2d(0.0), 
+        mGyro.getRotation2d(), 
         // might need to edit order of motors (double check)
         {
             mBackLeft.getModulePosition(), 
@@ -103,9 +103,9 @@ public:
     bool stopModules();
     void orientModules(double FL, double FR, double BL, double BR);
     void autoMove(double angleRadians, double distanceFeet);
-    void resetOdometry(frc::Translation2d trans, frc::Rotation2d angle, double initialRot);
+    void resetOdometry(frc::Translation2d trans, frc::Rotation2d angle);
     frc::Pose2d getOdometryPose();
-    void updateOdometry(double initialRot);
+    void updateOdometry();
     void displayDriveTelemetry();
     void setDriveCurrentLimit(int limit);
     void zeroAccumulation();

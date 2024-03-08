@@ -34,8 +34,8 @@ public:
         return Rotation2d(Rotation2d::degreesBound(gyro.GetAngle()) * PI / 180);
     }
 
-    frc::Rotation2d getRotation2d(double initialRot)
+    frc::Rotation2d getRotation2d()
     {
-        return frc::Rotation2d(units::radian_t((gyro.GetAngle() + initialRot) * PI / 180));
+        return frc::Rotation2d(units::radian_t((gyro.GetAngle()) * PI / 180));
     }
 };
