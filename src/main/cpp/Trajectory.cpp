@@ -32,7 +32,7 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
     frc::SmartDashboard::PutNumber("VY", vy_feet);
     frc::SmartDashboard::PutNumber("VX", vx_feet);
 
-    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
+    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getBoundedAngleCCW(), true, true); 
 }
 
 /**
@@ -53,8 +53,8 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
     auto const initialState = traj.getInitialState();
     auto const initialPose = initialState.position;
 
-    mDrive.resetOdometry(initialPose, initialState.heading);
-    
+    // set second param to initial holonomic rotation 
+    mDrive.resetOdometry(initialPose, 60_deg);
 
     frc::Timer trajTimer;
     trajTimer.Start();
@@ -89,7 +89,6 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
 void Trajectory::followPath(int numPath, bool flipAlliance)
 {
     // std::this_thread::sleep_for(std::chrono::seconds(7));
-    mGyro.gyro.SetAngleAdjustment(60.0);
     follow("[A] Park", flipAlliance, false);
     /*
     mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
