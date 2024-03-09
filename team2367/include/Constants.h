@@ -45,7 +45,7 @@ constexpr int rightFrontMotorID = 10;
 constexpr int rightBackMotorID = 12;
 
 // Intake & Index
-constexpr int indexMotorID = 16;
+constexpr int indexMotorID = 20;
 constexpr int intakeMotorID = 17;
 
 // Shooter

@@ -90,14 +90,14 @@ void Superstructure::loadNote()
     double distance = 1.0;
     // mIndex.setDistance(distance);
     mShooter.setDistance(distance * 2.0 / 3.0);
-    mIndex.setDistance(distance * 10);
+    // mIndex.setDistance(distance * 10);
 }
 
 void Superstructure::pushNoteBack() {
     double distance = -1.0;
     // mIndex.setDistance(distance);
     mShooter.setDistance(distance * 2.0 / 3.0);
-    mIndex.setDistance(distance * 10);
+    // mIndex.setDistance(distance * 10);
 }
 
 void Superstructure::scoreAmp()
