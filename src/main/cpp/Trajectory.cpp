@@ -89,7 +89,7 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
 void Trajectory::followPath(int numPath, bool flipAlliance)
 {
     // std::this_thread::sleep_for(std::chrono::seconds(7));
-    follow("[A] Park", flipAlliance, false);
+    follow("[Amp] Park", flipAlliance, false);
     /*
     mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
     // Wait until shooter reaches 4000 RPM or 3 seconds pass
