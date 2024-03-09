@@ -5,8 +5,10 @@
   "pathFolders": [
     "Amp",
     "Middle",
+    "Right",
+    "Left",
     "Source",
-    "tests"
+    "Tests"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.9,

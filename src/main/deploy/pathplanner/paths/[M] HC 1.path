@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.794660580061901,
+        "x": 1.379352698520212,
         "y": 5.526310219287105
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.245160312124536,
-        "y": 5.526310219287105
+        "x": 2.1895337679551288,
+        "y": 6.6087092776107665
       },
       "isLocked": false,
-      "linkedName": "Note 2"
+      "linkedName": "Front Speaker"
     },
     {
       "anchor": {
-        "x": 1.379352698520212,
-        "y": 5.526310219287105
+        "x": 7.8299213774353476,
+        "y": 7.446741620335093
       },
       "prevControl": {
-        "x": 0.9865094689630081,
-        "y": 5.526310219287105
+        "x": 6.628456641171246,
+        "y": 7.061099469428187
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Front Speaker"
+      "linkedName": "Halfcourt 1"
     }
   ],
   "rotationTargets": [],
@@ -44,9 +44,6 @@
   },
   "reversed": false,
   "folder": "Middle",
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
-  "useDefaultConstraints": true
+  "previewStartingState": null,
+  "useDefaultConstraints": false
 }
