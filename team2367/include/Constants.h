@@ -11,8 +11,8 @@
 #define ctrSlewRate 0.3
 
 // Module Constraints
-#define moduleMaxFPS 16.254667 // feet per sec
-#define moduleMaxRPM 5700      // RPM
+#define moduleMaxFPS 11.407 // feet per sec
+#define moduleMaxRPM 4000 // RPM
 #define moduleMaxRot 2.0 // 9.678 / 2, Radians/sec
 
 // Drivebase Measurements
@@ -45,7 +45,7 @@ constexpr int rightFrontMotorID = 10;
 constexpr int rightBackMotorID = 12;
 
 // Intake & Index
-constexpr int indexMotorID = 16;
+constexpr int indexMotorID = 20;
 constexpr int intakeMotorID = 17;
 
 // Shooter

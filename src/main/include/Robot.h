@@ -59,7 +59,7 @@ public:
   Elevator mElevator;
 
   // Teleop Controls
-  float ctrPercent = 0.5;
+  float ctrPercent = 1.0;
   float boostPercent = 0.9;
   double ctrPercentAim = 0.3;
   TimeDelayButton snapRobotToGoal;

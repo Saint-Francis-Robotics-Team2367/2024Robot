@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.794660580061901,
-        "y": 5.526310219287105
+        "x": 7.905814612555151,
+        "y": 7.42286910036783
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.245160312124536,
-        "y": 5.526310219287105
+        "x": 7.131501707447859,
+        "y": 7.401906414923941
       },
       "isLocked": false,
-      "linkedName": "Note 2"
+      "linkedName": "Halfcourt 1"
     },
     {
       "anchor": {
-        "x": 1.379352698520212,
-        "y": 5.526310219287105
+        "x": 0.7613988607606847,
+        "y": 6.662808445987263
       },
       "prevControl": {
-        "x": 0.9865094689630081,
-        "y": 5.526310219287105
+        "x": 1.8169561802086567,
+        "y": 7.349766931015344
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Front Speaker"
+      "linkedName": "Left Speaker"
     }
   ],
   "rotationTargets": [],
@@ -39,14 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 61.94877001460674,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Middle",
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
-  "useDefaultConstraints": true
+  "folder": "Left",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
 }

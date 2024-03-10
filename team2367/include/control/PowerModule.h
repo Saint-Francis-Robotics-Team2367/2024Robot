@@ -4,7 +4,7 @@
 #include <util/ShuffleUI.h>
 #include <frc/PowerDistribution.h>
 
-#define swerveDriveStartCurrent 40
+#define swerveDriveStartCurrent 60
 #define totalMatchSeconds 150
 
 class PowerModule
