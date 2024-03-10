@@ -42,7 +42,7 @@ void Robot::AutonomousInit()
   mSuperstructure.enable();
   selectedAuto = mChooser.GetSelected();
   frc::SmartDashboard::PutString("auto", selectedAuto);
-  Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro);
+  Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
   mTraj.followPath(1, false);
   
   // mTraj.follow("Rotations", false, false); 

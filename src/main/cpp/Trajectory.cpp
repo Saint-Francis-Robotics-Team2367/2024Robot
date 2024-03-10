@@ -86,6 +86,20 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
 }
 
 /**
+ * Uses limelight to calculate error accumulated in path
+*/
+void Trajectory::driveError() 
+{
+    double x = mLimelight.getXYCoords()[0]; 
+    double y = mLimelight.getXYCoords()[1]; 
+
+    double currX = mDrive.getOdometryPose().X().value(); 
+    double currY = mDrive.getOdometryPose().Y().value(); 
+
+    
+}
+
+/**
  * Calls sequences of follow functions for set paths
  * Path naming convention: "[Right Middle Left] Action" 
  */

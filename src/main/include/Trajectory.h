@@ -31,17 +31,22 @@ private:
     SwerveDrive &mDrive;
     Superstructure &mSuperstructure; 
     NavX &mGyro;
+    Limelight &mLimelight; 
 
 
 public:
-    Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput, NavX &mGyroInput) : mDrive(mDriveInput),
-                                                                    mSuperstructure(mSSInput), mGyro(mGyroInput){};
+    Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput, NavX &mGyroInput, Limelight &mLimelightInput) : mDrive(mDriveInput),
+                                                                                                                    mSuperstructure(mSSInput), 
+                                                                                                                    mGyro(mGyroInput),
+                                                                                                                    mLimelight(mLimelightInput){};
 
     void driveToState(PathPlannerTrajectory::State const &state);
 
     void follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first);
 
     void followPath(int numPath, bool flipAlliance);
+
+    void driveError(); 
 
     void testHolonomic(frc::Pose2d const &target_pose,
                        units::velocity::meters_per_second_t const &velocity,
