@@ -19,6 +19,7 @@
 #include "frc/kinematics/SwerveModulePosition.h"
 #include "frc/geometry/Rotation2d.h"
 #include "control/PowerModule.h"
+#include <swerve/TalonFXMotor.h>
 
 // Steer PID values(custom, untuned)
 constexpr float steerP = 0.40; // 0.50; // prev 0.76
@@ -41,12 +42,10 @@ public:
     int driveID;
 
     rev::CANSparkMax *steerMotor;
-    rev::CANSparkMax *driveMotor;
+    // rev::CANSparkMax *driveMotor;
+    TalonFXMotor driveMotor;
 
     CAN_Coder steerEnc;
-    rev::SparkRelativeEncoder driveEnc;
-
-    // PID Controller for Steer Motor
     frc::PIDController steerCTR;
 
     // REV Default Velocity PID values(Drive Motor)
@@ -54,7 +53,6 @@ public:
     float maxAccumulation = 0.4;
 
     // PID Controller for Drive Motor
-    rev::SparkPIDController m_pidController;
 
     // Timer for acceleration limiting
     frc::Timer aTimer = frc::Timer();
@@ -98,7 +96,6 @@ public:
 
     void setDrivePositionSetpoint(float setpt);
     void setDriveVelocitySetpoint(float setpt);
-    void setDriveCurrentLimit(int limit);
 
     // TODO: Test this
     void setModuleState(SwerveModuleState setpt, bool takeShortestPath = true);
