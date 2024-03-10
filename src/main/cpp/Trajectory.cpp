@@ -38,7 +38,7 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
 /**
  * Follows pathplanner trajectory
  */
-void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake)
+void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first)
 {
     mDrive.enableModules();
     auto path = PathPlannerPath::fromPathFile(traj_dir_file_path);
@@ -50,11 +50,14 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
 
     PathPlannerTrajectory traj = PathPlannerTrajectory(path, frc::ChassisSpeeds(), 0_rad);
 
-    auto const initialState = traj.getInitialState();
-    auto const initialPose = initialState.position;
+    if (first) {
+        auto const initialState = traj.getInitialState();
+        auto const initialPose = initialState.position;
 
-    // set second param to initial holonomic rotation 
-    mDrive.resetOdometry(initialPose, 60_deg);
+        // set second param to initial holonomic rotation 
+        mDrive.resetOdometry(initialPose, 0_rad);
+    }
+    
 
     frc::Timer trajTimer;
     trajTimer.Start();
@@ -89,7 +92,7 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
 void Trajectory::followPath(int numPath, bool flipAlliance)
 {
     // std::this_thread::sleep_for(std::chrono::seconds(7));
-    follow("[Amp] Park", flipAlliance, false);
+
     /*
     mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
     // Wait until shooter reaches 4000 RPM or 3 seconds pass
@@ -102,11 +105,16 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
 
     mSuperstructure.mIndex.setVelocity(0.0);
     // mSuperstructure.mShooter.setSpeed(Shooter::STOP);
+    */
 
-    follow("Drive Note 2", flipAlliance, true);
-    follow("Score Note 2", flipAlliance, true);
+    follow("[M] Note 2", flipAlliance, true, true);
+    follow("[M] Score Note 2", flipAlliance, true, false);
 
     mSuperstructure.controlIntake(false, false);
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    /*
     startTimeShooter = frc::Timer::GetFPGATimestamp().value();
     while (mSuperstructure.mShooter.getSpeed() < 4000 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter > 3.0) {};
     // Run indexer
@@ -116,6 +124,23 @@ void Trajectory::followPath(int numPath, bool flipAlliance)
     mSuperstructure.mIndex.setVelocity(0.0);
     mSuperstructure.mShooter.setSpeed(Shooter::STOP);
     */
+
+    follow("[M] Note 1", flipAlliance, true, false); 
+    follow("[M] Score Note 1", flipAlliance, true, false); 
+
+    mSuperstructure.controlIntake(false, false);
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    follow("[M] Note 3", flipAlliance, true, false); 
+    follow("[M] Score Note 3", flipAlliance, true, false); 
+
+    mSuperstructure.controlIntake(false, false);
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+
+    
 
 
     // mSuperstructure.controlIntake(false, false);
