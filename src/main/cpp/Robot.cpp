@@ -101,9 +101,6 @@ void Robot::TeleopPeriodic()
   {
     scoreAmp = !scoreAmp;
   }
-  // if (ctrOperator.GetL1ButtonPressed()) {
-  //   cleanDriveAccum = !cleanDriveAccum;
-  // }
 
   // Decide drive modes
   if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 5.0, driveTurning)) // SNAP mode
@@ -111,22 +108,22 @@ void Robot::TeleopPeriodic()
     // Snap condition
     frc::SmartDashboard::PutBoolean("SNAP", true);
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
-    mHeadingController.setFieldSetpoint(dPad);
+    mHeadingController.setSetpointPOV(dPad);
   }
-  // else if (preScoringSpeaker && !driveTurning) // ALIGN(scoring) mode
-  // {
-  //   if (mLimelight.isSpeakerTagDetected())
-  //   {
-  //     Pose3d target = mLimelight.getTargetPoseRobotSpace();
-  //     double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / PI;
-  //     double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
-  //     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-  //     mHeadingController.setSetpoint(zeroSetpoint);
-  //     // limit robot speed temporarily
-  //     leftX = (leftX / ctrPercent) * ctrPercentAim;
-  //     leftY = (leftY / ctrPercent) * ctrPercentAim;
-  //   }
-  // }
+  else if (preScoringSpeaker && !driveTurning) // ALIGN(scoring) mode
+  {
+    if (mLimelight.isSpeakerTagDetected())
+    {
+      Pose3d target = mLimelight.getTargetPoseRobotSpace();
+      double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / PI;
+      double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
+      mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+      mHeadingController.setSetpoint(zeroSetpoint);
+      // limit robot speed temporarily
+      leftX = (leftX / ctrPercent) * ctrPercentAim;
+      leftY = (leftY / ctrPercent) * ctrPercentAim;
+    }
+  }
   else // Normal driving mode
   {
     frc::SmartDashboard::PutBoolean("SNAP", false);
