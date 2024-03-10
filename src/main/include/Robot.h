@@ -75,9 +75,9 @@ public:
   // Auto Selectors
   frc::SendableChooser<std::string> mChooser;
   const std::string kAutoDefault = "Default: nothing";
-  const std::string kAutoCustom1 = "Straight";
-  const std::string kAutoCustom2 = "Straight, shoot";
-  const std::string kAutoCustom3 = "2 straights, shoot";
-  const std::string kAutoCustom4 = "Curve";
+  const std::string kAutoCustom1 = "Middle";
+  const std::string kAutoCustom2 = "Amp";
+  const std::string kAutoCustom3 = "Source";
+  const std::string kAutoCustom4 = "Test";
   std::string selectedAuto;
 };
