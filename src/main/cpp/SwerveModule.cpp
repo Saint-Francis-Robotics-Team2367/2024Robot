@@ -1,10 +1,12 @@
 #include "SwerveModule.h"
+#include <string>
 
 SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int cancoderID) : steerMotor(new rev::CANSparkMax(steerMotorID, rev::CANSparkMax::MotorType::kBrushless)),
                                                                                  driveMotor(new rev::CANSparkMax(driveMotorID, rev::CANSparkMax::MotorType::kBrushless)),
                                                                                  steerEnc(CAN_Coder(cancoderID)),
                                                                                  driveEnc(driveMotor->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
-                                                                                 m_pidController(driveMotor->GetPIDController())
+                                                                                 m_pidController(driveMotor->GetPIDController()),
+                                                                                 steerCTR(frc::PIDController(steerP, steerI, steerD))
 {
     steerID = steerMotorID;
     driveID = driveMotorID;
@@ -13,8 +15,6 @@ SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int cancoderID) :
 void SwerveModule::initMotors()
 {
     // Resetting Motor settings, Encoders, putting it in brake mode
-    steerMotor->RestoreFactoryDefaults();
-    driveMotor->RestoreFactoryDefaults();
     steerMotor->ClearFaults();
     driveMotor->ClearFaults();
 
@@ -35,23 +35,18 @@ void SwerveModule::initMotors()
     driveEnc.SetPositionConversionFactor(1.0);
 
     // Setpoints to initial encoder positions/speeds
-    steerAngleSetpoint = steerEnc.getPosition().getRadians();
+    steerAngleSetpoint = steerEnc.getAbsolutePosition().getRadians();
     driveVelocitySetpoint = 0.0;
 
     // Set PID values for REV Drive PID
     m_pidController.SetP(kP);
     m_pidController.SetI(kI);
     m_pidController.SetFF(kFF);
-    m_pidController.SetIAccum(0.0);
+    m_pidController.SetIMaxAccum(maxAccumulation);
+    frc::SmartDashboard::PutNumber("MaxAccu", maxAccumulation);
     m_pidController.SetOutputRange(kMinOutput, kMaxOutput);
     steerCTR.EnableContinuousInput(0, 2 * PI);
-    steerCTR.SetIZone(steerIZone);
-
-    // driveMotor->SetClosedLoopRampRate(0.5);
-
-    // Clears Motor Controller's Log of errors
-    // steerMotor->ClearFaults();
-    // driveMotor->ClearFaults();
+    steerCTR.Reset();
 }
 
 float SwerveModule::getSteerAngleSetpoint()
@@ -108,8 +103,8 @@ void SwerveModule::setModuleState(SwerveModuleState setpt, bool takeShortestPath
     }
     else
     {
-        driveVelocitySetpoint = setpt.getSpeedFPS();
-        steerAngleSetpoint = setpt.getRot2d().getRadians();
+        setDriveVelocitySetpoint(setpt.getSpeedFPS());
+        setSteerAngleSetpoint(setpt.getRot2d().getRadians());
         prevSetpoint.setRot2d(setpt.getRot2d());
         prevSetpoint.setSpeedFPS(setpt.getSpeedFPS());
     }
@@ -122,14 +117,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
     double desAngle = desiredSetpoint.getRot2d().getRadians();
     double desVel = desiredSetpoint.getSpeedFPS();
 
-    double limitVel = ControlUtil::limitAcceleration(currVel, desVel, maxDriveAccelerationRPM, loopTime);
-
-    if (steerID == 11)
-    {
-        frc::SmartDashboard::PutNumber("LimitedVel", limitVel);
-        frc::SmartDashboard::PutNumber("DesiredVel", desVel);
-        frc::SmartDashboard::PutBoolean("AccLimited?", desVel != limitVel);
-    }
+    // double limitVel = ControlUtil::limitAcceleration(currVel, desVel, maxDriveAccelerationRPM, loopTime);
     // desVel = limitVel;
 
     double dist = fabs(currAngle - desAngle);
@@ -137,7 +125,6 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
     double setpointAngle;
     double setpointVel;
-
     if (flip)
     {
         setpointAngle = Rotation2d::radiansBound(desAngle + PI);
@@ -146,6 +133,7 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
         // setpointVel = -(desVel * (-angleDist / PI_2) + desVel);
         setpointVel = -ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
+        
     }
     else
     {
@@ -206,21 +194,47 @@ bool SwerveModule::isFinished(float percentageBound)
  */
 void SwerveModule::run()
 {
+    // Steer PID
+    // frc::SmartDashboard::PutNumber("SteerEncoder" + std::to_string(steerID), steerEnc.getAbsolutePosition().getDegrees());
+    // frc::SmartDashboard::PutNumber("SteerSetpoint" + std::to_string(steerID), steerAngleSetpoint * (180 / M_PI));
+    // frc::SmartDashboard::PutNumber("SteerOutput" + std::to_string(steerID), steerMotor->GetAppliedOutput());
     if (moduleInhibit) // Thread is in standby mode
     {
-
+        currentSteerOutput = 0.0;
         steerMotor->StopMotor();
         driveMotor->StopMotor();
     }
 
     else
     {
-        // Steer PID
+        double inputMaxAccu = frc::SmartDashboard::GetNumber("MaxAccu", maxAccumulation);
+        if (maxAccumulation != inputMaxAccu) {
+            m_pidController.SetIMaxAccum(inputMaxAccu);
+            maxAccumulation = inputMaxAccu;
+        }
+        if (steerID == 7) {
+            double vel = driveEnc.GetVelocity();
+            if (vel > maxVelocityAttained) {
+                maxVelocityAttained = vel;
+            }
+            frc::SmartDashboard::PutNumber("MaxVAttained", maxVelocityAttained);
+        }
 
-        currentSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
-        steerMotor->Set(currentSteerOutput);
+        if (steerID == 7) {
+            frc::SmartDashboard::PutNumber("IntegralAccum", m_pidController.GetIAccum());
+        }
+
+        double newSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
+        if (!ControlUtil::epsilonEquals(newSteerOutput, currentSteerOutput)) // Save some CAN buffer
+        {
+            currentSteerOutput = newSteerOutput;
+            steerMotor->Set(currentSteerOutput);
+        }
+        
+        // frc::SmartDashboard::PutNumber("Driveset" + std::to_string(steerID), driveVelocitySetpoint);
 
         // Drive Motor uses the internal REV PID, since optimizations here are rarely needed
+        
         if (driveMode == POSITION)
         {
             m_pidController.SetReference(drivePositionSetpoint, rev::CANSparkMax::ControlType::kPosition);

@@ -21,10 +21,10 @@
 #include "control/PowerModule.h"
 
 // Steer PID values(custom, untuned)
-constexpr float steerP = 0.50; // prev 0.76
-constexpr float steerI = 0.11;
+constexpr float steerP = 0.40; // 0.50; // prev 0.76
+constexpr float steerI = 0.0;// 0.11;
 constexpr float steerD = 0.0;
-constexpr float steerIZone = 0.05;
+constexpr float steerIZone = 0.0; //0.05;
 
 // Drive Velocity PID Values(Defaults from REV)
 constexpr float revkP = 6e-5;
@@ -47,10 +47,11 @@ public:
     rev::SparkRelativeEncoder driveEnc;
 
     // PID Controller for Steer Motor
-    frc::PIDController steerCTR{steerP, steerI, steerD};
+    frc::PIDController steerCTR;
 
     // REV Default Velocity PID values(Drive Motor)
     float kP = revkP, kI = revkI, kFF = revkFF, kMaxOutput = revkMaxOutput, kMinOutput = revkMinOutput;
+    float maxAccumulation = 0.4;
 
     // PID Controller for Drive Motor
     rev::SparkPIDController m_pidController;
@@ -73,6 +74,7 @@ public:
 
     // Module Constraints
     const int maxRPMFreeSpeed = moduleMaxRPM;
+    double maxVelocityAttained = 0.0;
     const float maxDriveAccelerationFPS = 25.8; // 7.603; // Feet per sec2
     const float maxDriveAccelerationRPM = 2665.993 * (25.8 / 7.6);
     const float maxSteerVelocity = 189.2; // Radians per sec

@@ -4,13 +4,15 @@
 
 #include "Robot.h"
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/DriverStation.h>
+#include <string>
 
 void Robot::RobotInit()
 {
+  mElevator.init();
   mDrive.initModules();
   mGyro.init();
-  mPowerModule.init(true);
-  // mIntake.init();
+  mSuperstructure.init();
 
   mChooser.SetDefaultOption("0", kAutoDefault);
   mChooser.AddOption("1", kAutoCustom1);
@@ -21,11 +23,14 @@ void Robot::RobotInit()
 }
 void Robot::RobotPeriodic()
 {
-  mDrive.setDriveCurrentLimit(mPowerModule.updateDriveCurrentLimit());
-  frc::SmartDashboard::PutNumber("Energy Usage", mPowerModule.mPDH.GetTotalEnergy());
+  frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
-  frc::SmartDashboard::PutNumber("Mag", mGyro.getMagnetometerCW().getDegrees());
-  frc::SmartDashboard::PutNumber("GyroConnected?", mGyro.gyro.IsConnected());
+  frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
+  
+  Pose3d target = mLimelight.getTargetPoseRobotSpace();
+  frc::SmartDashboard::PutNumber("LimelightX", target.x * 39.37);
+  frc::SmartDashboard::PutNumber("LimelightY", target.y * 39.37);
+  frc::SmartDashboard::PutNumber("TestShooterAngle", mSuperstructure.mArm.findBetterLaunchAngle(target.x * 39.37, target.y * 39.37, 51.875) * 180 / PI);
 }
 
 void Robot::AutonomousInit()
@@ -34,10 +39,14 @@ void Robot::AutonomousInit()
   mDrive.enableModules();
 
   mDrive.state = DriveState::Auto;
-  selectedAuto = mChooser.GetSelected(); 
-
-  Trajectory mTraj = Trajectory(mDrive);
-  mTraj.followPath(std::stoi(selectedAuto));
+  mSuperstructure.enable();
+  selectedAuto = mChooser.GetSelected();
+  frc::SmartDashboard::PutString("auto", selectedAuto);
+  Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
+  mTraj.followPath(1, false);
+  
+  // mTraj.follow("Rotations", false, false); 
+  
 }
 void Robot::AutonomousPeriodic()
 {
@@ -46,6 +55,8 @@ void Robot::TeleopInit()
 {
   mDrive.state = DriveState::Teleop;
   mDrive.enableModules();
+  mSuperstructure.enable();
+
   mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
   xStickLimiter.reset(0.0);
@@ -53,67 +64,72 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
+  auto startTime = frc::Timer::GetFPGATimestamp();
   // Controller inputs
   bool boost = ctr.GetL2Axis() > 0;
 
   double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1);
   double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1);
 
-  leftX = ControlUtil::boostScaler(leftX, boost, boostPercent, ctrPercent);
-  leftY = ControlUtil::boostScaler(leftY, boost, boostPercent, ctrPercent);
+  // leftX = ControlUtil::boostScaler(leftX, boost, boostPercent, ctrPercent);
+  // leftY = ControlUtil::boostScaler(leftY, boost, boostPercent, ctrPercent);
 
   leftX = xStickLimiter.calculate(leftX);
   leftY = yStickLimiter.calculate(leftY);
 
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
 
-  double rightTrigger = ctr.GetR2Axis();
-  int dPad = ctr.GetPOV();
+  int dPad = ctrOperator.GetPOV();
   bool rumbleController = false;
-  // Intake::intakeState intakeMode = Intake::buttonsToState(ctr.GetL1Button(), ctr.GetR1Button());
 
   // Driver Information
-  frc::SmartDashboard::PutNumber("leftX", leftX);
-  frc::SmartDashboard::PutNumber("leftY", leftY);
   frc::SmartDashboard::PutBoolean("TargetFound?", mLimelight.isSpeakerTagDetected());
-  if (!mGyro.gyro.IsConnected())
-  {
-    rumbleController = true;
-  }
+  frc::SmartDashboard::PutBoolean("Note?", mSuperstructure.mIndex.isNoteDetected());
+  frc::SmartDashboard::PutNumber("Prox?", mSuperstructure.mIndex.getSensorProximity());
 
   // Teleop States
   bool driveTranslating = !(leftX == 0 && leftY == 0);
   bool driveTurning = !(rightX == 0);
-  double rot = rightX * moduleMaxRot;
-  bool preparingToShoot = rightTrigger > 0.2;
+  double rot = rightX * moduleMaxRot * 2;
+  bool preScoringSpeaker = ctr.GetR2Axis() > 0.2;
+  bool intakeIn = ctr.GetR1Button();
+  bool intakeClear = ctr.GetL1Button();
+  bool loadNote = ctr.GetCrossButton();
+  bool reverseNote = ctr.GetCircleButton();
+  bool overrideShooter = ctrOperator.GetSquareButton();
+  if (ctr.GetTriangleButtonReleased())
+  {
+    scoreAmp = !scoreAmp;
+  }
+  // if (ctrOperator.GetL1ButtonPressed()) {
+  //   cleanDriveAccum = !cleanDriveAccum;
+  // }
 
   // Decide drive modes
-  if (dPad >= 0) // SNAP mode
+  if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 5.0, driveTurning)) // SNAP mode
   {
     // Snap condition
+    frc::SmartDashboard::PutBoolean("SNAP", true);
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
-    mHeadingController.setSetpointPOV(dPad);
+    mHeadingController.setFieldSetpoint(dPad);
   }
-  else if (preparingToShoot && !driveTurning) // ALIGN(scoring) mode
-  {
-    if (mLimelight.isSpeakerTagDetected())
-    {
-      Pose3d target = mLimelight.getTargetPoseRobotSpace();
-      double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / PI;
-      double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
-      mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-      mHeadingController.setSetpoint(zeroSetpoint);
-      // limit robot speed temporarily
-      leftX = (leftX / ctrPercent) * ctrPercentAim;
-      leftY = (leftY / ctrPercent) * ctrPercentAim;
-    }
-    else
-    {
-      rumbleController = true;
-    }
-  }
+  // else if (preScoringSpeaker && !driveTurning) // ALIGN(scoring) mode
+  // {
+  //   if (mLimelight.isSpeakerTagDetected())
+  //   {
+  //     Pose3d target = mLimelight.getTargetPoseRobotSpace();
+  //     double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / PI;
+  //     double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
+  //     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+  //     mHeadingController.setSetpoint(zeroSetpoint);
+  //     // limit robot speed temporarily
+  //     leftX = (leftX / ctrPercent) * ctrPercentAim;
+  //     leftY = (leftY / ctrPercent) * ctrPercentAim;
+  //   }
+  // }
   else // Normal driving mode
   {
+    frc::SmartDashboard::PutBoolean("SNAP", false);
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   }
 
@@ -123,30 +139,97 @@ void Robot::TeleopPeriodic()
             : mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
 
   // Gyro Resets
-  if (ctr.GetCrossButtonReleased())
+  if (ctrOperator.GetCrossButtonReleased())
   {
     mGyro.init();
   }
 
   // Drive function
   mDrive.Drive(
-      ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, rot),
+      ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, -rot),
       mGyro.getBoundedAngleCCW(),
-      mGyro.gyro.IsConnected());
-  // mIntake.setState(intakeMode, true, 1.0);
-  if (rumbleController)
+      mGyro.gyro.IsConnected(),
+      cleanDriveAccum);
+
+  // Superstructure function
+
+  if (loadNote && !scoreAmp) // Load note into shooter
   {
-    ctr.SetRumble(frc::GenericHID::RumbleType::kBothRumble, 0.5);
+    if (ctr.GetCrossButtonPressed())
+    {
+      mSuperstructure.loadNote();
+    }
+
+    // mSuperstructure.mIndex.setVelocity(3000);
+  }
+  else if (reverseNote && !scoreAmp)
+  {
+    if (ctr.GetCircleButtonPressed())
+    {
+      mSuperstructure.pushNoteBack();
+    }
+  }
+  else if (scoreAmp) // Lift Arm
+  {
+    mSuperstructure.scoreAmp();
+    if (ctr.GetSquareButton()) // Unload shooter into amp
+    {
+      mSuperstructure.unloadShooter();
+    }
+    else
+    {
+      mSuperstructure.mShooter.setSpeed(0.0);
+    }
+  }
+  else if (preScoringSpeaker) // Spin Shooter
+  {
+    Pose3d target = mLimelight.getTargetPoseRobotSpace();
+    mSuperstructure.preScoreSpeaker(target);
+    if ((ctr.GetSquareButton() && mSuperstructure.mShooter.getSpeed() > 4000) || overrideShooter) // Load note into spinning shooter
+    {
+      mSuperstructure.scoreSpeaker();
+    }
+  }
+  else
+  {
+    if (ctr.GetR1ButtonReleased()) // lock shooter after intake
+    {
+      mSuperstructure.mShooter.setDistance(0.0);
+    }
+    if (ctr.GetR1ButtonPressed()) // unlock shooter before intake
+    {
+      mSuperstructure.mShooter.setSpeed(Shooter::STOP);
+    }
+    mSuperstructure.controlIntake(intakeIn, intakeClear);
+    mSuperstructure.stow();
   }
 
   // Module Telemetry
   mDrive.displayDriveTelemetry();
-  // PowerModule::updateCurrentLimits();
+  mSuperstructure.updateTelemetry();
+  static units::time::second_t max_loop{0};
+  auto curr_loop = frc::Timer::GetFPGATimestamp() - startTime;
+  if (curr_loop > max_loop)
+    max_loop = curr_loop;
+  frc::SmartDashboard::PutNumber("CurrLoop", curr_loop.value());
+  frc::SmartDashboard::PutNumber("maxLoop", max_loop.value());
+  double elevatorSetpoint = ctrOperator.GetLeftY();
+  if (ctrOperator.GetTriangleButton())
+  {
+    mElevator.motorLeft.Set(elevatorSetpoint);
+    mElevator.motorRight.Set(elevatorSetpoint);
+  }
+  else
+  {
+    mElevator.motorLeft.StopMotor();
+    mElevator.motorRight.StopMotor();
+  }
 }
 
 void Robot::DisabledInit()
 {
   mDrive.stopModules();
+  mSuperstructure.disable();
 }
 void Robot::DisabledPeriodic() {}
 

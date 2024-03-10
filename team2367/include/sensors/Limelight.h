@@ -7,8 +7,7 @@
 #include "LimelightHelpers.h"
 #include <algorithm>
 #include "geometry/Pose3d.h"
-
-#define PI 3.14159265359
+#include "Constants.h"
 
 class Limelight
 {
@@ -49,12 +48,12 @@ public:
             double angleToTagDegrees = limelightAngleDegrees + ty;
             double angleToTagRadians = angleToTagDegrees * (PI / 180.0);
             double distanceToWall = (tagHeightInches - limelightHeightInches) / tan(angleToTagRadians);
+            distanceToWall = distanceToWall + 0.4191; //added the distance between limelight and shooter
             frc::SmartDashboard::PutNumber("distanceToWall", distanceToWall);
             return distanceToWall;
         }
-        else
-        {
-            return -1.0;
+        else {
+            return 0;
         }
     }
 
@@ -69,7 +68,7 @@ public:
         }
         else
         {
-            return NULL;
+            return 0;
         }
     }
 
@@ -127,108 +126,4 @@ public:
     {
         return isIn((int)LimelightHelpers::getFiducialID(), speakerCenterIDs);
     }
-
-    /*
-
-    void speaker() {
-        LimelightHelpers::getFiducialID("limelight");//finish later
-    }
-
-    void amp() {
-        LimelightHelpers::getFiducialID("limelight");//finish later
-    }
-
-    std::vector<double> getFieldPos(){
-        std::vector<double> pose = LimelightHelpers::getBotpose("");
-        return pose; //TX, TY, TZ, RX, RY, RZ
-    }
-
-    std::vector<double> getTargetPoseRobotSpace() {
-        //std::vector<double> pose = LimelightHelpers::getTargetPose_RobotSpace("limelight");
-        //Above code returned an empty vector for some reason
-        std::vector<double> pose = nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumberArray("targetpose_robotspace", std::span<double>{});
-        return pose;
-    }
-
-
-
-
-
-inline std::vector<double> getBotpose(const std::string &limelightName = "")
-{
-    return getLimelightNTDoubleArray(limelightName, "botpose");
-}
-
-inline std::vector<double> getBotpose_wpiRed(const std::string &limelightName = "")
-{
-    return getLimelightNTDoubleArray(limelightName, "botpose_wpired");
-}
-
-inline std::vector<double> getBotpose_wpiBlue(const std::string &limelightName = "")
-{
-    return getLimelightNTDoubleArray(limelightName, "botpose_wpiblue");
-}
-
-inline std::vector<double> getBotpose_TargetSpace(const std::string &limelightName = "")
-{
-    return getLimelightNTDoubleArray(limelightName, "botpose_targetSpace");
-}
-
-inline std::vector<double> getCameraPose_TargetSpace(const std::string &limelightName = "")
-{
-    return getLimelightNTDoubleArray(limelightName, "camerapose_targetspace");
-}
-
-inline std::vector<double> getTargetPose_CameraSpace(const std::string &limelightName = "")
-{
-    return getLimelightNTDoubleArray(limelightName, "targetpose_cameraspace");
-}
-
-inline std::vector<double> getTargetPose_RobotSpace(const std::string &limelightName = "")
-{
-    return getLimelightNTDoubleArray(limelightName, "targetpose_robotspace");
-}
-
-
-
-
-
-
-
-
-    std::vector<double> getTargetAngles(double in_x, double in_y) { // Gets ax, ay
-        double px = in_x;
-        double py = in_y;
-        // double tx = nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumber("tx",0.0);
-        // double tx = nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumber("tx",0.0);
-
-        // frc::SmartDashboard::PutNumber("TX", px);
-        // frc::SmartDashboard::PutNumber("TY", py);
-
-        double nx = (1/160) * (px - 159.5);
-        double ny = (1/120) * (119.5 - py);
-
-        double horizontal_fov = 54;
-        double vertical_fov = 41;
-
-        double vpw = 2.0*tan(horizontal_fov/2);
-        double vph = 2.0*tan(vertical_fov/2);
-
-        double x = vpw/2 * nx;
-        double y = vph/2 * ny;
-
-        double ax = atan2(1,x);
-        double ay = atan2(1,y);
-
-        // double axr = (ax * PI)/180;
-        // double ayr = (ay * PI)/180;
-
-        // double d = 4;
-        // double rx = d * tan(axr);
-        // double ry = sqrt(d*d + rx*rx) * tan(ayr);
-
-        frc::SmartDashboard::PutNumber("AX", ax);
-        frc::SmartDashboard::PutNumber("AY", ay);
-        return std::vector<double> {ax, ay};
-    }*/
 };

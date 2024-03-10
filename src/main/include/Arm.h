@@ -8,41 +8,41 @@
 #include <rev/SparkPIDController.h>
 #include <rev/SparkRelativeEncoder.h>
 #include <thread>
+#include "Constants.h"
+#include <thread>
 
-constexpr int leftFrontMotorID = 9;
-constexpr int leftBackMotorID = 11;
-constexpr int rightFrontMotorID = 10;
-constexpr int rightBackMotorID = 12;
-
-constexpr int tiltControllerP = 0.02;
-constexpr int tiltControllerI = 0.0;
-constexpr int tiltControllerD = 0.0;
+constexpr float tiltControllerP = 0.02;
+constexpr float tiltControllerI = 0.0;
+constexpr float tiltControllerD = 0.0;
 
 constexpr int armCurrentLimit = 20;
 
 constexpr float encoderToArmRatio = 12.0 / 54.0;
-constexpr float armMinFromVertical = 84.0;
+constexpr float armMinFromVertical = 67.2;
 constexpr float shooterToArmAngle = 46.0;
 
 class Arm
 {
-private:
-    rev::CANSparkMax leftSideLead = rev::CANSparkMax(leftFrontMotorID, rev::CANSparkBase::MotorType::kBrushless);
-    rev::CANSparkMax leftSideFollow = rev::CANSparkMax(leftBackMotorID, rev::CANSparkBase::MotorType::kBrushless);
-    rev::CANSparkMax rightSideLead = rev::CANSparkMax(rightFrontMotorID, rev::CANSparkBase::MotorType::kBrushless);
-    rev::CANSparkMax rightSideFollow = rev::CANSparkMax(rightBackMotorID, rev::CANSparkBase::MotorType::kBrushless);
+public:
+    rev::CANSparkMax leftSideLead = rev::CANSparkMax(motorIDs::leftFrontMotorID, rev::CANSparkBase::MotorType::kBrushless);
+    rev::CANSparkMax leftSideFollow = rev::CANSparkMax(motorIDs::leftBackMotorID, rev::CANSparkBase::MotorType::kBrushless);
+    rev::CANSparkMax rightSideLead = rev::CANSparkMax(motorIDs::rightFrontMotorID, rev::CANSparkBase::MotorType::kBrushless);
+    rev::CANSparkMax rightSideFollow = rev::CANSparkMax(motorIDs::rightBackMotorID, rev::CANSparkBase::MotorType::kBrushless);
 
     frc::DutyCycleEncoder tiltEncoder = frc::DutyCycleEncoder(0);
     frc::PIDController tiltController{tiltControllerP, tiltControllerI, tiltControllerD};
 
-    bool stopTiltMotor = true;
     double tiltSetpoint;
-    float maxTiltSetpoint = 61;
+    double lastTiltSetpoint;
+    float maxTiltSetpoint = 70;
     void setAllMotors(double input);
 
     // Preset Positions
-    const float highSetpoint = -20.0;
-    const float stowSetpoint = 60.0;
+    const float highSetpoint = -45.0;
+    float stowSetpoint;
+
+    const float speakerHeight = 2.045081;// meters
+    const double rollerCircumference = 0.31918581360576; // meters
 
 public:
     enum armPosition
@@ -52,12 +52,15 @@ public:
     };
     void init();
     void runPeriodic();
-    void enableMotors();
-    void disableMotors();
+    void disable();
+    void zeroSensors();
 
     Rotation2d getAxleAngle();
     Rotation2d getShooterAngle();
     void setPosition(float desiredAngle);
     void setPosition(armPosition desiredPosition);
     void incrementPosition(float increment);
+    double heightAtAngle(double velocity, double x, double y);
+    double findLaunchAngle(double velocity, double x, double y);
+    double findBetterLaunchAngle(double xTag, double yTag, double zTag);
 };

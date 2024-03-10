@@ -4,7 +4,7 @@
 #include <chrono>
 #include <thread>
 
-void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented)
+void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented, bool cleanAccum)
 {
     double desiredVx = desiredSpeeds.vxMetersPerSecond;
     double desiredVy = desiredSpeeds.vyMetersPerSecond;
@@ -19,6 +19,13 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     }
     desiredVx = desiredSpeeds.vxMetersPerSecond;
     desiredVy = desiredSpeeds.vyMetersPerSecond;
+
+    if (cleanAccum && fabs(desiredVx) < (moduleMaxFPS * 0.1) && fabs(desiredVy) < (moduleMaxFPS * 0.1)) {
+        zeroAccumulation();
+        frc::SmartDashboard::PutNumber("CleanedAccum", true);
+    } else {
+        frc::SmartDashboard::PutNumber("CleanedAccum", false);
+    }
 
     if (fabs(desiredVx) < kEpsilon && fabs(desiredVy) < kEpsilon && fabs(desiredSpeeds.omegaRadiansPerSecond) < kEpsilon)
     {
@@ -37,14 +44,14 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
         return;
     }
 
-    Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
-    Twist2d robotTwist = Pose2d::log(robotPoseVel);
-    ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
-    ShuffleUI::MakeWidget("Xspeed", "drive", newDesiredSpeeds.vxMetersPerSecond);
-    ShuffleUI::MakeWidget("Yspeed", "drive", newDesiredSpeeds.vyMetersPerSecond);
-    ShuffleUI::MakeWidget("Rot", "drive", newDesiredSpeeds.omegaRadiansPerSecond);
+    // Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
+    // Twist2d robotTwist = Pose2d::log(robotPoseVel);
+    // ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
+    // ShuffleUI::MakeWidget("Xspeed", "drive", newDesiredSpeeds.vxMetersPerSecond);
+    // ShuffleUI::MakeWidget("Yspeed", "drive", newDesiredSpeeds.vyMetersPerSecond);
+    // ShuffleUI::MakeWidget("Rot", "drive", newDesiredSpeeds.omegaRadiansPerSecond);
 
-    std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(newDesiredSpeeds);
+    std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(desiredSpeeds);
     moduleStates = m_kinematics.desaturateWheelSpeeds(moduleStates, moduleMaxFPS);
     /**
      * Kinematics class returns module orientations in polar degrees
@@ -69,7 +76,7 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
         // frc::SmartDashboard::PutNumber(std::to_string(i) + "angle", moduleStates[i].getRot2d().getDegrees());
     }
 
-    // Order of kinematics output is always FL, FR, BL, BR
+    // Order of kinematics output is always BL, FL, BR, FR
     mFrontLeft.setModuleState(moduleStates[1], true);
     mFrontRight.setModuleState(moduleStates[3], true);
     mBackLeft.setModuleState(moduleStates[0], true);
@@ -103,7 +110,7 @@ void SwerveDrive::runModules()
         mFrontRight.run();
         mBackLeft.run();
         mBackRight.run();
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(12));
     }
 }
 
@@ -169,7 +176,7 @@ void SwerveDrive::setDriveCurrentLimit(int limit)
  * Resets odometry position
  * (used in auto config)
  */
-void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot)
+void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d angle)
 {
     m_odometry.ResetPosition(
         mGyro.getRotation2d(),
@@ -177,7 +184,7 @@ void SwerveDrive::resetOdometry(frc::Translation2d trans, frc::Rotation2d rot)
          mFrontLeft.getModulePosition(),
          mFrontRight.getModulePosition(),
          mBackRight.getModulePosition()},
-        frc::Pose2d{trans, rot});
+        frc::Pose2d{trans, angle});
 }
 
 /**
@@ -208,4 +215,11 @@ void SwerveDrive::updateOdometry()
  */
 void SwerveDrive::displayDriveTelemetry()
 {
+}
+
+void SwerveDrive::zeroAccumulation() {
+    mFrontLeft.m_pidController.SetIAccum(0.0);
+    mFrontRight.m_pidController.SetIAccum(0.0);
+    mBackRight.m_pidController.SetIAccum(0.0);
+    mBackLeft.m_pidController.SetIAccum(0.0);
 }

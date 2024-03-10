@@ -5,21 +5,22 @@
 #include <string>
 #include <util/ShuffleUI.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include "Constants.h"
 
-constexpr unsigned int intakeMotorID = 19;
-constexpr unsigned int clearingCurrentLimit = 60;
-constexpr unsigned int intakeCurrentLimit = 10;
+constexpr int clearingCurrentLimit = 60;
+constexpr int intakeCurrentLimit = 60;
 
 class Intake
 {
-private:
-    int intakeSpeed = 5700;
+public:
+    int intakeSpeed = 3000;
 
     // Clear Thresholds
     const int clearCurrentThreshold = 40;
     const int clearVelocityThreshold = 100;
+    
 
-    rev::CANSparkMax intakeMotor = rev::CANSparkMax(intakeMotorID, rev::CANSparkMax::MotorType::kBrushed);
+    rev::CANSparkMax intakeMotor = rev::CANSparkMax(motorIDs::intakeMotorID, rev::CANSparkMax::MotorType::kBrushless);
     rev::SparkPIDController intakeController = intakeMotor.GetPIDController();
     rev::SparkRelativeEncoder intakeEncoder = intakeMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
 
@@ -32,11 +33,14 @@ public:
         CLEAR,
         STOP
     };
+    intakeState currentState = intakeState::STOP;
 
     void init();
     void disable();
     void setIntakeState(intakeState state);
     void setIntakeSpeed(double speed);
+    void setPID(double kP, double kI, double kD, double kFF, double min, double max);
+
 
 
 };

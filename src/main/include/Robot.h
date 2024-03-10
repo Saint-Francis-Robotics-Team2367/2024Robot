@@ -11,6 +11,7 @@
 
 #include "util/ShuffleUI.h"
 #include <thread>
+#include "Elevator.h"
 
 #include "util/ControlUtil.h"
 #include "sensors/NavX.h"
@@ -23,8 +24,9 @@
 #include "control/PowerModule.h"
 #include "SwerveDrive.h"
 #include "Trajectory.h"
-
-// #include "Intake.h"
+#include "Superstructure.h"
+#include "util/TimeDelayButton.h"
+#include "Arm.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -49,22 +51,26 @@ public:
 
   // Modules/Devices
   frc::PS5Controller ctr = frc::PS5Controller(0);
+  frc::PS5Controller ctrOperator = frc::PS5Controller(1);
   NavX mGyro = NavX();
   SwerveDrive mDrive = SwerveDrive(mGyro);
   Limelight mLimelight;
-  // Intake mIntake;
-  // frc::Joystick ctr = frc::Joystick(0);
+  Superstructure mSuperstructure;
+  Elevator mElevator;
 
   // Teleop Controls
-  float ctrPercent = 0.5;
+  float ctrPercent = 1.0;
   float boostPercent = 0.9;
   double ctrPercentAim = 0.3;
+  TimeDelayButton snapRobotToGoal;
+  bool scoreAmp = false;
+  bool liftElev = false;
+  bool cleanDriveAccum = true;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
   SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
-  PowerModule mPowerModule;
 
   // Auto Selectors
   frc::SendableChooser<std::string> mChooser;

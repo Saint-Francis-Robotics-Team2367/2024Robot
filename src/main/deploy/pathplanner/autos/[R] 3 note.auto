@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7078341517794149,
+      "y": 4.421404481697853
+    },
+    "rotation": -61.3289106942324
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[R] Note 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[R] Score Note 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[R] HC 5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[R] Score HC 5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[R] HC 4"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

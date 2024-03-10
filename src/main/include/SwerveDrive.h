@@ -20,22 +20,21 @@
 #include <pathplanner/lib/path/PathPlannerTrajectory.h>
 #include <pathplanner/lib/path/PathPlannerPath.h>
 
-
 // Motor/CAN IDs
-#define FLsteerID 11
-#define FLdriveID 18
+#define FLsteerID 7
+#define FLdriveID 8
 #define FL_CAN_ID 3 // updated
 
-#define FRsteerID 4
-#define FRdriveID 16
+#define FRsteerID 3
+#define FRdriveID 4
 #define FR_CAN_ID 1 // updated
 
-#define BLsteerID 12
-#define BLdriveID 10
+#define BLsteerID 5
+#define BLdriveID 6
 #define BL_CAN_ID 2 // updated
 
-#define BRsteerID 6
-#define BRdriveID 5
+#define BRsteerID 1
+#define BRdriveID 2
 #define BR_CAN_ID 0 // updated
 
 // #define maxRot
@@ -62,7 +61,6 @@ private:
     std::array<Translation2d, 4> wheelPs = {Translation2d(trackWidth, wheelBase), Translation2d(trackWidth, -wheelBase), Translation2d(-trackWidth, wheelBase), Translation2d(-trackWidth, -wheelBase)};
 
     SwerveDriveKinematics m_kinematics = SwerveDriveKinematics(wheelPs);
-
     NavX &mGyro; 
 
     // wpi lib class ver of kinemactics used to initialize odometry
@@ -92,13 +90,14 @@ private:
     void runModules(); // Private - do not call outside of init
 
 public:
+
     SwerveDrive(NavX &mGyroInput) : mGyro(mGyroInput) {
     }
 
     DriveState state = DriveState::Teleop;
     // TODO overload - pass Point2d + rotation, it figures it out
     // void Drive(Translation2d translation, Rotation2d rotation);
-    void Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented);
+    void Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented, bool cleanAccum = false);
     void initModules();
     void enableModules();
     bool stopModules();
@@ -109,5 +108,6 @@ public:
     void updateOdometry();
     void displayDriveTelemetry();
     void setDriveCurrentLimit(int limit);
+    void zeroAccumulation();
 
 };

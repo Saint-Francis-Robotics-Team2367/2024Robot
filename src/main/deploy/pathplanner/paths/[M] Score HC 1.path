@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.905814612555151,
+        "y": 7.42286910036783
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.7927732151760605,
+        "y": 7.188003885267029
+      },
+      "isLocked": false,
+      "linkedName": "Halfcourt 1"
+    },
+    {
+      "anchor": {
+        "x": 1.379352698520212,
+        "y": 5.526310219287105
+      },
+      "prevControl": {
+        "x": 2.5207798285966945,
+        "y": 6.341063885831475
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Front Speaker"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.9,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 189.2,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Middle",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

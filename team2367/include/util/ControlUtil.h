@@ -60,6 +60,18 @@ public:
         }
     }
 
+    static bool epsilonEquals(double a, double b)
+    {
+        if (fabs(a - b) < kEpsilon)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     static double limitAcceleration(double currentVelocity, double desiredVelocity, float maxAcc, float dt)
     {
         float accRange = maxAcc * dt;
@@ -150,5 +162,15 @@ public:
         return (pow(2 / PI, n) * desiredVelocity) * pow(angleError - PI_2, n);
 
 
+    }
+    
+    /**
+     * returns true if timeLimit exceeded
+    */
+    static bool waitOn(std::function< bool(void) >& func, int timeLimit) 
+    {
+        double startTime = frc::Timer::GetFPGATimestamp().value();
+        while (func() || frc::Timer::GetFPGATimestamp().value() - startTime > timeLimit);
+        return frc::Timer::GetFPGATimestamp().value() -  startTime > timeLimit;
     }
 };

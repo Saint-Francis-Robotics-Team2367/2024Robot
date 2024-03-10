@@ -1,0 +1,71 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.379352698520212,
+        "y": 5.526310219287105
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.4973866872701063,
+        "y": 5.526310219287105
+      },
+      "isLocked": false,
+      "linkedName": "Front Speaker"
+    },
+    {
+      "anchor": {
+        "x": 4.416982403409252,
+        "y": 5.922463405111996
+      },
+      "prevControl": {
+        "x": 2.831735638581617,
+        "y": 5.851398355111526
+      },
+      "nextControl": {
+        "x": 6.0022291682368865,
+        "y": 5.993528455112466
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.9551036463184035,
+        "y": 5.79187715782839
+      },
+      "prevControl": {
+        "x": 6.248695688509989,
+        "y": 5.79187715782839
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Halfcourt 2"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 180.0,
+      "rotateFast": true
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Middle",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

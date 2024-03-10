@@ -43,6 +43,25 @@ public:
         mSetpoint = inp;
     }
 
+    void setFieldSetpoint(int POV) 
+    {
+        if (POV >= 0) {
+            if (POV == 0) 
+            {
+                mSetpoint = 45;
+            } else if (POV == 180) 
+            {
+                mSetpoint = 0;
+            } else if (POV == 270) 
+            {
+                mSetpoint = 215;
+            } else if (POV == 90) {
+                mSetpoint = 90;
+            }
+        }
+
+    }
+
     void setSetpointPOV(int POV) {
         if (POV >= 0) {
             mSetpoint = POV;
