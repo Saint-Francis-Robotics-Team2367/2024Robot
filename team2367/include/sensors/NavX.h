@@ -13,6 +13,7 @@ public:
     void init()
     {
         gyro.Reset();
+        angleOffset = Rotation2d(0.0);
         gyro.Calibrate();
     }
 
