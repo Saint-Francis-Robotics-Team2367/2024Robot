@@ -8,11 +8,17 @@ class NavX
 {
 public:
     AHRS gyro = AHRS(frc::SerialPort::kMXP);
+    Rotation2d angleOffset = Rotation2d(0.0);
     
     void init()
     {
         gyro.Reset();
         gyro.Calibrate();
+    }
+
+    void setOffset(Rotation2d angleOffsetInput) 
+    {
+        angleOffset = angleOffsetInput;
     }
 
     Rotation2d getMagnetometerCW()
@@ -26,16 +32,16 @@ public:
      */
     Rotation2d getBoundedAngleCCW()
     {
-        return Rotation2d(Rotation2d::degreesBound(-gyro.GetAngle()) * PI / 180);
+        return Rotation2d(Rotation2d::degreesBound(-gyro.GetAngle() - angleOffset.getDegrees()) * PI / 180);
     }
 
     Rotation2d getBoundedAngleCW()
     {
-        return Rotation2d(Rotation2d::degreesBound(gyro.GetAngle()) * PI / 180);
+        return Rotation2d(Rotation2d::degreesBound(gyro.GetAngle() + angleOffset.getDegrees()) * PI / 180);
     }
 
     frc::Rotation2d getRotation2d()
     {
-        return frc::Rotation2d(units::radian_t((gyro.GetAngle()) * PI / 180));
+        return frc::Rotation2d(units::radian_t((gyro.GetAngle() + angleOffset.getDegrees()) * PI / 180));
     }
 };
