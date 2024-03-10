@@ -213,6 +213,14 @@ void SwerveModule::run()
             maxAccumulation = inputMaxAccu;
         }
         if (steerID == 7) {
+            double vel = driveEnc.GetVelocity();
+            if (vel > maxVelocityAttained) {
+                maxVelocityAttained = vel;
+            }
+            frc::SmartDashboard::PutNumber("MaxVAttained", maxVelocityAttained);
+        }
+
+        if (steerID == 7) {
             frc::SmartDashboard::PutNumber("IntegralAccum", m_pidController.GetIAccum());
         }
 
