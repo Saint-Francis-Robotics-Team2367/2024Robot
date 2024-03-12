@@ -214,10 +214,18 @@ void SwerveModule::run()
         }
         if (steerID == 7) {
             double vel = driveEnc.GetVelocity();
+            double currAcc = (vel - lastVelocity) / 0.0012;
+            frc::SmartDashboard::PutNumber("CurrAcc", currAcc);
+            if (currAcc > maxAccelerationReach) {
+                maxAccelerationReach = currAcc;
+            }
+            frc::SmartDashboard::PutNumber("MaxAcc", maxAccelerationReach);
+
             if (vel > maxVelocityAttained) {
                 maxVelocityAttained = vel;
             }
             frc::SmartDashboard::PutNumber("MaxVAttained", maxVelocityAttained);
+            lastVelocity = vel;
         }
 
         if (steerID == 7) {
