@@ -164,13 +164,13 @@ void SwerveDrive::autoMove(double angleRadians, double distanceFeet)
     // TODO: Wait for modules to reach point
 }
 
-void SwerveDrive::setDriveCurrentLimit(int limit)
-{
-    mFrontRight.setDriveCurrentLimit(limit);
-    mFrontLeft.setDriveCurrentLimit(limit);
-    mBackLeft.setDriveCurrentLimit(limit);
-    mBackRight.setDriveCurrentLimit(limit);
-}
+// void SwerveDrive::setDriveCurrentLimit(int limit)
+// {
+//     mFrontRight.setDriveCurrentLimit(limit);
+//     mFrontLeft.setDriveCurrentLimit(limit);
+//     mBackLeft.setDriveCurrentLimit(limit);
+//     mBackRight.setDriveCurrentLimit(limit);
+// }
 
 /**
  * Resets odometry position
@@ -218,8 +218,8 @@ void SwerveDrive::displayDriveTelemetry()
 }
 
 void SwerveDrive::zeroAccumulation() {
-    mFrontLeft.m_pidController.SetIAccum(0.0);
-    mFrontRight.m_pidController.SetIAccum(0.0);
-    mBackRight.m_pidController.SetIAccum(0.0);
-    mBackLeft.m_pidController.SetIAccum(0.0);
+    // mFrontLeft.m_pidController.SetIAccum(0.0);
+    // mFrontRight.m_pidController.SetIAccum(0.0);
+    // mBackRight.m_pidController.SetIAccum(0.0);
+    // mBackLeft.m_pidController.SetIAccum(0.0);
 }
