@@ -14,11 +14,11 @@ void Robot::RobotInit()
   mGyro.init();
   mSuperstructure.init();
 
-  mChooser.SetDefaultOption("0", kAutoDefault);
-  mChooser.AddOption("1", kAutoCustom1);
-  mChooser.AddOption("2", kAutoCustom2);
-  mChooser.AddOption("3", kAutoCustom3);
-  mChooser.AddOption("4", kAutoCustom4);
+  mChooser.SetDefaultOption("Middle Three Piece", Trajectory::MIDDLE_THREE_PIECE);
+  mChooser.AddOption("Delayed Shoot, No Move", Trajectory::DELAYED_SHOOT_NO_MOVE);
+  // mChooser.AddOption("2", kAutoCustom2);
+  // mChooser.AddOption("3", kAutoCustom3);
+  // mChooser.AddOption("4", kAutoCustom4);
   frc::SmartDashboard::PutData("Auto Paths", &mChooser);
 }
 void Robot::RobotPeriodic()
@@ -41,7 +41,7 @@ void Robot::AutonomousInit()
   mDrive.state = DriveState::Auto;
   mSuperstructure.enable();
   selectedAuto = mChooser.GetSelected();
-  frc::SmartDashboard::PutString("auto", selectedAuto);
+  frc::SmartDashboard::PutNumber("auto", selectedAuto);
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
   mTraj.followPath(1, false);
   

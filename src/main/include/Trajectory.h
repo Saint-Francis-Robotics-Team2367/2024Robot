@@ -35,6 +35,13 @@ private:
 
 
 public:
+    enum autos {
+        DELAYED_SHOOT_NO_MOVE,
+        DO_NOTHING,
+        MIDDLE_THREE_PIECE,
+        AMP_THREE_PIECE,
+        SOURCE_THREE_PIECE
+    };
     Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput, NavX &mGyroInput, Limelight &mLimelightInput) : mDrive(mDriveInput),
                                                                                                                     mSuperstructure(mSSInput), 
                                                                                                                     mGyro(mGyroInput),

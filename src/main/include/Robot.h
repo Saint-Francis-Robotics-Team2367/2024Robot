@@ -73,11 +73,11 @@ public:
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
 
   // Auto Selectors
-  frc::SendableChooser<std::string> mChooser;
+  frc::SendableChooser<Trajectory::autos> mChooser;
   const std::string kAutoDefault = "Default: nothing";
   const std::string kAutoCustom1 = "Middle";
   const std::string kAutoCustom2 = "Amp";
   const std::string kAutoCustom3 = "Source";
   const std::string kAutoCustom4 = "Test";
-  std::string selectedAuto;
+  Trajectory::autos selectedAuto;
 };
