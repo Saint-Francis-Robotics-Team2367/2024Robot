@@ -111,15 +111,21 @@ public:
 
     Pose3d getTargetPoseRobotSpace()
     {
-        if (targetDetected() == true)
-        {
-            std::vector<double> x = LimelightHelpers::getTargetPose_RobotSpace();
-            Pose3d output = Pose3d(x);
-            double tempY = output.y;
-            output.y = output.z;
-            output.z = -tempY;
-            return output;
-        }
+        std::vector<double> x = LimelightHelpers::getTargetPose_RobotSpace();
+        Pose3d output = Pose3d(x);
+        double tempY = output.y;
+        output.y = output.z;
+        output.z = -tempY;
+        return output;
+    }
+
+    Pose3d getRobotPoseFieldSpace() {
+        std::vector<double> x = LimelightHelpers::getBotpose();
+        Pose3d output = Pose3d(x);
+        double tempY = output.y;
+        output.y = output.z;
+        output.z = -tempY;
+        return output;
     }
 
     bool isSpeakerTagDetected()
