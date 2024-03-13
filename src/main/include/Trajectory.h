@@ -40,7 +40,10 @@ public:
         DO_NOTHING,
         MIDDLE_THREE_PIECE,
         AMP_THREE_PIECE,
-        SOURCE_THREE_PIECE
+        SOURCE_THREE_PIECE,
+        SOURCE_TWO_PIECE,
+        AMP_PARK,
+        SOURCE_PARK,
     };
     Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput, NavX &mGyroInput, Limelight &mLimelightInput) : mDrive(mDriveInput),
                                                                                                                     mSuperstructure(mSSInput), 
@@ -49,7 +52,7 @@ public:
 
     void driveToState(PathPlannerTrajectory::State const &state);
 
-    void follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first);
+    void follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first = false, double startingRot = 0);
 
     void followPath(Trajectory::autos autoTrajectory, bool flipAlliance);
 

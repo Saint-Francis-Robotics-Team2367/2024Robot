@@ -38,7 +38,7 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
 /**
  * Follows pathplanner trajectory
  */
-void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first)
+void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first = false, double startingRot = 0)
 {
     mDrive.enableModules();
     auto path = PathPlannerPath::fromPathFile(traj_dir_file_path);
@@ -57,7 +57,7 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
         auto const initialPose = initialState.position;
 
         // set second param to initial holonomic rotation
-        mDrive.resetOdometry(initialPose, 0_rad);
+        mDrive.resetOdometry(initialPose, units::degree_t(startingRot));
     }
 
     frc::Timer trajTimer;
@@ -116,46 +116,87 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
 
     case MIDDLE_THREE_PIECE:
         follow("[M] Note 2", flipAlliance, true, true);
-        follow("[M] Score Note 2", flipAlliance, true, false);
+        follow("[M] Score Note 2", flipAlliance, true);
         mSuperstructure.controlIntake(false, false);
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
-        follow("[M] Note 1", flipAlliance, true, false);
-        follow("[M] Score Note 1", flipAlliance, true, false);
+        follow("[M] Note 1", flipAlliance, true);
+        follow("[M] Score Note 1", flipAlliance, true);
         mSuperstructure.controlIntake(false, false);
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
-        follow("[M] Note 3", flipAlliance, true, false);
-        follow("[M] Score Note 3", flipAlliance, true, false);
+        follow("[M] Note 3", flipAlliance, true);
+        follow("[M] Score Note 3", flipAlliance, true);
         mSuperstructure.controlIntake(false, false);
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
         break;
 
     case AMP_THREE_PIECE:
-        follow("[Amp] Drive Note 1", flipAlliance, false, true);
+        follow("[L] HC 1", flipAlliance, true, true, 60);
+        follow("[L] Score HC 1", flipAlliance, true);
+        mSuperstructure.controlIntake(false, false);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        follow("[L] HC 2", flipAlliance, true);
+        follow("[L] Score HC 2", flipAlliance, true);
+        mSuperstructure.controlIntake(false, false);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        follow("[L] Note 1", flipAlliance, true);
+        follow("[L] Score Note 1", flipAlliance, true);
+        mSuperstructure.controlIntake(false, false);
         break;
 
     case SOURCE_THREE_PIECE:
-        follow("[R] HC 5", flipAlliance, true, true);
-        follow("[R] Score HC 5", flipAlliance, true, false);
+        follow("[R] HC 5", flipAlliance, true, true, 300);
+        follow("[R] Score HC 5", flipAlliance, true);
         mSuperstructure.controlIntake(false, false);
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
-        follow("[R] HC 4", flipAlliance, true, false);
-        follow("[R] Score HC 4", flipAlliance, true, false);
+        follow("[R] HC 4", flipAlliance, true);
+        follow("[R] Score HC 4", flipAlliance, true);
         mSuperstructure.controlIntake(false, false);
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
-        follow("[R] Note 3", flipAlliance, true, false);
-        follow("[R] Score Note 3", flipAlliance, true, false);
+        follow("[R] Note 3", flipAlliance, true);
+        follow("[R] Score Note 3", flipAlliance, true);
         mSuperstructure.controlIntake(false, false);
         break;
-        
+
+    case SOURCE_TWO_PIECE: 
+        follow("[R] HC 5", flipAlliance, true, true, 300);
+        follow("[R] Score HC 5", flipAlliance, true);
+        mSuperstructure.controlIntake(false, false);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        follow("[R] HC 4", flipAlliance, true);
+        follow("[R] Score HC 4", flipAlliance, true);
+        mSuperstructure.controlIntake(false, false);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        break; 
+
+
+    case AMP_PARK: 
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        follow("[Amp] Park", flipAlliance, true, false, 60);
+        break; 
+
+    case SOURCE_PARK: 
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        follow("[Source] Park", flipAlliance, true, false, 300);
+        break;
+
+    
+
     default:
         break;
     }

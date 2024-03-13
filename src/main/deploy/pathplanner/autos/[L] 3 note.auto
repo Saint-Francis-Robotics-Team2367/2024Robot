@@ -14,18 +14,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "[L] Note 1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "[L] Score Note 1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "[L] HC 1"
           }
         },
@@ -33,6 +21,30 @@
           "type": "path",
           "data": {
             "pathName": "[L] Score HC 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[L] HC 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[L] Score HC 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[L] Note 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[L] Score Note 1"
           }
         }
       ]
