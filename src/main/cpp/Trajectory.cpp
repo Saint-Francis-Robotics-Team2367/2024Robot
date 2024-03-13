@@ -109,9 +109,11 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
     {
     case DO_NOTHING:
         break;
+
     case DELAYED_SHOOT_NO_MOVE:
         waitToShoot(1);
         break;
+
     case MIDDLE_THREE_PIECE:
         follow("[M] Note 2", flipAlliance, true, true);
         follow("[M] Score Note 2", flipAlliance, true, false);
@@ -131,11 +133,29 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
         break;
+
     case AMP_THREE_PIECE:
         follow("[Amp] Drive Note 1", flipAlliance, false, true);
         break;
+
     case SOURCE_THREE_PIECE:
+        follow("[R] HC 5", flipAlliance, true, true);
+        follow("[R] Score HC 5", flipAlliance, true, false);
+        mSuperstructure.controlIntake(false, false);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        follow("[R] HC 4", flipAlliance, true, false);
+        follow("[R] Score HC 4", flipAlliance, true, false);
+        mSuperstructure.controlIntake(false, false);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        follow("[R] Note 3", flipAlliance, true, false);
+        follow("[R] Score Note 3", flipAlliance, true, false);
+        mSuperstructure.controlIntake(false, false);
         break;
+        
     default:
         break;
     }
