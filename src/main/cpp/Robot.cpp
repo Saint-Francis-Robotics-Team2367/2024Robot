@@ -16,7 +16,9 @@ void Robot::RobotInit()
 
   mChooser.SetDefaultOption("Middle Three Piece", Trajectory::MIDDLE_THREE_PIECE);
   mChooser.AddOption("Delayed Shoot, No Move", Trajectory::DELAYED_SHOOT_NO_MOVE);
-  // mChooser.AddOption("2", kAutoCustom2);
+  mChooser.AddOption("Amp 3 piece", Trajectory::AMP_THREE_PIECE);
+  mChooser.AddOption("Source 3 piece", Trajectory::SOURCE_THREE_PIECE);
+
   // mChooser.AddOption("3", kAutoCustom3);
   // mChooser.AddOption("4", kAutoCustom4);
   frc::SmartDashboard::PutData("Auto Paths", &mChooser);
@@ -43,7 +45,7 @@ void Robot::AutonomousInit()
   selectedAuto = mChooser.GetSelected();
   frc::SmartDashboard::PutNumber("auto", selectedAuto);
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
-  mTraj.followPath(1, false);
+  mTraj.followPath(selectedAuto, false);
   
   // mTraj.follow("Rotations", false, false); 
   

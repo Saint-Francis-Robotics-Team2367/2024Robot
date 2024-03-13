@@ -124,12 +124,17 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
         mSuperstructure.controlIntake(false, false);
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        
+
         follow("[M] Note 3", flipAlliance, true, false);
         follow("[M] Score Note 3", flipAlliance, true, false);
         mSuperstructure.controlIntake(false, false);
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
+        break;
+    case AMP_THREE_PIECE:
+        follow("[Amp] Drive Note 1", flipAlliance, false, true);
+        break;
+    case SOURCE_THREE_PIECE:
         break;
     default:
         break;
