@@ -32,7 +32,7 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
     frc::SmartDashboard::PutNumber("VY", vy_feet);
     frc::SmartDashboard::PutNumber("VX", vx_feet);
 
-    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getBoundedAngleCCW(), true, true); 
+    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
 }
 
 /**
@@ -44,27 +44,29 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
     auto path = PathPlannerPath::fromPathFile(traj_dir_file_path);
 
     // switches path to red alliance (mirrors it)
-    if (flipAlliance) {
-        path = path->flipPath(); 
+    if (flipAlliance)
+    {
+        path = path->flipPath();
     }
 
     PathPlannerTrajectory traj = PathPlannerTrajectory(path, frc::ChassisSpeeds(), 0_rad);
 
-    if (first) {
+    if (first)
+    {
         auto const initialState = traj.getInitialState();
         auto const initialPose = initialState.position;
 
-        // set second param to initial holonomic rotation 
+        // set second param to initial holonomic rotation
         mDrive.resetOdometry(initialPose, 0_rad);
     }
-    
 
     frc::Timer trajTimer;
     trajTimer.Start();
 
     while ((mDrive.state == DriveState::Auto) && (trajTimer.Get() <= traj.getTotalTime()))
     {
-        if (intake) {
+        if (intake)
+        {
             mSuperstructure.controlIntake(true, false);
         }
 
@@ -87,272 +89,64 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
 
 /**
  * Uses limelight to calculate error accumulated in path
-*/
-void Trajectory::driveError() 
+ */
+void Trajectory::driveError()
 {
-    double x = mLimelight.getXYCoords()[0]; 
-    double y = mLimelight.getXYCoords()[1]; 
+    double x = mLimelight.getXYCoords()[0];
+    double y = mLimelight.getXYCoords()[1];
 
-    double currX = mDrive.getOdometryPose().X().value(); 
-    double currY = mDrive.getOdometryPose().Y().value(); 
-
-    
+    double currX = mDrive.getOdometryPose().X().value();
+    double currY = mDrive.getOdometryPose().Y().value();
 }
 
 /**
  * Calls sequences of follow functions for set paths
- * Path naming convention: "[Right Middle Left] Action" 
+ * Path naming convention: "[Right Middle Left] Action"
  */
-void Trajectory::followPath(int numPath, bool flipAlliance)
+void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
 {
-    // std::this_thread::sleep_for(std::chrono::seconds(7));
+    switch (autoTrajectory)
+    {
+    case DO_NOTHING:
+        break;
+    case DELAYED_SHOOT_NO_MOVE:
+        waitToShoot(1);
+        break;
+    case MIDDLE_THREE_PIECE:
+        follow("[M] Note 2", flipAlliance, true, true);
+        follow("[M] Score Note 2", flipAlliance, true, false);
+        mSuperstructure.controlIntake(false, false);
 
-    /*
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        follow("[M] Note 1", flipAlliance, true, false);
+        follow("[M] Score Note 1", flipAlliance, true, false);
+        mSuperstructure.controlIntake(false, false);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        
+        follow("[M] Note 3", flipAlliance, true, false);
+        follow("[M] Score Note 3", flipAlliance, true, false);
+        mSuperstructure.controlIntake(false, false);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        break;
+    default:
+        break;
+    }
+}
+
+void Trajectory::waitToShoot(int delaySeconds)
+{
     mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
     // Wait until shooter reaches 4000 RPM or 3 seconds pass
     double startTimeShooter = frc::Timer::GetFPGATimestamp().value();
-    while (mSuperstructure.mShooter.getSpeed() < 4000 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter > 3.0) {};
+    while (mSuperstructure.mShooter.getSpeed() < 4000 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter > 3.0)
+    {
+    };
     // Run indexer
     mSuperstructure.mIndex.setVelocity(2000.0);
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    // Stop Shooter
-
-    mSuperstructure.mIndex.setVelocity(0.0);
-    // mSuperstructure.mShooter.setSpeed(Shooter::STOP);
-    */
-
-    follow("[M] Note 2", flipAlliance, true, true);
-    follow("[M] Score Note 2", flipAlliance, true, false);
-
-    mSuperstructure.controlIntake(false, false);
-
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    /*
-    startTimeShooter = frc::Timer::GetFPGATimestamp().value();
-    while (mSuperstructure.mShooter.getSpeed() < 4000 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter > 3.0) {};
-    // Run indexer
-    mSuperstructure.mIndex.setVelocity(2000.0);
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(delaySeconds));
     // Stop Shooter
     mSuperstructure.mIndex.setVelocity(0.0);
-    mSuperstructure.mShooter.setSpeed(Shooter::STOP);
-    */
-
-    follow("[M] Note 1", flipAlliance, true, false); 
-    follow("[M] Score Note 1", flipAlliance, true, false); 
-
-    mSuperstructure.controlIntake(false, false);
-
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    follow("[M] Note 3", flipAlliance, true, false); 
-    follow("[M] Score Note 3", flipAlliance, true, false); 
-
-    mSuperstructure.controlIntake(false, false);
-
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-
-    
-
-
-    // mSuperstructure.controlIntake(false, false);
-
-    // mSuperstructure.controlIntake(true, false); 
-    // follow("[M] Note 2", flipAlliance);
-    // std::this_thread::sleep_for(std::chrono::seconds(1));
-    // mSuperstructure.controlIntake(false, false);
-    // follow("[M] Score Note 2", flipAlliance);
-
-    // mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
-    // // Wait until shooter reaches 4000 RPM or 5 seconds pass
-    // startTimeShooter = frc::Timer::GetFPGATimestamp().value();
-    // while (mSuperstructure.mShooter.getSpeed() < 4000 || startTimeShooter - frc::Timer::GetFPGATimestamp().value() > 5.0) {};
-    // // Run indexer
-    // mSuperstructure.mIndex.setVelocity(2000.0);
-    // std::this_thread::sleep_for(std::chrono::seconds(2));
-    // // Stop Shooter
-    // mSuperstructure.mIndex.setVelocity(0.0);
-    // mSuperstructure.mShooter.setSpeed(Shooter::STOP);
-
-    // break;
-    // switch (numPath)
-    // {
-    // // do nothing
-    // case 0: 
-    //     break; 
-
-    // // straight past stage line
-    // case 1:
-    //     mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
-    //     // Wait until shooter reaches 4000 RPM or 5 seconds pass
-    //     double startTimeShooter = frc::Timer::GetFPGATimestamp().value();
-    //     while (mSuperstructure.mShooter.getSpeed() < 4000 || startTimeShooter - frc::Timer::GetFPGATimestamp().value() > 5.0) {};
-    //     // Run indexer
-    //     mSuperstructure.mIndex.setVelocity(2000.0);
-    //     std::this_thread::sleep_for(std::chrono::seconds(2));
-    //     // Stop Shooter
-    //     mSuperstructure.mIndex.setVelocity(0.0);
-    //     mSuperstructure.mShooter.setSpeed(Shooter::STOP);
-    //     // follow("[R1] Straight", flipAlliance);
-    //     break;
-
-    // // R - 2 note auto  
-    // // HC 5, holding HC 4 
-    // // (when other teams want all inner notes)
-    // case 2:
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-    //     follow("[R] HC 5", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[R] Score HC 5", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[R] HC 4", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     break;
-
-    // // R - 3 note auto
-    // // note 3, HC 5, holding HC 4
-    // // (when other teams want inner notes 1 and 2)
-    // case 3:
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-    //     follow("[R] Note 3", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[R] Score Note 3", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[R] HC 5", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[R] Score HC 5", flipAlliance); 
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[R] HC 4", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     break;
-
-    // // R - 3 note auto 
-    // // note 3, note 2, holding HC 5
-    // case 4: 
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-    //     follow("[R] Note 3", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[R] Score Note 3", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[R] Note 2", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[R] Score Note 2", flipAlliance); 
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[R] HC 5", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     break; 
-
-    // // M - 2 note auto 
-    // // note 2, holding HC 2 
-    // case 5:
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-    //     follow("[M] Note 2", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[M] Score Note 2", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[M] HC 2", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     break;
-
-    // // M - 3 note auto 
-    // // note 2, note 3, holding HC 2
-    // case 6: 
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-    //     follow("[M] Note 2", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[M] Score Note 2", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[M] Note 3", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[M] Score Note 3", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[M] HC 2", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     break; 
-
-    // // M - 4 note auto 
-    // // note 2, note 3, note 1, holding HC 1
-    // case 7: 
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-    //     follow("[M] Note 2", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[M] Score Note 2", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[M] Note 3", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[M] Score Note 3", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[M] Note 1", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[M] Score Note 1", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[M] HC 2", flipAlliance);
-    //     mSuperstructure.controlIntake(true, false);
-    //     break; 
-
-    // // L - 2 note auto
-    // // note 1, holding HC 1
-    // case 8: 
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker();
-    //     follow("[L] Note 1", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[L] Score Note 1", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-    //     follow ("[L] HC 1", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     break; 
-
-    // // L - 3 note auto 
-    // // note 1, note 2, holding HC 1
-    // case 9: 
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker();
-    //     follow("[L] Note 1", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[L] Score Note 1", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow("[L] Note 2", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     follow("[L] Score Note 2", flipAlliance);
-    //     mSuperstructure.preScoreSpeaker(); 
-    //     mSuperstructure.scoreSpeaker(); 
-
-    //     follow ("[L] HC 1", flipAlliance); 
-    //     mSuperstructure.controlIntake(true, false);
-    //     break; 
-    // }
 }

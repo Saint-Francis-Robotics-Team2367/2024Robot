@@ -51,7 +51,9 @@ public:
 
     void follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first);
 
-    void followPath(int numPath, bool flipAlliance);
+    void followPath(Trajectory::autos autoTrajectory, bool flipAlliance);
+
+    void waitToShoot(int delaySeconds);
 
     void driveError(); 
 
