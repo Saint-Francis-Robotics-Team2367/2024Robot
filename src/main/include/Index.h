@@ -21,18 +21,18 @@ public:
     };
 
     bool inDistanceMode = false;
-    rev::CANSparkMax indexMotor = rev::CANSparkMax(motorIDs::indexMotorID, rev::CANSparkLowLevel::MotorType::kBrushed);
-    // rev::SparkPIDController indexController = indexMotor.GetPIDController();
-    // rev::SparkRelativeEncoder indexEncoder = indexMotor.GetEncoder();
+    rev::CANSparkMax indexMotor = rev::CANSparkMax(motorIDs::indexMotorID, rev::CANSparkLowLevel::MotorType::kBrushless);
+    rev::SparkPIDController indexController = indexMotor.GetPIDController();
+    rev::SparkRelativeEncoder indexEncoder = indexMotor.GetEncoder();
     rev::ColorSensorV3 colorSensor = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
 
 public:
     void init();
     void disable();
     void setVelocity(double velocity);
-    // void setDistance(double distance);
-    // bool isDistanceFinished(float percentageBound);
+    void setDistance(double distance);
+    bool isDistanceFinished(float percentageBound);
     int getSensorProximity();
     bool isNoteDetected();
-    // void setPID(double kP, double kI, double kD, double kFF, double min, double max, int slot);
+    void setPID(double kP, double kI, double kD, double kFF, double min, double max, int slot);
 };
