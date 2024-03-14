@@ -9,10 +9,10 @@
 
 void Robot::RobotInit()
 {
-  mElevator.init();
+  //mElevator.init();
   mDrive.initModules();
   mGyro.init();
-  mSuperstructure.init();
+  //mSuperstructure.init();
 
   mChooser.SetDefaultOption("0", kAutoDefault);
   mChooser.AddOption("1", kAutoCustom1);
@@ -23,14 +23,14 @@ void Robot::RobotInit()
 }
 void Robot::RobotPeriodic()
 {
-  frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
+  //frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
-  frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
+  //frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
   
   Pose3d target = mLimelight.getTargetPoseRobotSpace();
   frc::SmartDashboard::PutNumber("LimelightX", target.x * 39.37);
   frc::SmartDashboard::PutNumber("LimelightY", target.y * 39.37);
-  frc::SmartDashboard::PutNumber("TestShooterAngle", mSuperstructure.mArm.findBetterLaunchAngle(target.x * 39.37, target.y * 39.37, 51.875) * 180 / PI);
+  //frc::SmartDashboard::PutNumber("TestShooterAngle", mSuperstructure.mArm.findBetterLaunchAngle(target.x * 39.37, target.y * 39.37, 51.875) * 180 / PI);
 }
 
 void Robot::AutonomousInit()
@@ -39,11 +39,11 @@ void Robot::AutonomousInit()
   mDrive.enableModules();
 
   mDrive.state = DriveState::Auto;
-  mSuperstructure.enable();
+  //mSuperstructure.enable();
   selectedAuto = mChooser.GetSelected();
   frc::SmartDashboard::PutString("auto", selectedAuto);
-  Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
-  mTraj.followPath(1, false);
+  //Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
+  //mTraj.followPath(1, false);
   
   // mTraj.follow("Rotations", false, false); 
   
@@ -55,7 +55,7 @@ void Robot::TeleopInit()
 {
   mDrive.state = DriveState::Teleop;
   mDrive.enableModules();
-  mSuperstructure.enable();
+  //mSuperstructure.enable();
 
   mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
@@ -84,8 +84,8 @@ void Robot::TeleopPeriodic()
 
   // Driver Information
   frc::SmartDashboard::PutBoolean("TargetFound?", mLimelight.isSpeakerTagDetected());
-  frc::SmartDashboard::PutBoolean("Note?", mSuperstructure.mIndex.isNoteDetected());
-  frc::SmartDashboard::PutNumber("Prox?", mSuperstructure.mIndex.getSensorProximity());
+  //frc::SmartDashboard::PutBoolean("Note?", mSuperstructure.mIndex.isNoteDetected());
+  //frc::SmartDashboard::PutNumber("Prox?", mSuperstructure.mIndex.getSensorProximity());
 
   // Teleop States
   bool driveTranslating = !(leftX == 0 && leftY == 0);
@@ -157,7 +157,7 @@ void Robot::TeleopPeriodic()
   {
     if (ctr.GetCrossButtonPressed())
     {
-      mSuperstructure.loadNote();
+      //mSuperstructure.loadNote();
     }
 
     // mSuperstructure.mIndex.setVelocity(3000);
@@ -166,47 +166,47 @@ void Robot::TeleopPeriodic()
   {
     if (ctr.GetCircleButtonPressed())
     {
-      mSuperstructure.pushNoteBack();
+      //mSuperstructure.pushNoteBack();
     }
   }
   else if (scoreAmp) // Lift Arm
   {
-    mSuperstructure.scoreAmp();
+    //mSuperstructure.scoreAmp();
     if (ctr.GetSquareButton()) // Unload shooter into amp
     {
-      mSuperstructure.unloadShooter();
+      //mSuperstructure.unloadShooter();
     }
     else
     {
-      mSuperstructure.mShooter.setSpeed(0.0);
+      //mSuperstructure.mShooter.setSpeed(0.0);
     }
   }
   else if (preScoringSpeaker) // Spin Shooter
   {
     Pose3d target = mLimelight.getTargetPoseRobotSpace();
-    mSuperstructure.preScoreSpeaker(target);
-    if ((ctr.GetSquareButton() && mSuperstructure.mShooter.getSpeed() > 4000) || overrideShooter) // Load note into spinning shooter
-    {
-      mSuperstructure.scoreSpeaker();
-    }
+    //mSuperstructure.preScoreSpeaker(target);
+    // if ((ctr.GetSquareButton() && mSuperstructure.mShooter.getSpeed() > 4000) || overrideShooter) // Load note into spinning shooter
+    // {
+    //   mSuperstructure.scoreSpeaker();
+    // }
   }
   else
   {
     if (ctr.GetR1ButtonReleased()) // lock shooter after intake
     {
-      mSuperstructure.mShooter.setDistance(0.0);
+    //  mSuperstructure.mShooter.setDistance(0.0);
     }
     if (ctr.GetR1ButtonPressed()) // unlock shooter before intake
     {
-      mSuperstructure.mShooter.setSpeed(Shooter::STOP);
+   //   mSuperstructure.mShooter.setSpeed(Shooter::STOP);
     }
-    mSuperstructure.controlIntake(intakeIn, intakeClear);
-    mSuperstructure.stow();
+   // mSuperstructure.controlIntake(intakeIn, intakeClear);
+    //mSuperstructure.stow();
   }
 
   // Module Telemetry
   mDrive.displayDriveTelemetry();
-  mSuperstructure.updateTelemetry();
+  //mSuperstructure.updateTelemetry();
   static units::time::second_t max_loop{0};
   auto curr_loop = frc::Timer::GetFPGATimestamp() - startTime;
   if (curr_loop > max_loop)
@@ -216,20 +216,20 @@ void Robot::TeleopPeriodic()
   double elevatorSetpoint = ctrOperator.GetLeftY();
   if (ctrOperator.GetTriangleButton())
   {
-    mElevator.motorLeft.Set(elevatorSetpoint);
-    mElevator.motorRight.Set(elevatorSetpoint);
+    //mElevator.motorLeft.Set(elevatorSetpoint);
+    //mElevator.motorRight.Set(elevatorSetpoint);
   }
   else
   {
-    mElevator.motorLeft.StopMotor();
-    mElevator.motorRight.StopMotor();
+    //mElevator.motorLeft.StopMotor();
+    //mElevator.motorRight.StopMotor();
   }
 }
 
 void Robot::DisabledInit()
 {
   mDrive.stopModules();
-  mSuperstructure.disable();
+  //mSuperstructure.disable();
 }
 void Robot::DisabledPeriodic() {}
 

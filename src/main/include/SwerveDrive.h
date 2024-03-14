@@ -26,15 +26,15 @@
 #define FL_CAN_ID 3 // updated
 
 #define FRsteerID 3
-#define FRdriveID 4
+#define FRdriveID 2
 #define FR_CAN_ID 2 // updated
 
 #define BLsteerID 7
 #define BLdriveID 8
 #define BL_CAN_ID 4 // updated
-
+// 
 #define BRsteerID 1
-#define BRdriveID 2
+#define BRdriveID 4
 #define BR_CAN_ID 1 // updated
 
 // #define maxRot

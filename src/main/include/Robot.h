@@ -55,8 +55,8 @@ public:
   NavX mGyro = NavX();
   SwerveDrive mDrive = SwerveDrive(mGyro);
   Limelight mLimelight;
-  Superstructure mSuperstructure;
-  Elevator mElevator;
+  //Superstructure mSuperstructure;
+  //Elevator mElevator;
 
   // Teleop Controls
   float ctrPercent = 1.0;
