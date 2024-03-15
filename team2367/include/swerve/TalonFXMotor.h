@@ -53,6 +53,7 @@ public:
 
     void init()
     {
+
         pho::configs::TalonFXConfiguration configs{};
 
         /* Voltage-based velocity requires a feed forward to account for the back-emf of the motor */
@@ -62,8 +63,8 @@ public:
         configs.Slot0.kV = 0.12;   // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / Rotation per second
         configs.Slot0.kS = 0.05;
 
-        configs.TorqueCurrent.PeakForwardTorqueCurrent = 40;  // Peak output of 40 amps
-        configs.TorqueCurrent.PeakReverseTorqueCurrent = -40; // Peak output of 40 amps
+        configs.TorqueCurrent.PeakForwardTorqueCurrent = 30;  // Peak output of 40 amps
+        configs.TorqueCurrent.PeakReverseTorqueCurrent = -30; // Peak output of 40 amps
 
         /* Percent supply gains when we get a Slot 2 */
         configs.Slot1.kP = 0.01;    // An error of 100 rotations per second results in 100% output
