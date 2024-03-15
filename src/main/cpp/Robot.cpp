@@ -91,7 +91,7 @@ void Robot::TeleopPeriodic()
   // Teleop States
   bool driveTranslating = !(leftX == 0 && leftY == 0);
   bool driveTurning = !(rightX == 0);
-  double rot = rightX * moduleMaxRot * 2;
+  double rot = -rightX * moduleMaxRot * 2;
   bool preScoringSpeaker = ctr.GetR2Axis() > 0.2;
   bool intakeIn = ctr.GetR1Button();
   bool intakeClear = ctr.GetL1Button();
