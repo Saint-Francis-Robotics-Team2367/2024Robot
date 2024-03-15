@@ -10,8 +10,8 @@
 void Robot::RobotInit()
 {
   //mElevator.init();
-  mDrive.initModules();
-  mGyro.init();
+  //mDrive.initModules();
+  //mGyro.init();
   //mSuperstructure.init();
 
   mChooser.SetDefaultOption("0", kAutoDefault);
@@ -24,24 +24,24 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
   //frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
-  frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
+  //frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
   //frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
   
-  Pose3d target = mLimelight.getTargetPoseRobotSpace();
-  frc::SmartDashboard::PutNumber("LimelightX", target.x * 39.37);
-  frc::SmartDashboard::PutNumber("LimelightY", target.y * 39.37);
+  //Pose3d target = mLimelight.getTargetPoseRobotSpace();
+  //frc::SmartDashboard::PutNumber("LimelightX", target.x * 39.37);
+  //frc::SmartDashboard::PutNumber("LimelightY", target.y * 39.37);
   //frc::SmartDashboard::PutNumber("TestShooterAngle", mSuperstructure.mArm.findBetterLaunchAngle(target.x * 39.37, target.y * 39.37, 51.875) * 180 / PI);
 }
 
 void Robot::AutonomousInit()
 {
-  mGyro.init();
-  mDrive.enableModules();
+  //mGyro.init();
+  //mDrive.enableModules();
 
-  mDrive.state = DriveState::Auto;
+  //mDrive.state = DriveState::Auto;
   //mSuperstructure.enable();
-  selectedAuto = mChooser.GetSelected();
-  frc::SmartDashboard::PutString("auto", selectedAuto);
+  //selectedAuto = mChooser.GetSelected();
+  //frc::SmartDashboard::PutString("auto", selectedAuto);
   //Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
   //mTraj.followPath(1, false);
   
@@ -53,6 +53,7 @@ void Robot::AutonomousPeriodic()
 }
 void Robot::TeleopInit()
 {
+  mDrive.initModules();
   mDrive.state = DriveState::Teleop;
   mDrive.enableModules();
   //mSuperstructure.enable();
@@ -79,7 +80,7 @@ void Robot::TeleopPeriodic()
 
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
 
-  int dPad = ctrOperator.GetPOV();
+  //int dPad = ctrOperator.GetPOV();
   bool rumbleController = false;
 
   // Driver Information
@@ -96,7 +97,7 @@ void Robot::TeleopPeriodic()
   bool intakeClear = ctr.GetL1Button();
   bool loadNote = ctr.GetCrossButton();
   bool reverseNote = ctr.GetCircleButton();
-  bool overrideShooter = ctrOperator.GetSquareButton();
+  //bool overrideShooter = ctrOperator.GetSquareButton();
   if (ctr.GetTriangleButtonReleased())
   {
     scoreAmp = !scoreAmp;
@@ -106,13 +107,13 @@ void Robot::TeleopPeriodic()
   // }
 
   // Decide drive modes
-  if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 5.0, driveTurning)) // SNAP mode
-  {
-    // Snap condition
-    frc::SmartDashboard::PutBoolean("SNAP", true);
-    mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
-    mHeadingController.setFieldSetpoint(dPad);
-  }
+  // if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 5.0, driveTurning)) // SNAP mode
+  // {
+  //   // Snap condition
+  //   frc::SmartDashboard::PutBoolean("SNAP", true);
+  //   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
+  //   mHeadingController.setFieldSetpoint(dPad);
+  // }
   // else if (preScoringSpeaker && !driveTurning) // ALIGN(scoring) mode
   // {
   //   if (mLimelight.isSpeakerTagDetected())
@@ -139,10 +140,10 @@ void Robot::TeleopPeriodic()
             : mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
 
   // Gyro Resets
-  if (ctrOperator.GetCrossButtonReleased())
-  {
-    mGyro.init();
-  }
+  // if (ctrOperator.GetCrossButtonReleased())
+  // {
+  //   mGyro.init();
+  // }
 
   // Drive function
   mDrive.Drive(
@@ -213,17 +214,17 @@ void Robot::TeleopPeriodic()
     max_loop = curr_loop;
   frc::SmartDashboard::PutNumber("CurrLoop", curr_loop.value());
   frc::SmartDashboard::PutNumber("maxLoop", max_loop.value());
-  double elevatorSetpoint = ctrOperator.GetLeftY();
-  if (ctrOperator.GetTriangleButton())
-  {
+  //double elevatorSetpoint = ctrOperator.GetLeftY();
+  //if (ctrOperator.GetTriangleButton())
+  //{
     //mElevator.motorLeft.Set(elevatorSetpoint);
     //mElevator.motorRight.Set(elevatorSetpoint);
-  }
-  else
-  {
+  //}
+  //else
+  //{
     //mElevator.motorLeft.StopMotor();
     //mElevator.motorRight.StopMotor();
-  }
+  //}
 }
 
 void Robot::DisabledInit()
