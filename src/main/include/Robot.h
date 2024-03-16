@@ -8,10 +8,11 @@
 #include <frc/PS5Controller.h>
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/filter/SlewRateLimiter.h>
 
 #include "util/ShuffleUI.h"
 #include <thread>
-#include "Elevator.h"
+// #include "Elevator.h"
 
 #include "util/ControlUtil.h"
 #include "sensors/NavX.h"
@@ -23,10 +24,10 @@
 #include <frc/GenericHID.h>
 #include "control/PowerModule.h"
 #include "SwerveDrive.h"
-#include "Trajectory.h"
-#include "Superstructure.h"
+// #include "Trajectory.h"
+// #include "Superstructure.h"
 #include "util/TimeDelayButton.h"
-#include "Arm.h"
+// #include "Arm.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -69,8 +70,11 @@ public:
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
-  SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
-  SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
+  // SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
+  // SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
+
+  frc::SlewRateLimiter<units::feet_per_second> xStickLimiter{units::feet_per_second_t(11.407) / 1_s};
+  frc::SlewRateLimiter<units::feet_per_second> yStickLimiter{units::feet_per_second_t(11.407) / 1_s};
 
   // Auto Selectors
   frc::SendableChooser<std::string> mChooser;

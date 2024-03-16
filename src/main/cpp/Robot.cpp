@@ -60,8 +60,10 @@ void Robot::TeleopInit()
 
   mGyro.init();
   mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
-  xStickLimiter.reset(0.0);
-  yStickLimiter.reset(0.0);
+  // xStickLimiter.reset(0.0);
+  // yStickLimiter.reset(0.0);
+  xStickLimiter.Reset(units::feet_per_second_t(0));
+  yStickLimiter.Reset(units::feet_per_second_t(0));
 }
 void Robot::TeleopPeriodic()
 {
@@ -75,8 +77,10 @@ void Robot::TeleopPeriodic()
   // leftX = ControlUtil::boostScaler(leftX, boost, boostPercent, ctrPercent);
   // leftY = ControlUtil::boostScaler(leftY, boost, boostPercent, ctrPercent);
 
-  leftX = xStickLimiter.calculate(leftX);
-  leftY = yStickLimiter.calculate(leftY);
+  // leftX = xStickLimiter.calculate(leftX);
+  // leftY = yStickLimiter.calculate(leftY);
+  leftX = xStickLimiter.Calculate(units::feet_per_second_t(leftX)).value();
+  leftY = yStickLimiter.Calculate(units::feet_per_second_t(leftY)).value();
 
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
 

@@ -8,7 +8,7 @@
 
 // Controller Settings
 #define ctrDeadzone 0.09
-#define ctrSlewRate 0.3
+#define ctrSlewRate 0.001
 
 // Module Constraints
 #define moduleMaxFPS 11.407 // feet per sec
