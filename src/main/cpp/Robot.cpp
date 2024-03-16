@@ -28,6 +28,8 @@ void Robot::RobotPeriodic()
   frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
   frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
+  frc::SmartDashboard::PutNumber("Index vel", mSuperstructure.mIndex.indexEncoder.GetVelocity());
+  frc::SmartDashboard::PutNumber("Index applied", mSuperstructure.mIndex.indexMotor.GetAppliedOutput());
   
   Pose3d target = mLimelight.getTargetPoseRobotSpace();
   frc::SmartDashboard::PutNumber("LimelightX", target.x * 39.37);
@@ -76,7 +78,7 @@ void Robot::TeleopPeriodic()
   // leftX = ControlUtil::boostScaler(leftX, boost, boostPercent, ctrPercent);
   // leftY = ControlUtil::boostScaler(leftY, boost, boostPercent, ctrPercent);
 
-  leftX = xStickLimiter.calculate(leftX);
+  leftX = xStickLimiter.calculate(leftX); 
   leftY = yStickLimiter.calculate(leftY);
 
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);

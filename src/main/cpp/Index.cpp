@@ -5,7 +5,7 @@ void Index::init()
     indexMotor.RestoreFactoryDefaults();
     indexMotor.ClearFaults();
     indexMotor.SetSmartCurrentLimit(indexCurrentLimit);
-    indexMotor.SetInverted(true);
+    indexMotor.SetInverted(false);
     setPID(velocityP, velocityI, velocityD, velocityFF, -1.0, 1.0, VELOCITY);
     setPID(0.2, positionI, positionD, positionFF, -0.8, 0.8, POSITION);
 }
@@ -23,9 +23,11 @@ void Index::setVelocity(double velocity)
     if (velocity != velocitySetpoint)
     {
         velocitySetpoint = velocity;
+        frc::SmartDashboard::PutNumber("Velsetpt", velocitySetpoint);
         indexController.SetReference(velocitySetpoint, rev::CANSparkLowLevel::ControlType::kVelocity, VELOCITY);
+        // indexMotor.Set(velocity / fabs(velocity));
     }
-    indexMotor.Set(velocity / fabs(velocity));
+    
 }
 
 void Index::setPID(double kP, double kI, double kD, double kFF, double min, double max, int slot)
@@ -42,6 +44,7 @@ void Index::setDistance(double distance)
 {
     inDistanceMode = true;
     indexEncoder.SetPosition(0.0);
+    velocitySetpoint = 0.0;
     distanceSetpoint = distance;
     indexController.SetReference(distanceSetpoint, rev::CANSparkLowLevel::ControlType::kPosition, POSITION);
 }

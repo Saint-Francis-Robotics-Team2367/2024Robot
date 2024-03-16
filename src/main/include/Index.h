@@ -5,6 +5,7 @@
 #include <rev/SparkRelativeEncoder.h>
 #include <rev/ColorSensorV3.h>
 #include "Constants.h"
+#include <frc/smartdashboard/SmartDashboard.h>
 
 constexpr int indexCurrentLimit = 30;
 

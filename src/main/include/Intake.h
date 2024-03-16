@@ -13,7 +13,7 @@ constexpr int intakeCurrentLimit = 60;
 class Intake
 {
 public:
-    int intakeSpeed = 3000;
+    int intakeSpeed = 5700;
 
     // Clear Thresholds
     const int clearCurrentThreshold = 40;

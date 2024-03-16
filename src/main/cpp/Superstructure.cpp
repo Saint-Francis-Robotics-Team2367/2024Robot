@@ -45,20 +45,16 @@ void Superstructure::disable()
 void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
 {
     
-    float indexVelocity = 1200.0;
+    float indexVelocity = 3000.0;
     if (intakeIn)
-    {
+    {  
         mIntake.setIntakeState(Intake::IN);
-        if (!mIndex.isNoteDetected()) 
+        if (!mIndex.isNoteDetected())
         {
             
             mIndex.setVelocity(indexVelocity);
         } else {
             mIndex.disable();
-        }
-        
-        if (!mIndex.isNoteDetected()) {
-            mIndex.setVelocity(1000);
         }
     }
     else if (intakeClear)
@@ -130,7 +126,7 @@ void Superstructure::preScoreSpeaker(Pose3d target)
 
 void Superstructure::scoreSpeaker()
 {
-    mIndex.setVelocity(5700);
+    mIndex.setVelocity(5700.0);
 }
 
 void Superstructure::unloadShooter() {

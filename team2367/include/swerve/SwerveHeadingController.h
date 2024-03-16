@@ -8,7 +8,7 @@
 
 class SwerveHeadingController {
 private:
-    frc::PIDController mPIDCtr {0.06, 0.0, 0.0};
+    frc::PIDController mPIDCtr {0.2, 0.0, 0.0};
     double mSetpoint = 0.0;
     double outputMax;
     double outputMin;
