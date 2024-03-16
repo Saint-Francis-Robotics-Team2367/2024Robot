@@ -13,7 +13,7 @@ public:
     SlewRateLimiter(float maxChangeInputPerSecond)
     {
         maxChange = maxChangeInputPerSecond;
-        previousInput = 0;
+        previousInput = 0.0;
         prevTime = frc::Timer::GetFPGATimestamp().value();
     }
     double calculate(double input)
