@@ -68,7 +68,7 @@ public:
   bool cleanDriveAccum = true;
 
   // Controllers
-  SwerveHeadingController mHeadingController = SwerveHeadingController(-1.0, 1.0);
+  SwerveHeadingController mHeadingController = SwerveHeadingController(-4.0, 4.0);
   SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
 

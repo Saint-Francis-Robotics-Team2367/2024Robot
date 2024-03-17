@@ -18,9 +18,6 @@ void Robot::RobotInit()
   mChooser.AddOption("Delayed Shoot, No Move", Trajectory::DELAYED_SHOOT_NO_MOVE);
   mChooser.AddOption("Amp 3 piece", Trajectory::AMP_THREE_PIECE);
   mChooser.AddOption("Source 3 piece", Trajectory::SOURCE_THREE_PIECE);
-
-  // mChooser.AddOption("3", kAutoCustom3);
-  // mChooser.AddOption("4", kAutoCustom4);
   frc::SmartDashboard::PutData("Auto Paths", &mChooser);
 }
 void Robot::RobotPeriodic()
@@ -48,9 +45,6 @@ void Robot::AutonomousInit()
   frc::SmartDashboard::PutNumber("auto", selectedAuto);
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
   mTraj.followPath(selectedAuto, false);
-  
-  // mTraj.follow("Rotations", false, false); 
-  
 }
 void Robot::AutonomousPeriodic()
 {

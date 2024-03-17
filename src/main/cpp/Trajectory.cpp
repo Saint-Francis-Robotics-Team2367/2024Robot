@@ -38,7 +38,7 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
 /**
  * Follows pathplanner trajectory
  */
-void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first)
+void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first, float startAngle)
 {
     mDrive.enableModules();
     auto path = PathPlannerPath::fromPathFile(traj_dir_file_path);
@@ -57,7 +57,7 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
         auto const initialPose = initialState.position;
 
         // set second param to initial holonomic rotation
-        mDrive.resetOdometry(initialPose, 0_rad);
+        mDrive.resetOdometry(initialPose, units::angle::degree_t(startAngle));
     }
 
     frc::Timer trajTimer;
@@ -135,11 +135,11 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
         break;
 
     case AMP_THREE_PIECE:
-        follow("[Amp] Drive Note 1", flipAlliance, false, true);
+        follow("[Amp] Drive Note 1", flipAlliance, false, true, 60.0);
         break;
 
     case SOURCE_THREE_PIECE:
-        follow("[R] HC 5", flipAlliance, true, true);
+        follow("[R] HC 5", flipAlliance, true, true, -60.0);
         follow("[R] Score HC 5", flipAlliance, true, false);
         mSuperstructure.controlIntake(false, false);
 

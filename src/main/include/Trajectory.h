@@ -49,7 +49,7 @@ public:
 
     void driveToState(PathPlannerTrajectory::State const &state);
 
-    void follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first);
+    void follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first, float startAngle = 0.0);
 
     void followPath(Trajectory::autos autoTrajectory, bool flipAlliance);
 
