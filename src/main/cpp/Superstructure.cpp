@@ -51,7 +51,6 @@ void Superstructure::controlIntake(bool intakeIn, bool intakeClear)
         mIntake.setIntakeState(Intake::IN);
         if (!mIndex.isNoteDetected())
         {
-            
             mIndex.setVelocity(indexVelocity);
         } else {
             mIndex.disable();

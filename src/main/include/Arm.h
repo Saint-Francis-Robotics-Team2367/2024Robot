@@ -38,7 +38,7 @@ public:
     void setAllMotors(double input);
 
     // Preset Positions
-    const float highSetpoint = -45.0;
+    const float highSetpoint = -40.0;
     float stowSetpoint;
 
     const float speakerHeight = 2.045081;// meters

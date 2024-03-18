@@ -36,13 +36,13 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
+  mDrive.state = DriveState::Auto;
+
   mGyro.init();
   mDrive.enableModules();
-
-  mDrive.state = DriveState::Auto;
   mSuperstructure.enable();
+
   selectedAuto = mChooser.GetSelected();
-  frc::SmartDashboard::PutNumber("auto", selectedAuto);
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
   mTraj.followPath(selectedAuto, false);
 }
@@ -54,9 +54,9 @@ void Robot::TeleopInit()
   mDrive.state = DriveState::Teleop;
   mDrive.enableModules();
   mSuperstructure.enable();
-
   mGyro.init();
-  mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
+
+  mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   xStickLimiter.reset(0.0);
   yStickLimiter.reset(0.0);
 }
@@ -64,13 +64,8 @@ void Robot::TeleopPeriodic()
 {
   auto startTime = frc::Timer::GetFPGATimestamp();
   // Controller inputs
-  bool boost = ctr.GetL2Axis() > 0;
-
   double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1);
   double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1);
-
-  // leftX = ControlUtil::boostScaler(leftX, boost, boostPercent, ctrPercent);
-  // leftY = ControlUtil::boostScaler(leftY, boost, boostPercent, ctrPercent);
 
   leftX = xStickLimiter.calculate(leftX); 
   leftY = yStickLimiter.calculate(leftY);
@@ -103,8 +98,6 @@ void Robot::TeleopPeriodic()
   // Decide drive modes
   if (snapRobotToGoal.update(dPad >= 0 && !driveTurning, 5.0, driveTurning)) // SNAP mode
   {
-    // Snap condition
-    frc::SmartDashboard::PutBoolean("SNAP", true);
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
     mHeadingController.setSetpointPOV(dPad);
   }
@@ -117,14 +110,10 @@ void Robot::TeleopPeriodic()
       double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
       mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
       mHeadingController.setSetpoint(zeroSetpoint);
-      // limit robot speed temporarily
-      leftX = (leftX / ctrPercent) * ctrPercentAim;
-      leftY = (leftY / ctrPercent) * ctrPercentAim;
     }
   }
   else // Normal driving mode
   {
-    frc::SmartDashboard::PutBoolean("SNAP", false);
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   }
 
@@ -154,8 +143,6 @@ void Robot::TeleopPeriodic()
     {
       mSuperstructure.loadNote();
     }
-
-    // mSuperstructure.mIndex.setVelocity(3000);
   }
   else if (reverseNote && !scoreAmp)
   {

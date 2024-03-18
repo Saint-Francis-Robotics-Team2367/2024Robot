@@ -2,10 +2,8 @@
 #include <string>
 
 SwerveModule::SwerveModule(int steerMotorID, int driveMotorID, int cancoderID) : steerMotor(new rev::CANSparkMax(steerMotorID, rev::CANSparkMax::MotorType::kBrushless)),
-                                                                                 driveMotor(new rev::CANSparkMax(driveMotorID, rev::CANSparkMax::MotorType::kBrushless)),
+                                                                                 driveMotor(TalonFXMotor(driveMotorID)),
                                                                                  steerEnc(CAN_Coder(cancoderID)),
-                                                                                 driveEnc(driveMotor->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42)),
-                                                                                 m_pidController(driveMotor->GetPIDController()),
                                                                                  steerCTR(frc::PIDController(steerP, steerI, steerD))
 {
     steerID = steerMotorID;
@@ -16,37 +14,23 @@ void SwerveModule::initMotors()
 {
     // Resetting Motor settings, Encoders, putting it in brake mode
     steerMotor->ClearFaults();
-    driveMotor->ClearFaults();
-
     steerMotor->SetInverted(true);
-    driveMotor->SetInverted(true);
-
-    driveEnc.SetPosition(0);
 
     // Makes motor stiff(coast mode lets it run freely)
     steerMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-    driveMotor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     // Keep the motor limit at under 20A
     steerMotor->SetSmartCurrentLimit(maxSteerCurrent);
-    driveMotor->SetSmartCurrentLimit(maxDriveCurrent);
-
-    // Conversion factor from Rotations of motor, which is nothing for now
-    driveEnc.SetPositionConversionFactor(1.0);
 
     // Setpoints to initial encoder positions/speeds
     steerAngleSetpoint = steerEnc.getAbsolutePosition().getRadians();
     driveVelocitySetpoint = 0.0;
 
     // Set PID values for REV Drive PID
-    m_pidController.SetP(kP);
-    m_pidController.SetI(kI);
-    m_pidController.SetFF(kFF);
-    m_pidController.SetIMaxAccum(maxAccumulation);
-    frc::SmartDashboard::PutNumber("MaxAccu", maxAccumulation);
-    m_pidController.SetOutputRange(kMinOutput, kMaxOutput);
     steerCTR.EnableContinuousInput(0, 2 * PI);
     steerCTR.Reset();
+
+    driveMotor.init();
 }
 
 float SwerveModule::getSteerAngleSetpoint()
@@ -80,11 +64,6 @@ void SwerveModule::setDriveVelocitySetpoint(float setpt)
 {
     driveVelocitySetpoint = setpt;
     driveMode = VELOCITY;
-}
-
-void SwerveModule::setDriveCurrentLimit(int limit)
-{
-    driveMotor->SetSmartCurrentLimit(limit);
 }
 
 /**
@@ -133,7 +112,6 @@ SwerveModuleState SwerveModule::moduleSetpointGenerator(SwerveModuleState currSt
 
         // setpointVel = -(desVel * (-angleDist / PI_2) + desVel);
         setpointVel = -ControlUtil::scaleSwerveVelocity(desVel, angleDist, false);
-        
     }
     else
     {
@@ -174,12 +152,12 @@ bool SwerveModule::isFinished(float percentageBound)
 {
     if (driveMode == POSITION)
     {
-        double pos = driveEnc.GetPosition();
+        double pos = driveMotor.getPosition();
         return (pos < (drivePositionSetpoint * (1 + percentageBound))) && (pos > (drivePositionSetpoint * (1 - percentageBound)));
     }
     else
     {
-        double pos = driveEnc.GetVelocity();
+        double pos = driveMotor.getVelocity();
         return (pos < (driveVelocitySetpoint * (1 + percentageBound))) && (pos > (driveVelocitySetpoint * (1 - percentageBound)));
     }
 }
@@ -202,34 +180,19 @@ void SwerveModule::run()
     {
         currentSteerOutput = 0.0;
         steerMotor->StopMotor();
-        driveMotor->StopMotor();
+        driveMotor.set(TalonFXMotor::VELOCITY, 0.0);
     }
 
     else
     {
-        double inputMaxAccu = frc::SmartDashboard::GetNumber("MaxAccu", maxAccumulation);
-        if (maxAccumulation != inputMaxAccu) {
-            m_pidController.SetIMaxAccum(inputMaxAccu);
-            maxAccumulation = inputMaxAccu;
-        }
-        if (steerID == 7) {
-            double vel = driveEnc.GetVelocity();
-            double currAcc = (vel - lastVelocity) / 0.0012;
-            frc::SmartDashboard::PutNumber("CurrAcc", currAcc);
-            if (currAcc > maxAccelerationReach) {
-                maxAccelerationReach = currAcc;
-            }
-            frc::SmartDashboard::PutNumber("MaxAcc", maxAccelerationReach);
-
-            if (vel > maxVelocityAttained) {
+        if (steerID == 7)
+        {
+            double vel = driveMotor.getVelocity();
+            if (vel > maxVelocityAttained)
+            {
                 maxVelocityAttained = vel;
             }
             frc::SmartDashboard::PutNumber("MaxVAttained", maxVelocityAttained);
-            lastVelocity = vel;
-        }
-
-        if (steerID == 7) {
-            frc::SmartDashboard::PutNumber("IntegralAccum", m_pidController.GetIAccum());
         }
 
         double newSteerOutput = steerCTR.Calculate(steerEnc.getAbsolutePosition().getRadians(), steerAngleSetpoint);
@@ -238,18 +201,14 @@ void SwerveModule::run()
             currentSteerOutput = newSteerOutput;
             steerMotor->Set(currentSteerOutput);
         }
-        
-        // frc::SmartDashboard::PutNumber("Driveset" + std::to_string(steerID), driveVelocitySetpoint);
 
-        // Drive Motor uses the internal REV PID, since optimizations here are rarely needed
-        
         if (driveMode == POSITION)
         {
-            m_pidController.SetReference(drivePositionSetpoint, rev::CANSparkMax::ControlType::kPosition);
+            driveMotor.set(TalonFXMotor::POSITION, drivePositionSetpoint);
         }
         else
         {
-            m_pidController.SetReference(driveVelocitySetpoint, rev::CANSparkMax::ControlType::kVelocity);
+            driveMotor.set(TalonFXMotor::VELOCITY, driveVelocitySetpoint);
         }
     }
 }
@@ -266,7 +225,7 @@ double SwerveModule::getSteerOutput()
 
 double SwerveModule::getDriveEncoderVel()
 {
-    return driveEnc.GetVelocity();
+    return driveMotor.getVelocity();
 }
 
 /**
@@ -274,7 +233,7 @@ double SwerveModule::getDriveEncoderVel()
  */
 double SwerveModule::getDriveEncoderPos()
 {
-    return driveEnc.GetPosition();
+    return driveMotor.getPosition();
 }
 
 /**

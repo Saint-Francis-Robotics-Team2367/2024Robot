@@ -14,7 +14,6 @@ public:
     {
         gyro.Reset();
         angleOffset = Rotation2d(0.0);
-        gyro.Calibrate();
     }
 
     void setOffset(Rotation2d angleOffsetInput) 
