@@ -92,6 +92,8 @@ public:
         {
             modeSet(mode, input);
         }
+        lastInput = input;
+        lastMode = mode;
     }
 
     double getVelocity() {
