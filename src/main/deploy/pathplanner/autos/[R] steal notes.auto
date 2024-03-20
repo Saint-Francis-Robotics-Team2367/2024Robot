@@ -1,0 +1,73 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8108477755417065,
+      "y": 4.489458978917958
+    },
+    "rotation": -59.23728046576106
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "[R] HC 5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rotate HC 4 Part 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rotate Back 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rotate HC 3 Part 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rotate Back 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rotate HC 2 Part 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rotate Back 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rotate HC 1 Part 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Rotate Back 4"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.379352698520212,
-        "y": 5.526310219287105
+        "x": 8.289990426134699,
+        "y": 0.7696215392430785
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4973866872701063,
-        "y": 5.526310219287105
+        "x": 9.408024414884594,
+        "y": 0.7696215392430785
       },
       "isLocked": false,
       "linkedName": "Front Speaker"
     },
     {
       "anchor": {
-        "x": 3.478709230566609,
-        "y": 5.526310219287105
+        "x": 8.289990426134699,
+        "y": 2.397667103026514
       },
       "prevControl": {
-        "x": 3.1363394978571413,
-        "y": 5.526310219287105
+        "x": 7.947620693425231,
+        "y": 2.397667103026514
       },
       "nextControl": null,
       "isLocked": false,
@@ -44,9 +44,6 @@
   },
   "reversed": false,
   "folder": "Tests",
-  "previewStartingState": {
-    "rotation": 0.0,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": false
 }
