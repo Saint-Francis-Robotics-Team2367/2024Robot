@@ -35,6 +35,7 @@ void Arm::init()
 */
 void Arm::zeroSensors() {
     tiltEncoder.Reset();
+    tiltSetpoint = getShooterAngle().getDegrees();
 }
 
 /**
