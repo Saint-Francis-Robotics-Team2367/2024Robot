@@ -22,16 +22,14 @@ void Intake::setIntakeSpeed(double speed)
 
 void Intake::setIntakeState(intakeState state)
 {
-    if (state == currentState) {
-        return;
-    } else {
-        currentState = state;
-    }
+    // if (state == currentState) {
+    //     return;
+    // } else {
+    //     currentState = state;
+    // }
     switch (state)
     {
     case IN:
-        // intakeMotor.SetSmartCurrentLimit(intakeCurrentLimit);
-        // intakeMotor.Set(1.0);
         intakeController.SetReference(intakeSpeed, rev::CANSparkBase::ControlType::kVelocity);
         break;
     case CLEAR:
