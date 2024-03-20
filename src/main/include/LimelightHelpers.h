@@ -28,6 +28,7 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <fcntl.h>
+#include <networktables/UnitTopic.h>
     
 namespace LimelightHelpers
 {
@@ -283,7 +284,7 @@ namespace LimelightHelpers
         }
         return inData[position];
     }
-
+/*
     class PoseEstimate
     {
     public:
@@ -329,6 +330,7 @@ namespace LimelightHelpers
     inline PoseEstimate getBotPoseEstimate_wpiRed(const std::string &limelightName = "") {
         return getBotPoseEstimate(limelightName, "botpose_wpired");
     }
+*/
 
     inline const double INVALID_TARGET = 0.0;
     class SingleTargetingResultClass
