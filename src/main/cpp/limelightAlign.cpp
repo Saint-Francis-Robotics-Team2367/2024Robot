@@ -1,4 +1,4 @@
-//Google.com/Gemini Utilised AI to code
+//Google.com/Gemini Utilised AI to Code
 #include "LimelightHelpers.h"
 
 using namespace LimelightHelpers;
