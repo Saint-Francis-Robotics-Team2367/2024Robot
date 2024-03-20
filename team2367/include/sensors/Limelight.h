@@ -132,4 +132,9 @@ public:
     {
         return isIn((int)LimelightHelpers::getFiducialID(), speakerCenterIDs);
     }
+
+    bool isAmpTagDetected()
+    {
+        return isIn((int)LimelightHelpers::getFiducialID(), ampIDs);
+    }
 };
