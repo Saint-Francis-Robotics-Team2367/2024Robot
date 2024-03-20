@@ -22,11 +22,15 @@ void Robot::RobotInit()
 }
 void Robot::RobotPeriodic()
 {
+  frc::SmartDashboard::PutNumber("Blue", mSuperstructure.mIndex.colorSensor.GetColor().blue);
+  frc::SmartDashboard::PutNumber("Red", mSuperstructure.mIndex.colorSensor.GetColor().red);
+  frc::SmartDashboard::PutNumber("Prox", mSuperstructure.mIndex.getSensorProximity());
   frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
   frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
   frc::SmartDashboard::PutNumber("Index vel", mSuperstructure.mIndex.indexEncoder.GetVelocity());
   frc::SmartDashboard::PutNumber("Index applied", mSuperstructure.mIndex.indexMotor.GetAppliedOutput());
+  frc::SmartDashboard::PutNumber("ShooterVel", mSuperstructure.mShooter.topRollerEncoder.GetVelocity());
   
   Pose3d target = mLimelight.getTargetPoseRobotSpace();
   frc::SmartDashboard::PutNumber("LimelightX", target.x * 39.37);
@@ -55,6 +59,7 @@ void Robot::TeleopInit()
   mDrive.enableModules();
   mSuperstructure.enable();
   mGyro.init();
+  mDrive.resetOdometry(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
 
   mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   xStickLimiter.reset(0.0);
@@ -134,6 +139,9 @@ void Robot::TeleopPeriodic()
       mGyro.getBoundedAngleCCW(),
       mGyro.gyro.IsConnected(),
       cleanDriveAccum);
+  mDrive.updateOdometry();
+  frc::SmartDashboard::PutNumber("driveX", mDrive.getOdometryPose().X().value());
+  frc::SmartDashboard::PutNumber("driveY", mDrive.getOdometryPose().Y().value());
 
   // Superstructure function
 
@@ -163,11 +171,11 @@ void Robot::TeleopPeriodic()
       mSuperstructure.mShooter.setSpeed(0.0);
     }
   }
-  else if (preScoringSpeaker) // Spin Shooter
+  else if (preScoringSpeaker) // Spin Shooter print(hello world)
   {
     Pose3d target = mLimelight.getTargetPoseRobotSpace();
     mSuperstructure.preScoreSpeaker(target);
-    if ((ctr.GetSquareButton() && mSuperstructure.mShooter.getSpeed() > 4000) || overrideShooter) // Load note into spinning shooter
+    if ((ctr.GetSquareButton() && mSuperstructure.mShooter.getSpeed() > 5000) || overrideShooter) // Load note into spinning shooter
     {
       mSuperstructure.scoreSpeaker();
     }
