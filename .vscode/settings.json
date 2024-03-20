@@ -119,5 +119,6 @@
     "spanstream": "cpp",
     "stacktrace": "cpp",
     "syncstream": "cpp"
-  }
+  },
+  "C_Cpp.errorSquiggles": "enabled"
 }
