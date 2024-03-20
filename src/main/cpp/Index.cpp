@@ -71,5 +71,5 @@ bool Index::isNoteDetected()
 {
     bool blueLess = colorSensor.GetColor().blue < 0.15;
     bool redCheck = colorSensor.GetColor().red > 0.40;
-    return blueLess && redCheck;
+    return (blueLess && redCheck) || (getSensorProximity() > 175);
 }
