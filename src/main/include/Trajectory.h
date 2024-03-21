@@ -40,7 +40,8 @@ public:
         DO_NOTHING,
         MIDDLE_THREE_PIECE,
         AMP_THREE_PIECE,
-        SOURCE_THREE_PIECE
+        SOURCE_THREE_PIECE,
+        STEAL_HC_NOTES
     };
     Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput, NavX &mGyroInput, Limelight &mLimelightInput) : mDrive(mDriveInput),
                                                                                                                     mSuperstructure(mSSInput), 

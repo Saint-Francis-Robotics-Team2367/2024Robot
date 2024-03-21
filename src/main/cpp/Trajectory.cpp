@@ -157,6 +157,27 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
         mSuperstructure.controlIntake(false, false);
         waitToShoot(1);
         break;
+
+    case STEAL_HC_NOTES:
+        follow("[R] HC 5", flipAlliance, true, true);
+        mSuperstructure.controlIntake(false, false);
+        waitToShoot(0.2); //Shoot note
+        follow("Rotate HC 4 Part 1", flipAlliance, true, false);
+        follow("Rotate Back 1", flipAlliance, false, false);
+        mSuperstructure.controlIntake(false, false);
+        waitToShoot(0.2); //Shoot note
+        follow("Rotate HC 3 Part 1", flipAlliance, true, false);
+        follow("Rotate Back 2", flipAlliance, false, false);
+        mSuperstructure.controlIntake(false, false);
+        waitToShoot(0.2); //Shoot note
+        follow("Rotate HC 2 Part 1", flipAlliance, true, false);
+        follow("Rotate Back 3", flipAlliance, false, false);
+        mSuperstructure.controlIntake(false, false);
+        waitToShoot(0.2); //Shoot note
+        follow("Rotate HC 1 Part 1", flipAlliance, true, false);
+        follow("Rotate Back 4", flipAlliance, false, false);
+        mSuperstructure.controlIntake(false, false);
+        waitToShoot(0.2); //Shoot note
         
     default:
         break;
