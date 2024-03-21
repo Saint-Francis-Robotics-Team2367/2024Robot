@@ -48,7 +48,7 @@ public:
             double angleToTagDegrees = limelightAngleDegrees + ty;
             double angleToTagRadians = angleToTagDegrees * (PI / 180.0);
             double distanceToWall = (tagHeightInches - limelightHeightInches) / tan(angleToTagRadians);
-            distanceToWall = distanceToWall + 0.4191; //added the distance between limelight and shooter
+            distanceToWall = (distanceToWall*0.0254) + 0.4191; //added the distance between limelight and shooter
             frc::SmartDashboard::PutNumber("distanceToWall", distanceToWall);
             return distanceToWall;
         }
