@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8207567804024498,
-        "y": 5.185562658162353
+        "x": 1.4227626788586913,
+        "y": 4.425620772537842
       },
       "isLocked": false,
       "linkedName": "Front Speaker"
     },
     {
       "anchor": {
-        "x": 2.5209579817307786,
-        "y": 4.061891457116248
+        "x": 2.7688877599977424,
+        "y": 3.9897394378122093
       },
       "prevControl": {
-        "x": 2.2895370605556025,
-        "y": 4.709299946377671
+        "x": 2.1474302439345623,
+        "y": 3.9091548368281925
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,14 +32,14 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.477,
+    "maxVelocity": 5.21,
     "maxAcceleration": 1.5,
     "maxAngularVelocity": 189.2,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -0.9275435434490645,
     "rotateFast": false
   },
   "reversed": false,
