@@ -60,6 +60,7 @@ void Robot::TeleopInit()
   mSuperstructure.enable();
   mGyro.init();
   mDrive.resetOdometry(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
+  mSuperstructure.mShooter.setSpeed(Shooter::STOP);
 
   mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
   xStickLimiter.reset(0.0);
