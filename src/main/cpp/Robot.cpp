@@ -6,6 +6,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DriverStation.h>
 #include <string>
+#include "LimelightAlign.cpp"
 
 void Robot::RobotInit()
 {
@@ -90,6 +91,7 @@ void Robot::TeleopPeriodic()
   bool loadNote = ctr.GetCrossButton();
   bool reverseNote = ctr.GetCircleButton();
   bool overrideShooter = ctrOperator.GetSquareButton();
+  bool leftTrigger = ctr.GetL2Axis() > 0.5;
   if (ctr.GetTriangleButtonReleased())
   {
     scoreAmp = !scoreAmp;
@@ -206,8 +208,17 @@ void Robot::TeleopPeriodic()
     mElevator.motorLeft.StopMotor();
     mElevator.motorRight.StopMotor();
   }
-}
 
+  //Limelight align test-code for AMP
+  while(leftTrigger){
+    llAutoRotation();
+    mDrive.autoMove(0, horizontalMovementAmp(mLimelight));
+    if (autoShoot(mLimelight)){
+      mSuperstructure.scoreAmp();
+      mSuperstructure.unloadShooter();
+    }
+  }
+}
 void Robot::DisabledInit()
 {
   mDrive.stopModules();
