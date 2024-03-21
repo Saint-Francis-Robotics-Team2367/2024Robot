@@ -12,7 +12,7 @@
 
 
 
-constexpr float shooterCurrentLimit = 40;
+constexpr float shooterCurrentLimit = 30;
 
 class Shooter
 {
@@ -26,7 +26,7 @@ public:
     rev::SparkRelativeEncoder topRollerEncoder = topRollerMotor.GetEncoder();
     rev::SparkRelativeEncoder bottomRollerEncoder = bottomRollerMotor.GetEncoder();
 
-    const float maxVelocitySetpoint = 4000.0;
+    const float maxVelocitySetpoint = 6000.0;
     const float lowVelocitySetpoint = 500.0;
     float distanceSetpoint;
     double velocitySetpoint = 0.0;
