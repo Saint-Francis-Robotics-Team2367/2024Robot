@@ -7,7 +7,7 @@
 #include "Constants.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 
-constexpr int indexCurrentLimit = 30;
+constexpr int indexCurrentLimit = 50;
 
 class Index
 {
