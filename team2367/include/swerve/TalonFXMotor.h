@@ -97,7 +97,7 @@ public:
     }
 
     double getVelocity() {
-        return motor.GetRotorVelocity().GetValueAsDouble();
+        return motor.GetRotorVelocity().GetValueAsDouble() * 60.0;
     }
 
     double getPosition() {
