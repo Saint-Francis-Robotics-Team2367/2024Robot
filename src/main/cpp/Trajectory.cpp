@@ -5,8 +5,8 @@
 
 // controller used to track trajectories + correct minor disturbances
 static frc::HolonomicDriveController controller{
-    frc::PIDController{revkP, 0, 0},
-    frc::PIDController{revkP, 0, 0},
+    frc::PIDController{.0002, 0, 0},
+    frc::PIDController{0.0002, 0, 0},
     frc::ProfiledPIDController<units::radian>{
         0.2, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
@@ -27,10 +27,11 @@ void Trajectory::driveToState(PathPlannerTrajectory::State const &state)
     double vy_feet = correction.vy.value() * 3.281;
 
     // Clamp rot speed to 2.0 since that is the max rot we allow
-    double rot = std::clamp(correction.omega.value(), -2.0, 2.0);
+    double rot = std::clamp(correction.omega.value(), -moduleMaxRot, moduleMaxRot);
 
-    frc::SmartDashboard::PutNumber("VY", vy_feet);
-    frc::SmartDashboard::PutNumber("VX", vx_feet);
+    frc::SmartDashboard::PutNumber("autoVY", vy_feet);
+    frc::SmartDashboard::PutNumber("autoVX", vx_feet);
+    frc::SmartDashboard::PutNumber("autoRot", rot);
 
     mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
 }
@@ -119,19 +120,20 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
         follow("[M] Score Note 2", flipAlliance, true, false);
         mSuperstructure.controlIntake(false, false);
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        waitToShoot(1);
 
         follow("[M] Note 1", flipAlliance, true, false);
         follow("[M] Score Note 1", flipAlliance, true, false);
         mSuperstructure.controlIntake(false, false);
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        waitToShoot(1);
 
         follow("[M] Note 3", flipAlliance, true, false);
         follow("[M] Score Note 3", flipAlliance, true, false);
         mSuperstructure.controlIntake(false, false);
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        waitToShoot(1);
+
         break;
 
     case AMP_THREE_PIECE:
@@ -142,18 +144,18 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
         follow("[R] HC 5", flipAlliance, true, true, -60.0);
         follow("[R] Score HC 5", flipAlliance, true, false);
         mSuperstructure.controlIntake(false, false);
-
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        waitToShoot(1);
 
         follow("[R] HC 4", flipAlliance, true, false);
         follow("[R] Score HC 4", flipAlliance, true, false);
         mSuperstructure.controlIntake(false, false);
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        waitToShoot(1);
 
         follow("[R] Note 3", flipAlliance, true, false);
         follow("[R] Score Note 3", flipAlliance, true, false);
         mSuperstructure.controlIntake(false, false);
+        waitToShoot(1);
         break;
         
     default:
@@ -170,7 +172,7 @@ void Trajectory::waitToShoot(int delaySeconds)
     {
     };
     // Run indexer
-    mSuperstructure.mIndex.setVelocity(2000.0);
+    mSuperstructure.mIndex.setVelocity(5700.0);
     std::this_thread::sleep_for(std::chrono::seconds(delaySeconds));
     // Stop Shooter
     mSuperstructure.mIndex.setVelocity(0.0);
