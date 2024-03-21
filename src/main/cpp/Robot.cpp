@@ -209,13 +209,13 @@ void Robot::TeleopPeriodic()
     mElevator.motorRight.StopMotor();
   }
 
-  //Limelight align test-code for AMP
-  while(leftTrigger){
-    llAutoRotation();
-    mDrive.autoMove(0, horizontalMovementAmp(mLimelight));
-    if (autoShoot(mLimelight)){
-      mSuperstructure.scoreAmp();
-      mSuperstructure.unloadShooter();
+  //Limelight align test-code for AMP (DRIVER STILL HAS TO PUSH FORWARD)
+  while(leftTrigger){   //runs only when left trigger is held down constantly to avoid collisions
+    mDrive.autoMove(0, horizontalMovementAmp(mLimelight));  //moves robot laterally to match the april tag west/east coordinate
+    llAutoRotation();     //runs rotation function to rotate towards tag at all times
+    if (autoShoot(mLimelight)){ //runs if the autoshoot function returns true
+      mSuperstructure.scoreAmp(); // lift arm
+      mSuperstructure.unloadShooter();  //unloads the shooter
     }
   }
 }
