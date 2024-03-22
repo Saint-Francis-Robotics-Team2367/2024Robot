@@ -15,9 +15,11 @@ void Robot::RobotInit()
   mSuperstructure.init();
 
   mChooser.SetDefaultOption("Middle Three Piece", Trajectory::MIDDLE_THREE_PIECE);
+  mChooser.SetDefaultOption("Middle Two Piece", Trajectory::MIDDLE_TWO_PIECE);
   mChooser.AddOption("Delayed Shoot, No Move", Trajectory::DELAYED_SHOOT_NO_MOVE);
-  mChooser.AddOption("Amp 3 piece", Trajectory::AMP_THREE_PIECE);
   mChooser.AddOption("Source 3 piece", Trajectory::SOURCE_THREE_PIECE);
+  mChooser.AddOption("Source Steal Left", Trajectory::SOURCE_STEAL_TO_LEFT);
+  mChooser.AddOption("Source Steal Right", Trajectory::SOURCE_STEAL_TO_RIGHT);
   frc::SmartDashboard::PutData("Auto Paths", &mChooser);
 }
 void Robot::RobotPeriodic()
@@ -41,18 +43,18 @@ void Robot::AutonomousInit()
 
   selectedAuto = mChooser.GetSelected();
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
-  if (frc::DriverStation::IsDSAttached()) {
-    mTraj.isRed = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed;
-  }
-  if (mLimelight.targetDetected()) {
-    mTraj.startPose = mLimelight.getRobotPoseFieldSpace();
-    mTraj.receivedPose = true;
-  } else {
-    mTraj.receivedPose = false;
-  }
+  // if (frc::DriverStation::IsDSAttached()) {
+  //   mTraj.isRed = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed;
+  // }
+  // if (mLimelight.targetDetected()) {
+  //   mTraj.startPose = mLimelight.getRobotPoseFieldSpace();
+  //   mTraj.receivedPose = true;
+  // } else {
+  //   mTraj.receivedPose = false;
+  // }
   
   
-  mTraj.followPath(selectedAuto, mTraj.isRed);
+  mTraj.followPath(selectedAuto, false);
 }
 void Robot::AutonomousPeriodic()
 {

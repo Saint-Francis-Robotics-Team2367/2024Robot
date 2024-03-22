@@ -114,6 +114,21 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
     case DELAYED_SHOOT_NO_MOVE:
         waitToShoot(1);
         break;
+    case MIDDLE_TWO_PIECE:
+        waitToShoot(1);
+
+        follow("[M] Note 2", flipAlliance, true, true, 0.0);
+        follow("[M] Score Note 2", flipAlliance, true, false);
+        mSuperstructure.controlIntake(false, false);
+        
+        waitToShoot(1);
+
+        follow("[M] Note 1", flipAlliance, true, false);
+        follow("[M] Score Note 1", flipAlliance, true, false);
+        waitToShoot(1);
+        
+        mSuperstructure.controlIntake(false, false);
+        break;
 
     case MIDDLE_THREE_PIECE:
         waitToShoot(1);

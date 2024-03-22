@@ -45,6 +45,7 @@ public:
         DELAYED_SHOOT_NO_MOVE,
         DO_NOTHING,
         MIDDLE_THREE_PIECE,
+        MIDDLE_TWO_PIECE,
         AMP_THREE_PIECE,
         SOURCE_THREE_PIECE,
         STEAL_HC_NOTES,
