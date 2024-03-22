@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.379352698520212,
-        "y": 5.526310219287105
+        "x": 1.4461603495379611,
+        "y": 1.595957574355624
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4973866872701063,
-        "y": 5.526310219287105
+        "x": 1.9074033461455437,
+        "y": 1.595957574355624
       },
       "isLocked": false,
-      "linkedName": "Front Speaker"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.9776238487662163,
-        "y": 5.526310219287105
+        "x": 8.326166536075633,
+        "y": 1.595957574355624
       },
       "prevControl": {
-        "x": 2.890562927738606,
-        "y": 5.526310219287105
+        "x": 7.987681615182826,
+        "y": 1.595957574355624
       },
       "nextControl": {
-        "x": 3.0646847697938266,
-        "y": 5.526310219287105
+        "x": 8.66465145696844,
+        "y": 1.595957574355624
       },
       "isLocked": false,
-      "linkedName": "Note 2"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.3,
-        "y": 5.552736267509571
+        "x": 8.326166536075633,
+        "y": 7.549290438052603
       },
       "prevControl": {
-        "x": 3.3495282826946347,
-        "y": 5.539523243398339
+        "x": 8.978047346006319,
+        "y": 6.836474050087237
       },
       "nextControl": null,
       "isLocked": false,
@@ -59,7 +59,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Middle",
+  "folder": "Right",
   "previewStartingState": null,
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
