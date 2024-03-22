@@ -22,12 +22,14 @@
 #include <frc/Timer.h>
 #include "Shooter.h"
 #include "sensors/NavX.h"
+#include <frc/DriverStation.h>
 
 using namespace pathplanner;
 
 class Trajectory
 {
 private:
+    
     SwerveDrive &mDrive;
     Superstructure &mSuperstructure; 
     NavX &mGyro;
@@ -35,13 +37,21 @@ private:
 
 
 public:
+    Pose3d startPose = Pose3d();
+    bool receivedPose;
+    bool isRed = false;
+    
     enum autos {
         DELAYED_SHOOT_NO_MOVE,
         DO_NOTHING,
         MIDDLE_THREE_PIECE,
         AMP_THREE_PIECE,
         SOURCE_THREE_PIECE,
-        STEAL_HC_NOTES
+        STEAL_HC_NOTES,
+        AMP_SHOOT_AND_PARK,
+        SOURCE_SHOOT_AND_PARK,
+        SOURCE_STEAL_TO_LEFT,
+        SOURCE_STEAL_TO_RIGHT
     };
     Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput, NavX &mGyroInput, Limelight &mLimelightInput) : mDrive(mDriveInput),
                                                                                                                     mSuperstructure(mSSInput), 

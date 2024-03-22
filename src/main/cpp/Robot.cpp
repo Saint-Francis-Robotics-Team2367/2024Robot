@@ -22,20 +22,13 @@ void Robot::RobotInit()
 }
 void Robot::RobotPeriodic()
 {
-  frc::SmartDashboard::PutNumber("Blue", mSuperstructure.mIndex.colorSensor.GetColor().blue);
-  frc::SmartDashboard::PutNumber("Red", mSuperstructure.mIndex.colorSensor.GetColor().red);
-  frc::SmartDashboard::PutNumber("Prox", mSuperstructure.mIndex.getSensorProximity());
   frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
-  frc::SmartDashboard::PutNumber("IntakeCurrent", mSuperstructure.mIntake.intakeMotor.GetOutputCurrent());
-  frc::SmartDashboard::PutNumber("Index vel", mSuperstructure.mIndex.indexEncoder.GetVelocity());
-  frc::SmartDashboard::PutNumber("Index applied", mSuperstructure.mIndex.indexMotor.GetAppliedOutput());
-  frc::SmartDashboard::PutNumber("ShooterVel", mSuperstructure.mShooter.topRollerEncoder.GetVelocity());
   
   Pose3d target = mLimelight.getTargetPoseRobotSpace();
-  frc::SmartDashboard::PutNumber("LimelightX", target.x * 39.37);
-  frc::SmartDashboard::PutNumber("LimelightY", target.y * 39.37);
-  frc::SmartDashboard::PutNumber("TestShooterAngle", mSuperstructure.mArm.findBetterLaunchAngle(target.x * 39.37, target.y * 39.37, 51.875) * 180 / PI);
+  frc::SmartDashboard::PutNumber("targetX", target.x * 39.37);
+  frc::SmartDashboard::PutNumber("targetY", target.y * 39.37);
+
 }
 
 void Robot::AutonomousInit()
@@ -48,7 +41,18 @@ void Robot::AutonomousInit()
 
   selectedAuto = mChooser.GetSelected();
   Trajectory mTraj = Trajectory(mDrive, mSuperstructure, mGyro, mLimelight);
-  mTraj.followPath(selectedAuto, false);
+  if (frc::DriverStation::IsDSAttached()) {
+    mTraj.isRed = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed;
+  }
+  if (mLimelight.targetDetected()) {
+    mTraj.startPose = mLimelight.getRobotPoseFieldSpace();
+    mTraj.receivedPose = true;
+  } else {
+    mTraj.receivedPose = false;
+  }
+  
+  
+  mTraj.followPath(selectedAuto, mTraj.isRed);
 }
 void Robot::AutonomousPeriodic()
 {

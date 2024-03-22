@@ -5,10 +5,10 @@
 
 // controller used to track trajectories + correct minor disturbances
 static frc::HolonomicDriveController controller{
-    frc::PIDController{.0002, 0, 0},
-    frc::PIDController{0.0002, 0, 0},
+    frc::PIDController{revkP, 0, 0},
+    frc::PIDController{revkP, 0, 0},
     frc::ProfiledPIDController<units::radian>{
-        0.2, 0, 0,
+        0.4, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
             units::radians_per_second_t(5.0),
             units::radians_per_second_squared_t(100)}}};
@@ -116,10 +116,12 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
         break;
 
     case MIDDLE_THREE_PIECE:
-        follow("[M] Note 2", flipAlliance, true, true);
+        waitToShoot(1);
+
+        follow("[M] Note 2", flipAlliance, true, true, 0.0);
         follow("[M] Score Note 2", flipAlliance, true, false);
         mSuperstructure.controlIntake(false, false);
-
+        
         waitToShoot(1);
 
         follow("[M] Note 1", flipAlliance, true, false);
@@ -178,9 +180,25 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
         follow("Rotate Back 4", flipAlliance, false, false);
         mSuperstructure.controlIntake(false, false);
         waitToShoot(0.2); //Shoot note
-        
-    default:
         break;
+    case AMP_SHOOT_AND_PARK:
+        waitToShoot(1);
+        std::this_thread::sleep_for(std::chrono::seconds(6));
+        follow("[Amp] Park", flipAlliance, false, true, 60.0);
+        break;
+    case SOURCE_SHOOT_AND_PARK:
+        waitToShoot(1);
+        std::this_thread::sleep_for(std::chrono::seconds(6));
+        follow("[Source] Park", flipAlliance, false, true, -60.0);
+        break;
+    case SOURCE_STEAL_TO_LEFT:
+        follow("[Source] Steal to Left", false, false, true, 0.0);
+        break;
+    case SOURCE_STEAL_TO_RIGHT:
+        follow("[Source] Steal to Right", false, false, true, 0.0);
+        break;
+    default:
+        waitToShoot(1);
     }
 }
 
@@ -189,12 +207,15 @@ void Trajectory::waitToShoot(int delaySeconds)
     mSuperstructure.mShooter.setSpeed(Shooter::HIGH);
     // Wait until shooter reaches 4000 RPM or 3 seconds pass
     double startTimeShooter = frc::Timer::GetFPGATimestamp().value();
-    while (mSuperstructure.mShooter.getSpeed() < 4000 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter > 3.0)
+    while (mDrive.state == DriveState::Auto && (mSuperstructure.mShooter.getSpeed() < 4000 || frc::Timer::GetFPGATimestamp().value() - startTimeShooter < 3.0))
     {
     };
     // Run indexer
     mSuperstructure.mIndex.setVelocity(5700.0);
-    std::this_thread::sleep_for(std::chrono::seconds(delaySeconds));
+    double startTimeShoot = frc::Timer::GetFPGATimestamp().value();
+    while (mDrive.state == DriveState::Auto && frc::Timer::GetFPGATimestamp().value() - startTimeShoot < delaySeconds) {
+
+    };
     // Stop Shooter
     mSuperstructure.mIndex.setVelocity(0.0);
 }

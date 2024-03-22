@@ -118,6 +118,8 @@
     "expected": "cpp",
     "spanstream": "cpp",
     "stacktrace": "cpp",
-    "syncstream": "cpp"
+    "syncstream": "cpp",
+    "__hash_table": "cpp",
+    "__node_handle": "cpp"
   }
 }
