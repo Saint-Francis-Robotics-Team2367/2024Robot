@@ -20,6 +20,7 @@ void Robot::RobotInit()
   mChooser.AddOption("Source 3 piece", Trajectory::SOURCE_THREE_PIECE);
   mChooser.AddOption("Source Steal Left", Trajectory::SOURCE_STEAL_TO_LEFT);
   mChooser.AddOption("Source Steal Right", Trajectory::SOURCE_STEAL_TO_RIGHT);
+  mChooser.AddOption("Source Grab Far", Trajectory::SOURCE_FAR_GRAB);
   frc::SmartDashboard::PutData("Auto Paths", &mChooser);
 }
 void Robot::RobotPeriodic()

@@ -52,7 +52,8 @@ public:
         AMP_SHOOT_AND_PARK,
         SOURCE_SHOOT_AND_PARK,
         SOURCE_STEAL_TO_LEFT,
-        SOURCE_STEAL_TO_RIGHT
+        SOURCE_STEAL_TO_RIGHT,
+        SOURCE_FAR_GRAB
     };
     Trajectory(SwerveDrive &mDriveInput, Superstructure &mSSInput, NavX &mGyroInput, Limelight &mLimelightInput) : mDrive(mDriveInput),
                                                                                                                     mSuperstructure(mSSInput), 

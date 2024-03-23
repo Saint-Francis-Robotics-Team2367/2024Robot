@@ -215,6 +215,10 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
     case SOURCE_STEAL_TO_RIGHT:
         follow("[Source] Steal to Right", false, false, true, 0.0);
         break;
+    case SOURCE_FAR_GRAB:
+        waitToShoot(1);
+        follow("[Source] Grab Far", flipAlliance, true, true);
+        mSuperstructure.controlIntake(false, false);
     }
 }
 
