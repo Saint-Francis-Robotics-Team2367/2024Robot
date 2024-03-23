@@ -83,7 +83,9 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
         using namespace std::chrono_literals;
 
         // refresh rate of holonomic drive controller's PID controllers (edit if needed)
-        std::this_thread::sleep_for(20ms);
+        double delayStart = frc::Timer::GetFPGATimestamp().value();
+        while (mDrive.state == DriveState::Auto && frc::Timer::GetFPGATimestamp().value() - delayStart < 0.02) {
+        };
     }
     mDrive.stopModules();
 }
@@ -93,11 +95,11 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
  */
 void Trajectory::driveError()
 {
-    double x = mLimelight.getXYCoords()[0];
-    double y = mLimelight.getXYCoords()[1];
+    // double x = mLimelight.getXYCoords()[0];
+    // double y = mLimelight.getXYCoords()[1];
 
-    double currX = mDrive.getOdometryPose().X().value();
-    double currY = mDrive.getOdometryPose().Y().value();
+    // double currX = mDrive.getOdometryPose().X().value();
+    // double currY = mDrive.getOdometryPose().Y().value();
 }
 
 /**
@@ -125,9 +127,10 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
 
         follow("[M] Note 1", flipAlliance, true, false);
         follow("[M] Score Note 1", flipAlliance, true, false);
+        mSuperstructure.controlIntake(false, false);
+
         waitToShoot(1);
         
-        mSuperstructure.controlIntake(false, false);
         break;
 
     case MIDDLE_THREE_PIECE:
@@ -212,8 +215,6 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
     case SOURCE_STEAL_TO_RIGHT:
         follow("[Source] Steal to Right", false, false, true, 0.0);
         break;
-    default:
-        waitToShoot(1);
     }
 }
 

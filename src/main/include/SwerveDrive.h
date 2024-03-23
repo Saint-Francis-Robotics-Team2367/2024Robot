@@ -43,6 +43,7 @@
 enum DriveState{
     Teleop,
     Auto,
+    Disabled,
     Test
 };
 class SwerveDrive

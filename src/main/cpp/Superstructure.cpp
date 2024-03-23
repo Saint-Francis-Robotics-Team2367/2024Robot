@@ -100,7 +100,7 @@ void Superstructure::scoreAmp()
     mArm.setPosition(Arm::armPosition::HIGH);
 }
 
-void Superstructure::preScoreSpeaker(Pose3d target)
+void Superstructure::preScoreSpeaker()
 {
     
     mShooter.setSpeed(Shooter::HIGH);

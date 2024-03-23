@@ -15,7 +15,7 @@ void Robot::RobotInit()
   mSuperstructure.init();
 
   mChooser.SetDefaultOption("Middle Three Piece", Trajectory::MIDDLE_THREE_PIECE);
-  mChooser.SetDefaultOption("Middle Two Piece", Trajectory::MIDDLE_TWO_PIECE);
+  mChooser.AddOption("Middle Two Piece", Trajectory::MIDDLE_TWO_PIECE);
   mChooser.AddOption("Delayed Shoot, No Move", Trajectory::DELAYED_SHOOT_NO_MOVE);
   mChooser.AddOption("Source 3 piece", Trajectory::SOURCE_THREE_PIECE);
   mChooser.AddOption("Source Steal Left", Trajectory::SOURCE_STEAL_TO_LEFT);
@@ -27,9 +27,9 @@ void Robot::RobotPeriodic()
   frc::SmartDashboard::PutNumber("Shooter Angle", mSuperstructure.mArm.getShooterAngle().getDegrees());
   frc::SmartDashboard::PutNumber("Gyro", mGyro.getBoundedAngleCW().getDegrees());
   
-  Pose3d target = mLimelight.getTargetPoseRobotSpace();
-  frc::SmartDashboard::PutNumber("targetX", target.x * 39.37);
-  frc::SmartDashboard::PutNumber("targetY", target.y * 39.37);
+  // Pose3d target = mLimelight.getTargetPoseRobotSpace();
+  // frc::SmartDashboard::PutNumber("targetX", target.x * 39.37);
+  // frc::SmartDashboard::PutNumber("targetY", target.y * 39.37);
 
 }
 
@@ -88,7 +88,7 @@ void Robot::TeleopPeriodic()
   bool rumbleController = false;
 
   // Driver Information
-  frc::SmartDashboard::PutBoolean("TargetFound?", mLimelight.isSpeakerTagDetected());
+  //frc::SmartDashboard::PutBoolean("TargetFound?", mLimelight.isSpeakerTagDetected());
   frc::SmartDashboard::PutBoolean("Note?", mSuperstructure.mIndex.isNoteDetected());
   frc::SmartDashboard::PutNumber("Prox?", mSuperstructure.mIndex.getSensorProximity());
 
@@ -113,17 +113,17 @@ void Robot::TeleopPeriodic()
     mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
     mHeadingController.setSetpointPOV(dPad);
   }
-  else if (preScoringSpeaker && !driveTurning) // ALIGN(scoring) mode
-  {
-    if (mLimelight.isSpeakerTagDetected())
-    {
-      Pose3d target = mLimelight.getTargetPoseRobotSpace();
-      double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / PI;
-      double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
-      mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-      mHeadingController.setSetpoint(zeroSetpoint);
-    }
-  }
+  // else if (preScoringSpeaker && !driveTurning) // ALIGN(scoring) mode
+  // {
+  //   // if (mLimelight.isSpeakerTagDetected())
+  //   // {
+  //   //   Pose3d target = mLimelight.getTargetPoseRobotSpace();
+  //   //   double angleOffset = Rotation2d::polarToCompass(atan2(target.y, target.x)) * 180 / PI;
+  //   //   double zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
+  //   //   mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+  //   //   mHeadingController.setSetpoint(zeroSetpoint);
+  //   // }
+  // }
   else // Normal driving mode
   {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
@@ -180,8 +180,7 @@ void Robot::TeleopPeriodic()
   }
   else if (preScoringSpeaker) // Spin Shooter print(hello world)
   {
-    Pose3d target = mLimelight.getTargetPoseRobotSpace();
-    mSuperstructure.preScoreSpeaker(target);
+    mSuperstructure.preScoreSpeaker();
     if ((ctr.GetSquareButton() && mSuperstructure.mShooter.getSpeed() > 5000) || overrideShooter) // Load note into spinning shooter
     {
       mSuperstructure.scoreSpeaker();
@@ -225,6 +224,7 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit()
 {
+  mDrive.state = DriveState::Disabled;
   mDrive.stopModules();
   mSuperstructure.disable();
 }
